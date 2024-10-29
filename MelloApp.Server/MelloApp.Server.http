@@ -1,0 +1,6 @@
+@MelloApp.Server_HostAddress = http://localhost:5080
+
+GET {{MelloApp.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
