@@ -9,13 +9,13 @@ public class ApplicationUser : IdentityUser
 {
     [Required]
     [MaxLength(50)]
-    public string FirstName { get; set; }
+    public string? FirstName { get; set; }
 
     [Required]
     [MaxLength(50)]
-    public string LastName { get; set; }
+    public string? LastName { get; set; }
 
-    public virtual ICollection<ScoreAfterSubCompetition> Scores { get; set; }
-    public virtual Leaderboard Leaderboard { get; set; }
-    public virtual ICollection<Prediction> Predictions { get; set; }
+    public virtual ICollection<ScoreAfterSubCompetition>? Scores { get; set; }
+    public virtual Leaderboard? Leaderboard { get; set; }
+    public virtual ICollection<Prediction>? Predictions { get; set; }
 }

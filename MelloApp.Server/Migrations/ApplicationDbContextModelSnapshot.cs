@@ -230,7 +230,6 @@ namespace MelloApp.Server.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Location")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -508,8 +507,7 @@ namespace MelloApp.Server.Migrations
 
             modelBuilder.Entity("MelloApp.Server.Data.ApplicationUser", b =>
                 {
-                    b.Navigation("Leaderboard")
-                        .IsRequired();
+                    b.Navigation("Leaderboard");
 
                     b.Navigation("Predictions");
 

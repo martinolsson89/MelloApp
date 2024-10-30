@@ -12,9 +12,9 @@ public class SubCompetition
     public string Name { get; set; }
 
     public DateTime Date { get; set; }
-    public string Location { get; set; }
+    public string? Location { get; set; }
 
-    public virtual ICollection<Artist> Artists { get; set; }
-    public virtual ICollection<ResultOfSubCompetition> Results { get; set; }
-    public virtual ICollection<Prediction> Predictions { get; set; }
+    public virtual ICollection<Artist>? Artists { get; set; }
+    public virtual ICollection<ResultOfSubCompetition>? Results { get; set; }
+    public virtual ICollection<Prediction>? Predictions { get; set; }
 }

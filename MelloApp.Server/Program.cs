@@ -1,6 +1,9 @@
 
 using MelloApp.Server.Data;
+using MelloApp.Server.Interface;
+using MelloApp.Server.Mappings;
 using MelloApp.Server.Models;
+using MelloApp.Server.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +18,11 @@ namespace MelloApp.Server
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException();
             builder.Services.AddDbContext<ApplicationDbContext>(options => 
                 options.UseSqlServer(connectionString));
+
+            builder.Services.AddScoped<IRepository<SubCompetition>, SubCompetitionRepository>();
+
+            builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
+
 
             builder.Services.AddAuthorization();
 

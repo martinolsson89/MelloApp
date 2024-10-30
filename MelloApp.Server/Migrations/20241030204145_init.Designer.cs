@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MelloApp.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241029224724_init")]
+    [Migration("20241030204145_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -233,7 +233,6 @@ namespace MelloApp.Server.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Location")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -511,8 +510,7 @@ namespace MelloApp.Server.Migrations
 
             modelBuilder.Entity("MelloApp.Server.Data.ApplicationUser", b =>
                 {
-                    b.Navigation("Leaderboard")
-                        .IsRequired();
+                    b.Navigation("Leaderboard");
 
                     b.Navigation("Predictions");
 
