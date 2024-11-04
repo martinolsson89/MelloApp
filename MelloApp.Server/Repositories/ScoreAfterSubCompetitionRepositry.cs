@@ -5,22 +5,26 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MelloApp.Server.Repositories;
 
-public class ScoreAfterSubCompetitionRepositry : IRepository<ScoreAfterSubCompetition>
+public class ScoreAfterSubCompetitionRepository : IRepository<ScoreAfterSubCompetition>
 {
     private readonly ApplicationDbContext _context;
 
-    public ScoreAfterSubCompetitionRepositry(ApplicationDbContext context)
+    public ScoreAfterSubCompetitionRepository(ApplicationDbContext context)
     {
         _context = context;
     }
     public async Task<List<ScoreAfterSubCompetition>> GetAllAsync()
     {
-        return await _context.ScoresAfterSubCompetitions.ToListAsync();
+       var scores = await _context.ScoresAfterSubCompetitions.ToListAsync();
+
+       return scores;
     }
 
     public async Task<ScoreAfterSubCompetition?> GetByIdAsync(string id)
     {
-        return await _context.ScoresAfterSubCompetitions.FindAsync(id);
+        var score = await _context.ScoresAfterSubCompetitions.FindAsync(id);
+
+        return score;
     }
 
     public async Task<ScoreAfterSubCompetition> CreateAsync(ScoreAfterSubCompetition model)

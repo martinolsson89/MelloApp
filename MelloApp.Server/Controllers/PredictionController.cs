@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MelloApp.Server.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("/[controller]")]
     [ApiController]
     public class PredictionController : ControllerBase
     {

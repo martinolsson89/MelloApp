@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using MelloApp.Server.Data;
 using MelloApp.Server.Models;
+using MelloApp.Server.Models.Account;
 using MelloApp.Server.Models.Dto;
 
 namespace MelloApp.Server.Mappings;
@@ -39,6 +41,10 @@ public class AutoMapperProfiles : Profile
         CreateMap<ScoreAfterSubCompetition, AddScoreAfterSubCompetitionDto>().ReverseMap();
         CreateMap<ScoreAfterSubCompetition, UpdateScoreAfterSubCompetitionDto>().ReverseMap();
         CreateMap<ScoreAfterSubCompetition, DeleteScoreAfterSubCompetitionDto>().ReverseMap();
+
+        // ApplicationUser UserDto
+        CreateMap<ApplicationUser, UserDto>().ReverseMap();
+        
 
     }
 }

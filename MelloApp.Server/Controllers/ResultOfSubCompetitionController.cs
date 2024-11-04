@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MelloApp.Server.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("/[controller]")]
     [ApiController]
     public class ResultOfSubCompetitionController : ControllerBase
     {
@@ -98,6 +98,7 @@ namespace MelloApp.Server.Controllers
 
         // DELETE: /ResultOfSubCompetition/{id}
         [Authorize]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteResultOfSubCompetition(string id)
         {
             var resultOfSubCompetition = await _repository.DeleteAsync(id);

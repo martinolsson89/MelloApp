@@ -21,6 +21,12 @@ namespace MelloApp.Server
 
             builder.Services.AddScoped<IRepository<SubCompetition>, SubCompetitionRepository>();
             builder.Services.AddScoped<IRepository<Artist>, ArtistRepository>();
+            builder.Services.AddScoped<IRepository<ScoreAfterSubCompetition>, ScoreAfterSubCompetitionRepository>();
+            builder.Services.AddScoped<IRepository<ResultOfSubCompetition>, ResultOfSubCompetitionRepository>();
+            builder.Services.AddScoped<IRepository<Prediction>, PredictionRepository>();
+            builder.Services.AddScoped<IRepository<Leaderboard>, LeaderboardRepository>();
+            builder.Services.AddScoped<IRepository<ApplicationUser>, UserRepository>();
+
 
             builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
 
@@ -110,6 +116,39 @@ namespace MelloApp.Server
                     await userManager.AddToRoleAsync(user, "Admin");
                 }
             }
+
+            // Create six random users // POST: /Account/register
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+                string[] firstNames = ["Frida", "Lena", "Joakim", "Bjorn", "Eva", "Ove", "Rebecka"];
+
+                for (int i = 0; i < 6; i++)
+                {
+                    string firstName =$"{firstNames[i]}";
+                    string lastName = "User" + i;
+                    string email = $"{firstNames[i]}" + "@user.com";
+                    string password = "asdf12";
+
+                    if (await userManager.FindByEmailAsync(email) == null)
+                    {
+                        var user = new ApplicationUser
+                        {
+                            FirstName = firstName,
+                            LastName = lastName,
+                            Email = email,
+                            UserName = email
+                        };
+
+                        await userManager.CreateAsync(user, password);
+
+                        await userManager.AddToRoleAsync(user, "User");
+                    }
+                }
+            }
+
 
             app.Run();
         }

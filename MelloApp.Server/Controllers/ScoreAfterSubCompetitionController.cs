@@ -8,15 +8,15 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MelloApp.Server.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("/[controller]")]
     [ApiController]
-    public class ScoreAfterSubCompetition : ControllerBase
+    public class ScoreAfterSubCompetitionController : ControllerBase
     {
-        private readonly ILogger<ArtistsController> _logger;
+        private readonly ILogger<ScoreAfterSubCompetition> _logger;
         private readonly IMapper _mapper;
         private readonly IRepository<ScoreAfterSubCompetition> _repository;
 
-        public ScoreAfterSubCompetition(ILogger<ArtistsController> logger, IMapper mapper, IRepository<ScoreAfterSubCompetition> repository)
+        public ScoreAfterSubCompetitionController(ILogger<ScoreAfterSubCompetition> logger, IMapper mapper, IRepository<ScoreAfterSubCompetition> repository)
         {
             _logger = logger;
             _mapper = mapper;

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MelloApp.Server.Controllers
 {
-    [Route("[controller]")]
+    [Route("/[controller]")]
     [ApiController]
     public class ArtistsController : ControllerBase
     {
