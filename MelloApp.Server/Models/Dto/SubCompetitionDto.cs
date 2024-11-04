@@ -52,4 +52,7 @@ public class GetSubCompetitionDto
     public List<string>? ArtistIds { get; set; }
     public List<string>? ResultIds { get; set; }
     public List<string>? PredictionIds { get; set; }
+    public List<GetArtistDto>? Artists { get; set; } // Use a DTO for artist details
 }
+
+

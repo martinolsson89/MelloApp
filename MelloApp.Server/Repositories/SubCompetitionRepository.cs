@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MelloApp.Server.Repositories;
 
-public class SubCompetitionRepository : IRepository<SubCompetition>
+public class SubCompetitionRepository : ISubCompetitionRepository
 {
     private readonly ApplicationDbContext _context;
 
@@ -66,5 +66,14 @@ public class SubCompetitionRepository : IRepository<SubCompetition>
         await _context.SaveChangesAsync();
 
         return subCompetition;
+    }
+
+    public async Task<List<SubCompetition>> GetSubCompetitionsWithArtistsAsync()
+    {
+        var subCompetitions = await _context.SubCompetitions
+            .Include(sc => sc.Artists)
+            .ToListAsync();
+
+        return subCompetitions;
     }
 }

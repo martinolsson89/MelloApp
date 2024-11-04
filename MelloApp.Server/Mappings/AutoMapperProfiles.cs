@@ -20,6 +20,14 @@ public class AutoMapperProfiles : Profile
         CreateMap<SubCompetition, UpdateSubCompetitionDto>().ReverseMap();
         CreateMap<SubCompetition, DeleteSubCompetitionDto>().ReverseMap();
 
+        CreateMap<SubCompetition, GetSubCompetitionDto>()
+            .ForMember(dest => dest.Artists, opt => opt.MapFrom(src => src.Artists))
+            .ReverseMap();
+
+        CreateMap<Artist, GetArtistDto>().ReverseMap();
+
+
+
         CreateMap<Leaderboard, GetLeaderboardDto>().ReverseMap();
         CreateMap<Leaderboard, AddLeaderboardDto>().ReverseMap();
         CreateMap<Leaderboard, UpdateLeaderboardDto>().ReverseMap();

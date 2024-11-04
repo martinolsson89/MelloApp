@@ -17,7 +17,7 @@ public class Artist
     public int StartingNumber { get; set; }
 
     [Required]
-    public string? SubCompetitionId { get; set; } = Guid.NewGuid().ToString();
+    public string? SubCompetitionId { get; set; }
     public virtual SubCompetition? SubCompetition { get; set; }
 
     public virtual ICollection<Prediction>? Predictions { get; set; }

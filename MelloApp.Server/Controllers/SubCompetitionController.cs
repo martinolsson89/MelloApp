@@ -14,11 +14,11 @@ namespace MelloApp.Server.Controllers
     [ApiController]
     public class SubCompetitionController : ControllerBase
     {
-        private readonly IRepository<SubCompetition> _repository;
+        private readonly ISubCompetitionRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger<SubCompetitionController> _logger;
 
-        public SubCompetitionController(IRepository<SubCompetition> repository, ILogger<SubCompetitionController> logger, IMapper mapper)
+        public SubCompetitionController(ISubCompetitionRepository repository, ILogger<SubCompetitionController> logger, IMapper mapper)
         {
             _repository = repository;
             _logger = logger;
@@ -118,6 +118,18 @@ namespace MelloApp.Server.Controllers
             var subCompetitionResponse = _mapper.Map<GetSubCompetitionDto>(subCompetition);
 
             return Ok(subCompetitionResponse);
+        }
+
+        // GET: /SubCompetition/GetSubCompetitionsWithArtists
+        [Authorize]
+        [HttpGet("GetSubCompetitionsWithArtists")]
+        public async Task<IActionResult> GetSubCompetitionsWithArtists()
+        {
+            var subCompetitions = await _repository.GetSubCompetitionsWithArtistsAsync();
+
+            var subCompetitionsDto = _mapper.Map<List<GetSubCompetitionDto>>(subCompetitions);
+
+            return Ok(subCompetitionsDto);
         }
     }
 }
