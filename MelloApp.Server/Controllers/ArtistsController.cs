@@ -1,5 +1,8 @@
-﻿using MelloApp.Server.Data;
+﻿using AutoMapper;
+using MelloApp.Server.Data;
+using MelloApp.Server.Interface;
 using MelloApp.Server.Models;
+using MelloApp.Server.Models.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,13 +14,15 @@ namespace MelloApp.Server.Controllers
     [ApiController]
     public class ArtistsController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IRepository<Artist> _repository;
         private readonly ILogger<ArtistsController> _logger;
+        private readonly IMapper _mapper;
 
-        public ArtistsController(ApplicationDbContext context, ILogger<ArtistsController> logger)
+        public ArtistsController(IRepository<Artist> repository, ILogger<ArtistsController> logger, IMapper mapper)
         {
-            _context = context;
+            _repository = repository;
             _logger = logger;
+            _mapper = mapper;
         }
 
         // GET: /Artists
@@ -25,80 +30,88 @@ namespace MelloApp.Server.Controllers
         [HttpGet]
         public async Task<IActionResult> GetArtists()
         {
-            var artists = await _context.Artists.ToListAsync();
-            return Ok(artists);
+            var artists = await _repository.GetAllAsync();
+
+            var artistsDto = _mapper.Map<List<GetArtistDto>>(artists);
+
+            return Ok(artistsDto);
         }
 
         // GET: /Artists/{id}
         [Authorize]
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetArtist(int id)
+        public async Task<IActionResult> GetArtist(string id)
         {
-            var artist = await _context.Artists.FindAsync(id);
-            if (artist == null)
-            {
-                return NotFound();
-            }
-            return Ok(artist);
+            var artist = await _repository.GetByIdAsync(id);
+
+            var artistDto = _mapper.Map<GetArtistDto>(artist);
+
+            return Ok(artistDto);
         }
 
         // POST: /Artists
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<IActionResult> CreateArtist([FromBody] Artist model)
+        public async Task<IActionResult> CreateArtist([FromBody] AddArtistDto artistDto)
         {
-            var artist = new Artist
+            if (ModelState.IsValid)
             {
-                Name = model.Name,
-                Song = model.Song,
-                StartingNumber = model.StartingNumber,
-                SubCompetitionId = model.SubCompetitionId
-            };
+                var artist = _mapper.Map<Artist>(artistDto);
 
-            _context.Artists.AddAsync(artist);
-            await _context.SaveChangesAsync();
+                artist = await _repository.CreateAsync(artist);
 
-            return Ok(artist);
+                var artistResponse = _mapper.Map<GetArtistDto>(artist);
+
+                return CreatedAtAction(nameof(GetArtist), new { id = artist.Id }, artistResponse);
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
 
         }
 
         // PUT: /Artists/{id}
         [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateArtist(int id, [FromBody] Artist model)
+        public async Task<IActionResult> UpdateArtist(string id, [FromBody] UpdateArtistDto artistDto)
         {
-            var artist = await _context.Artists.FindAsync(id);
-
-            if (artist == null)
+            if(ModelState.IsValid)
             {
-                return NotFound();
+                var artist = _mapper.Map<Artist>(artistDto);
+
+                artist = await _repository.UpdateAsync(id, artist);
+
+                if (artist == null)
+                {
+                    return NotFound();
+                }
+
+                var artistResponse = _mapper.Map<GetArtistDto>(artist);
+
+                return Ok(artistResponse);
             }
-
-            artist.Name = model.Name;
-            artist.Song = model.Song;
-            artist.StartingNumber = model.StartingNumber;
-            artist.SubCompetitionId = model.SubCompetitionId;
-            await _context.SaveChangesAsync();
-
-            return Ok(artist);
+            else
+            {
+                return BadRequest(ModelState);
+            }
         }
 
         // DELETE: /Artists/{id}
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteArtist(int id)
+        public async Task<IActionResult> DeleteArtist(string id)
         {
-            var artist = await _context.Artists.FindAsync(id);
+            var artist = await _repository.DeleteAsync(id);
 
             if (artist == null)
             {
                 return NotFound();
             }
 
-            _context.Artists.Remove(artist);
-            await _context.SaveChangesAsync();
+            var artistResponse = _mapper.Map<GetArtistDto>(artist);
 
-            return Ok();
+            return Ok(artistResponse);
         }
     }
 }

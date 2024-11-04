@@ -8,13 +8,37 @@ public class AutoMapperProfiles : Profile
 {
     public AutoMapperProfiles()
     {
-        //CreateMap<Artist, ArtistDto.GetArtistDto>();
-        //CreateMap<Artist, ArtistDto.AddArtistDto>();
-        //CreateMap<Artist, ArtistDto.UpdateArtistDto>();
-        //CreateMap<ArtistDto.DeleteArtistDto, Artist>();
+        CreateMap<Artist, GetArtistDto>().ReverseMap();
+        CreateMap<Artist, AddArtistDto>().ReverseMap();
+        CreateMap<Artist, UpdateArtistDto>().ReverseMap();
+        CreateMap<Artist, DeleteArtistDto>().ReverseMap();
+
         CreateMap<SubCompetition, GetSubCompetitionDto>().ReverseMap();
         CreateMap<SubCompetition, AddSubCompetitionDto>().ReverseMap();
         CreateMap<SubCompetition, UpdateSubCompetitionDto>().ReverseMap();
         CreateMap<SubCompetition, DeleteSubCompetitionDto>().ReverseMap();
+
+        CreateMap<Leaderboard, GetLeaderboardDto>().ReverseMap();
+        CreateMap<Leaderboard, AddLeaderboardDto>().ReverseMap();
+        CreateMap<Leaderboard, UpdateLeaderboardDto>().ReverseMap();
+        CreateMap<Leaderboard, DeleteLeaderboardDto>().ReverseMap();
+
+        CreateMap<Prediction, GetPredictionDto>().ReverseMap();
+        CreateMap<Prediction, AddPredictionDto>().ReverseMap();
+        CreateMap<Prediction, UpdatePredictionDto>().ReverseMap();
+        CreateMap<Prediction, DeletePredictionDto>().ReverseMap();
+
+        // ResultOfSubCompetition
+        CreateMap<ResultOfSubCompetition, GetResultOfSubCompetitionDto>().ReverseMap();
+        CreateMap<ResultOfSubCompetition, AddResultOfSubCompetitionDto>().ReverseMap();
+        CreateMap<ResultOfSubCompetition, UpdateResultOfSubCompetitionDto>().ReverseMap();
+        CreateMap<ResultOfSubCompetition, DeleteResultOfSubCompetitionDto>().ReverseMap();
+
+        // ScoreAfterSubCompetition
+        CreateMap<ScoreAfterSubCompetition, GetScoreAfterSubCompetitionDto>().ReverseMap();
+        CreateMap<ScoreAfterSubCompetition, AddScoreAfterSubCompetitionDto>().ReverseMap();
+        CreateMap<ScoreAfterSubCompetition, UpdateScoreAfterSubCompetitionDto>().ReverseMap();
+        CreateMap<ScoreAfterSubCompetition, DeleteScoreAfterSubCompetitionDto>().ReverseMap();
+
     }
 }

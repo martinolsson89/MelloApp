@@ -47,4 +47,5 @@ public class GetArtistDto
     public string Song { get; set; }
     public int StartingNumber { get; set; }
     public string? SubCompetitionId { get; set; }
+    //public GetSubCompetitionDto? SubCompetition { get; set; }
 }

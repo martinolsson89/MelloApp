@@ -79,11 +79,13 @@ namespace MelloApp.Server.Controllers
         // PUT: /SubCompetition/{id}
         [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateSubCompetition(string id, [FromBody] SubCompetition model)
+        public async Task<IActionResult> UpdateSubCompetition(string id, [FromBody] UpdateSubCompetitionDto subCompetitionDto)
         {
             if (ModelState.IsValid)
             {
-                var subCompetition = await _repository.UpdateAsync(id, model);
+                var subCompetition = _mapper.Map<SubCompetition>(subCompetitionDto);
+
+                subCompetition = await _repository.UpdateAsync(id, subCompetition);
 
                 if (subCompetition == null)
                 {

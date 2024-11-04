@@ -24,6 +24,7 @@ public class SubCompetitionRepository : IRepository<SubCompetition>
     public async Task<SubCompetition?> GetByIdAsync(string id)
     {
         var subCompetition = await _context.SubCompetitions.FindAsync(id);
+
         return subCompetition;
     }
 

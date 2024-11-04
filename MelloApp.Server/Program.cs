@@ -20,6 +20,7 @@ namespace MelloApp.Server
                 options.UseSqlServer(connectionString));
 
             builder.Services.AddScoped<IRepository<SubCompetition>, SubCompetitionRepository>();
+            builder.Services.AddScoped<IRepository<Artist>, ArtistRepository>();
 
             builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
 
