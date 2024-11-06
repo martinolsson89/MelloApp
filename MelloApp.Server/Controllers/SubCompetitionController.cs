@@ -127,9 +127,81 @@ namespace MelloApp.Server.Controllers
         {
             var subCompetitions = await _repository.GetSubCompetitionsWithArtistsAsync();
 
-            var subCompetitionsDto = _mapper.Map<List<GetSubCompetitionDto>>(subCompetitions);
+            var subCompetitionsDto = _mapper.Map<List<GetSubCompetitionAndArtistsDto>>(subCompetitions);
 
             return Ok(subCompetitionsDto);
+        }
+
+        [Authorize]
+        [HttpGet("GetSubCompetitionWithArtist/{id}")]
+        public async Task<IActionResult> GetSubCompetitionWithArtist(string id)
+        {
+            var subCompetition = await _repository.GetSubCompetitionWithArtistAsync(id);
+
+            if (subCompetition == null)
+            {
+                return NotFound();
+            }
+
+            var subCompetitionDto = _mapper.Map<GetSubCompetitionAndArtistsDto>(subCompetition);
+
+            return Ok(subCompetitionDto);
+        }
+
+        // GET: /SubCompetition/GetSubCompetitionWitPrediction
+        [Authorize]
+        [HttpGet("GetSubCompetitionWitPrediction")]
+        public async Task<IActionResult> GetSubCompetitionWitPrediction()
+        {
+            var subCompetitions = await _repository.GetSubCompetitionWitPredictionAsync();
+
+            var subCompetitionsDto = _mapper.Map<List<GetSubCompetitionAndPredictionsDto>>(subCompetitions);
+
+            return Ok(subCompetitionsDto);
+        }
+
+        [Authorize]
+        [HttpGet("GetSubCompetitionWitPrediction/{id}")]
+        public async Task<IActionResult> GetSubCompetitionWitPrediction(string id)
+        {
+            var subCompetition = await _repository.GetSubCompetitionWitPredictionAsync(id);
+
+            if (subCompetition == null)
+            {
+                return NotFound();
+            }
+
+            var subCompetitionDto = _mapper.Map<GetSubCompetitionAndPredictionsDto>(subCompetition);
+
+            return Ok(subCompetitionDto);
+        }
+
+        // GET: /SubCompetition/GetSubCompetitionWithResult
+        [Authorize]
+        [HttpGet("GetSubCompetitionWithResult")]
+        public async Task<IActionResult> GetSubCompetitionWithResult()
+        {
+            var subCompetitions = await _repository.GetSubCompetitionWithResultAsync();
+
+            var subCompetitionsDto = _mapper.Map<List<GetSubCompetitionAndResultsDto>>(subCompetitions);
+
+            return Ok(subCompetitionsDto);
+        }
+
+        [Authorize]
+        [HttpGet("GetSubCompetitionWithResult/{id}")]
+        public async Task<IActionResult> GetSubCompetitionWithResult(string id)
+        {
+            var subCompetition = await _repository.GetSubCompetitionWithResultAsync(id);
+
+            if (subCompetition == null)
+            {
+                return NotFound();
+            }
+
+            var subCompetitionDto = _mapper.Map<GetSubCompetitionAndResultsDto>(subCompetition);
+
+            return Ok(subCompetitionDto);
         }
     }
 }

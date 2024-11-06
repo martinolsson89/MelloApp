@@ -14,14 +14,24 @@ public class UserRepository : IRepository<ApplicationUser>
     }
     public async Task<List<ApplicationUser>> GetAllAsync()
     {
-        var users = await _context.Users.ToListAsync();
+        var users = await _context.Users
+            .Include(u => u.Predictions)!
+            .ThenInclude(p => p.Artist)
+            .Include(u => u.Predictions)!
+            .ThenInclude(p => p.SubCompetition)
+            .ToListAsync();
 
         return users;
     }
 
     public async Task<ApplicationUser?> GetByIdAsync(string id)
     {
-        var user = await _context.Users.FindAsync(id);
+        var user = await _context.Users
+            .Include(u => u.Predictions)!
+            .ThenInclude(p => p.Artist)
+            .Include(u => u.Predictions)!
+            .ThenInclude(p => p.SubCompetition)
+            .FirstOrDefaultAsync(u => u.Id == id);
 
         return user;
     }

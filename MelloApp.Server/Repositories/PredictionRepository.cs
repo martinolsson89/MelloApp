@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MelloApp.Server.Repositories;
 
-public class PredictionRepository : IRepository<Prediction>
+public class PredictionRepository : IPredictionRepository
 {
     private readonly ApplicationDbContext _context;
 
@@ -67,4 +67,11 @@ public class PredictionRepository : IRepository<Prediction>
         return existingPrediction;
 
     }
+
+    public async Task CreateBatchAsync(IEnumerable<Prediction> predictions)
+    {
+        _context.Predictions.AddRange(predictions);
+        await _context.SaveChangesAsync();
+    }
+
 }

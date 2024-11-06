@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Security.Claims;
+using AutoMapper;
 using MelloApp.Server.Interface;
 using MelloApp.Server.Models;
 using MelloApp.Server.Models.Dto;
@@ -12,11 +13,11 @@ namespace MelloApp.Server.Controllers
     [ApiController]
     public class PredictionController : ControllerBase
     {
-        private readonly IRepository<Prediction> _repository;
+        private readonly IPredictionRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger<PredictionController> _logger;
 
-        public PredictionController(IRepository<Prediction> repository, ILogger<PredictionController> logger, IMapper mapper)
+        public PredictionController(IPredictionRepository repository, ILogger<PredictionController> logger, IMapper mapper)
         {
             _repository = repository;
             _logger = logger;
@@ -59,6 +60,15 @@ namespace MelloApp.Server.Controllers
         {
             if (ModelState.IsValid)
             {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Get the user ID of the logged-in user
+
+                if (string.IsNullOrEmpty(userId))
+                {
+                    return Unauthorized("User ID could not be determined. Please log in again.");
+                }
+
+                predictionDto.UserId = userId; // Assign the user ID to the predictionDto
+
                 var prediction = _mapper.Map<Prediction>(predictionDto);
 
                 prediction = await _repository.CreateAsync(prediction);
@@ -113,5 +123,44 @@ namespace MelloApp.Server.Controllers
 
             return Ok(predictionResponse);
         }
+
+        [Authorize]
+        [HttpPost("batch")]
+        public async Task<IActionResult> CreateBatchPredictions([FromBody] AddBatchPredictionDto batchPredictionDto)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized("User ID could not be determined. Please log in again.");
+            }
+
+            if (batchPredictionDto.Predictions == null || !batchPredictionDto.Predictions.Any())
+            {
+                return BadRequest("No predictions provided.");
+            }
+
+            var predictions = new List<Prediction>();
+            foreach (var predictionDto in batchPredictionDto.Predictions)
+            {
+                predictionDto.UserId = userId;
+                var prediction = _mapper.Map<Prediction>(predictionDto);
+                predictions.Add(prediction);
+            }
+
+            try
+            {
+                // Assuming your repository has a method for batch insert
+                await _repository.CreateBatchAsync(predictions);
+
+                var predictionResponses = predictions.Select(p => _mapper.Map<GetPredictionDto>(p)).ToList();
+                return Ok(predictionResponses);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while creating the predictions.");
+            }
+        }
+
     }
 }

@@ -35,3 +35,12 @@ public class GetResultOfSubCompetitionDto
     public string? SubCompetitionId { get; set; }
     
 }
+
+public class ResultOfSubCompetitionDto
+{
+    public string Id { get; set; }
+
+    public ArtistDto Artist { get; set; }
+    public int Placement { get; set; }
+    
+}

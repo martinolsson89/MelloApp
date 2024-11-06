@@ -40,19 +40,46 @@ public class DeleteSubCompetitionDto
     public string Id { get; set; }
 }
 
-
 public class GetSubCompetitionDto
+{
+    public string Name { get; set; }
+    public DateTime Date { get; set; }
+    public string? Location { get; set; }
+}
+
+
+public class GetSubCompetitionAndArtistsDto
 {
     public string Id { get; set; }
     public string Name { get; set; }
     public DateTime Date { get; set; }
     public string? Location { get; set; }
-
-    // Include related collections as lists of IDs or short info for reference if needed
-    public List<string>? ArtistIds { get; set; }
-    public List<string>? ResultIds { get; set; }
-    public List<string>? PredictionIds { get; set; }
     public List<GetArtistDto>? Artists { get; set; } // Use a DTO for artist details
+}
+
+public class GetSubCompetitionAndPredictionsDto
+{
+    public string Id { get; set; }
+    public string Name { get; set; }
+    public DateTime Date { get; set; }
+    public string? Location { get; set; }
+    public List<PredictionWithUserDto>? Predictions { get; set; } // Use a DTO for artist details
+}
+
+public class GetSubCompetitionAndResultsDto
+{
+    public string Id { get; set; }
+    public string Name { get; set; }
+    public DateTime Date { get; set; }
+    public string? Location { get; set; }
+    public List<ResultOfSubCompetitionDto>? Results { get; set; } // Use a DTO for artist details
+}
+
+public class SubCompetitionDto
+{
+    public string Name { get; set; }
+    public DateTime Date { get; set; }
+    public string? Location { get; set; }
 }
 
 
