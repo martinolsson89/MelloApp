@@ -59,7 +59,14 @@ namespace MelloApp.Server
             var app = builder.Build();
 
             app.UseDefaultFiles();
-            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                OnPrepareResponse = ctx =>
+                {
+                    ctx.Context.Response.Headers.Append("Content-Type", "text/html; charset=utf-8");
+                }
+            });
+
             app.MapIdentityApi<ApplicationUser>();
 
             // Configure the HTTP request pipeline.

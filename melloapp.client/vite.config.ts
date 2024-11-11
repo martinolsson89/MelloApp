@@ -46,6 +46,30 @@ export default defineConfig({
             '^/weatherforecast': {
                 target,
                 secure: false
+            },
+            '^/Account/pingauth': {
+                target: 'https://localhost:7263/',
+                secure: false
+            },
+            '^/Account/pingauthadmin': {
+                target: 'https://localhost:7263/',
+                secure: false
+            },
+            '^/Account/pingauthme': {
+                target: 'https://localhost:7263/',
+                secure: false
+            },
+            '^/Account/register': {
+                target: 'https://localhost:7263/',
+                secure: false
+            },
+            '^/login': {
+                target: 'https://localhost:7263/',
+                secure: false
+            },
+            '^/Account/logout': {
+                target: 'https://localhost:7263/',
+                secure: false
             }
         },
         port: 5173,
