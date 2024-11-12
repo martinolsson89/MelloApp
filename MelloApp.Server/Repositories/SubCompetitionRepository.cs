@@ -70,8 +70,8 @@ public class SubCompetitionRepository : ISubCompetitionRepository
 
     public async Task<List<SubCompetition>> GetSubCompetitionsWithArtistsAsync()
     {
-        var subCompetitions = await _context.SubCompetitions
-            .Include(sc => sc.Artists)
+        var subCompetitions = await _context.SubCompetitions.OrderBy(s=> s.Name)
+            .Include(sc => sc.Artists.OrderBy(a => a.StartingNumber))
             .ToListAsync();
 
         return subCompetitions;

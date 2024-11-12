@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { TextField, Typography, Button, Box, Alert } from '@mui/material';
 function Register() {
     // state variables for email and password
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -18,7 +20,13 @@ function Register() {
     // handle change events for input fields
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        if (name === 'email') {
+         if (name === 'firstName') {
+        setFirstName(value);
+        } 
+         else if (name === 'lastName') {
+        setLastName(value);
+        } 
+          else if (name === 'email') {
             setEmail(value);
         } else if (name === 'password') {
             setPassword(value);
@@ -31,9 +39,16 @@ function Register() {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         // validate email and password
-        if (!email || !password || !confirmPassword) {
-            setError('Please fill in all fields');
-        } else {
+        if (!firstName || !lastName || !email || !password || !confirmPassword) {
+            setError('Fyll i alla fält');
+        } else if (password !== confirmPassword) {
+            setError('Lösenorden matchar inte varandra');
+        } else if (password.length < 6) {
+            setError('Lösenordet måste vara minst 6 tecken långt');
+        } else if (!email.includes('@')) {
+            setError('Ogiltig email');
+        }
+        else {
             // clear error message
             setError('');
             // post data to the /register api
@@ -44,6 +59,8 @@ function Register() {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
+                    firstName: firstName,
+                    lastName: lastName,
                     email: email,
                     password: password
                 }),
@@ -73,6 +90,26 @@ function Register() {
                 Registrera ny användare
             </Typography>
             <form onSubmit={handleSubmit}>
+                <TextField
+                    fullWidth
+                    label="Förnamn"
+                    name="firstName"
+                    type="text"
+                    value={firstName}
+                    onChange={handleChange}
+                    margin="normal"
+                    required
+                />
+                <TextField
+                    fullWidth
+                    label="Efternamn"
+                    name="lastName"
+                    type="text"
+                    value={lastName}
+                    onChange={handleChange}
+                    margin="normal"
+                    required
+                />
                 <TextField
                     fullWidth
                     label="Email"

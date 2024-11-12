@@ -70,6 +70,14 @@ export default defineConfig({
             '^/Account/logout': {
                 target: 'https://localhost:7263/',
                 secure: false
+            },
+            '^/SubCompetition/GetSubCompetitionsWithArtists': {
+                target: 'https://localhost:7263/',
+                secure: false
+            },
+            '^/Prediction/batch': {
+                target: 'https://localhost:7263/',
+                secure: false
             }
         },
         port: 5173,

@@ -67,7 +67,10 @@ namespace MelloApp.Server.Controllers
         {
             var email = User.FindFirstValue(ClaimTypes.Email);
 
-            return Ok(new { Email = email});
+            return Ok(new
+            {
+                Email = email
+            });
         }
 
         // GET: /Account/pingauthadmin
@@ -106,7 +109,8 @@ namespace MelloApp.Server.Controllers
             {
                 UserId = user.Id,
                 Email = user.Email,
-                UserName = user.UserName
+                FirstName = user.FirstName,
+                LastName = user.LastName
                 // Include other non-sensitive user properties as needed
             });
         }
