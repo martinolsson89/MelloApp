@@ -10,6 +10,10 @@ public class ScoreAfterSubCompetition
     public int Points { get; set; }
 
     [Required]
-    public string? UserId { get; set; } = Guid.NewGuid().ToString();
+    public string? UserId { get; set; }
     public virtual ApplicationUser? User { get; set; }
+
+    [Required]
+    public string? SubCompetitionId { get; set; }
+    public virtual SubCompetition? SubCompetition { get; set; }
 }

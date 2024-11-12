@@ -16,10 +16,14 @@ public class Artist
 
     public int StartingNumber { get; set; }
 
+    [MaxLength(200)]
+    public string? ImageUrl { get; set; }
+
     [Required]
     public string? SubCompetitionId { get; set; }
     public virtual SubCompetition? SubCompetition { get; set; }
 
     public virtual ICollection<Prediction>? Predictions { get; set; }
     public virtual ICollection<ResultOfSubCompetition>? Results { get; set; }
+    public virtual ICollection<FinalPrediction>? FinalPredictions { get; set; }
 }

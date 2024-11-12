@@ -15,7 +15,11 @@ public class ApplicationUser : IdentityUser
     [MaxLength(50)]
     public string? LastName { get; set; }
 
+    [MaxLength(200)]
+    public string? AvatarImageUrl { get; set; }
+
     public virtual ICollection<ScoreAfterSubCompetition>? Scores { get; set; }
     public virtual Leaderboard? Leaderboard { get; set; }
     public virtual ICollection<Prediction>? Predictions { get; set; }
+    public virtual ICollection<FinalPrediction>? FinalPredictions { get; set; }
 }

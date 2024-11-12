@@ -1,11 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using MelloApp.Server.Data;
 using MelloApp.Server.Enums;
-using MelloApp.Server.Models;
 
 namespace MelloApp.Server.Models;
 
-public class Prediction
+public class FinalPrediction
 {
     public string Id { get; set; } = Guid.NewGuid().ToString();
 
@@ -17,9 +16,6 @@ public class Prediction
     public string ArtistId { get; set; } = Guid.NewGuid().ToString();
     public virtual Artist Artist { get; set; }
 
-    [Required]
-    public string SubCompetitionId { get; set; } = Guid.NewGuid().ToString();
-    public virtual SubCompetition SubCompetition { get; set; }
+    public eFinalPlacement FinalPlacement { get; set; }
 
-    public ePlacement PredictedPlacement { get; set; }
 }

@@ -30,6 +30,10 @@ namespace MelloApp.Server.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<string>("AvatarImageUrl")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -102,6 +106,10 @@ namespace MelloApp.Server.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("ImageUrl")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -124,6 +132,32 @@ namespace MelloApp.Server.Migrations
                     b.HasIndex("SubCompetitionId");
 
                     b.ToTable("Artists");
+                });
+
+            modelBuilder.Entity("MelloApp.Server.Models.FinalPrediction", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ArtistId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("FinalPlacement")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ArtistId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("FinalPredictions");
                 });
 
             modelBuilder.Entity("MelloApp.Server.Models.Leaderboard", b =>
@@ -155,8 +189,9 @@ namespace MelloApp.Server.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("PredictedPlacement")
-                        .HasColumnType("int");
+                    b.Property<string>("PredictedPlacement")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SubCompetitionId")
                         .IsRequired()
@@ -186,8 +221,9 @@ namespace MelloApp.Server.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("Placement")
-                        .HasColumnType("int");
+                    b.Property<string>("Placement")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SubCompetitionId")
                         .IsRequired()
@@ -210,11 +246,17 @@ namespace MelloApp.Server.Migrations
                     b.Property<int>("Points")
                         .HasColumnType("int");
 
+                    b.Property<string>("SubCompetitionId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("SubCompetitionId");
 
                     b.HasIndex("UserId");
 
@@ -386,6 +428,25 @@ namespace MelloApp.Server.Migrations
                     b.Navigation("SubCompetition");
                 });
 
+            modelBuilder.Entity("MelloApp.Server.Models.FinalPrediction", b =>
+                {
+                    b.HasOne("MelloApp.Server.Models.Artist", "Artist")
+                        .WithMany("FinalPredictions")
+                        .HasForeignKey("ArtistId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MelloApp.Server.Data.ApplicationUser", "User")
+                        .WithMany("FinalPredictions")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Artist");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("MelloApp.Server.Models.Leaderboard", b =>
                 {
                     b.HasOne("MelloApp.Server.Data.ApplicationUser", "User")
@@ -445,11 +506,19 @@ namespace MelloApp.Server.Migrations
 
             modelBuilder.Entity("MelloApp.Server.Models.ScoreAfterSubCompetition", b =>
                 {
+                    b.HasOne("MelloApp.Server.Models.SubCompetition", "SubCompetition")
+                        .WithMany("ScoresAfterSubCompetitions")
+                        .HasForeignKey("SubCompetitionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("MelloApp.Server.Data.ApplicationUser", "User")
                         .WithMany("Scores")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("SubCompetition");
 
                     b.Navigation("User");
                 });
@@ -507,6 +576,8 @@ namespace MelloApp.Server.Migrations
 
             modelBuilder.Entity("MelloApp.Server.Data.ApplicationUser", b =>
                 {
+                    b.Navigation("FinalPredictions");
+
                     b.Navigation("Leaderboard");
 
                     b.Navigation("Predictions");
@@ -516,6 +587,8 @@ namespace MelloApp.Server.Migrations
 
             modelBuilder.Entity("MelloApp.Server.Models.Artist", b =>
                 {
+                    b.Navigation("FinalPredictions");
+
                     b.Navigation("Predictions");
 
                     b.Navigation("Results");
@@ -528,6 +601,8 @@ namespace MelloApp.Server.Migrations
                     b.Navigation("Predictions");
 
                     b.Navigation("Results");
+
+                    b.Navigation("ScoresAfterSubCompetitions");
                 });
 #pragma warning restore 612, 618
         }

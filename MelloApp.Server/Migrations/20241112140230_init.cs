@@ -32,6 +32,7 @@ namespace MelloApp.Server.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    AvatarImageUrl = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -192,25 +193,6 @@ namespace MelloApp.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ScoresAfterSubCompetitions",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Points = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ScoresAfterSubCompetitions", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ScoresAfterSubCompetitions_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Artists",
                 columns: table => new
                 {
@@ -218,6 +200,7 @@ namespace MelloApp.Server.Migrations
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Song = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     StartingNumber = table.Column<int>(type: "int", nullable: false),
+                    ImageUrl = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     SubCompetitionId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
@@ -232,6 +215,58 @@ namespace MelloApp.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ScoresAfterSubCompetitions",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Points = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    SubCompetitionId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ScoresAfterSubCompetitions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ScoresAfterSubCompetitions_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ScoresAfterSubCompetitions_SubCompetitions_SubCompetitionId",
+                        column: x => x.SubCompetitionId,
+                        principalTable: "SubCompetitions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FinalPredictions",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ArtistId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    FinalPlacement = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FinalPredictions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_FinalPredictions_Artists_ArtistId",
+                        column: x => x.ArtistId,
+                        principalTable: "Artists",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_FinalPredictions_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Predictions",
                 columns: table => new
                 {
@@ -239,7 +274,7 @@ namespace MelloApp.Server.Migrations
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ArtistId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     SubCompetitionId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    PredictedPlacement = table.Column<int>(type: "int", nullable: false)
+                    PredictedPlacement = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -269,7 +304,7 @@ namespace MelloApp.Server.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Placement = table.Column<int>(type: "int", nullable: false),
+                    Placement = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ArtistId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     SubCompetitionId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
@@ -335,6 +370,16 @@ namespace MelloApp.Server.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_FinalPredictions_ArtistId",
+                table: "FinalPredictions",
+                column: "ArtistId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FinalPredictions_UserId",
+                table: "FinalPredictions",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Leaderboards_UserId",
                 table: "Leaderboards",
                 column: "UserId",
@@ -366,6 +411,11 @@ namespace MelloApp.Server.Migrations
                 column: "SubCompetitionId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ScoresAfterSubCompetitions_SubCompetitionId",
+                table: "ScoresAfterSubCompetitions",
+                column: "SubCompetitionId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ScoresAfterSubCompetitions_UserId",
                 table: "ScoresAfterSubCompetitions",
                 column: "UserId");
@@ -388,6 +438,9 @@ namespace MelloApp.Server.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "FinalPredictions");
 
             migrationBuilder.DropTable(
                 name: "Leaderboards");

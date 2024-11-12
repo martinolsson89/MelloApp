@@ -13,8 +13,9 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         public DbSet<ScoreAfterSubCompetition> ScoresAfterSubCompetitions { get; set; }
         public DbSet<Leaderboard> Leaderboards { get; set; }
         public DbSet<Prediction> Predictions { get; set; }
+        public DbSet<FinalPrediction> FinalPredictions { get; set; }
 
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) 
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) 
             : base(options)
         {
         }
@@ -74,6 +75,13 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
                 .HasForeignKey(s => s.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            // ScoreAfterSubCompetition -> SubCompetition (many-to-one)
+            modelBuilder.Entity<ScoreAfterSubCompetition>()
+                .HasOne(s => s.SubCompetition)
+                .WithMany(sc => sc.ScoresAfterSubCompetitions)
+                .HasForeignKey(s => s.SubCompetitionId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             // Leaderboard -> User (one-to-one)
             modelBuilder.Entity<Leaderboard>()
                 .HasOne(l => l.User)
@@ -81,8 +89,37 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
                 .HasForeignKey<Leaderboard>(l => l.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            // FinalPrediction -> User (many-to-one)
+            modelBuilder.Entity<FinalPrediction>()
+                .HasOne(fp => fp.User)
+                .WithMany(u => u.FinalPredictions)
+                .HasForeignKey(fp => fp.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // FinalPrediction -> Artist (many-to-one)
+            modelBuilder.Entity<FinalPrediction>()
+                .HasOne(fp => fp.Artist)
+                .WithMany(a => a.FinalPredictions)
+                .HasForeignKey(fp => fp.ArtistId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             // Add indexes to improve performance
             modelBuilder.Entity<Prediction>()
                 .HasIndex(p => new { p.UserId, p.SubCompetitionId });
-        }
+
+            // Configure Prediction.PredictedPlacement to store enum as string
+            modelBuilder.Entity<Prediction>()
+                .Property(p => p.PredictedPlacement)
+                .HasConversion<string>();
+
+            // Configure ResultOfSubCompetition.Placement to store enum as string
+            modelBuilder.Entity<ResultOfSubCompetition>()
+                .Property(r => r.Placement)
+                .HasConversion<string>();
+
+            // Configure FinalPrediction.PredictedPlacement to store enum as string
+            modelBuilder.Entity<FinalPrediction>()
+                .Property(fp => fp.FinalPlacement)
+                .HasConversion<string>();
+    }
 }
