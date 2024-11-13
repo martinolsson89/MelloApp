@@ -75,14 +75,14 @@ function Schedule() {
                             subheader={`${subCompetition.date} - ${subCompetition.location}`}
                         />
                         <CardContent>
-                            <Typography variant="h6">Artists:</Typography>
+                            <Typography variant="h6">Bidrag:</Typography>
                             <List>
                                 {subCompetition.artists.map((artist) => (
                                     <div key={artist.id}>
                                         <ListItem sx={{textAlign: 'center'}}>
                                             <ListItemText
-                                                primary={`${artist.startingNumber}. ${artist.name}`}
-                                                secondary={`Song: ${artist.song}`}
+                                                primary={`${artist.startingNumber}. ${artist.song}`}
+                                                secondary={`Artist: ${artist.name}`}
                                             />
                                         </ListItem>
                                         <Divider />

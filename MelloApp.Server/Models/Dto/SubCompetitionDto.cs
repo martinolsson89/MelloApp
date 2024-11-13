@@ -66,6 +66,15 @@ public class GetSubCompetitionAndPredictionsDto
     public List<PredictionWithUserDto>? Predictions { get; set; } // Use a DTO for artist details
 }
 
+public class GetSubCompetitionAndFinalPredictionsDto
+{
+    public string Id { get; set; }
+    public string Name { get; set; }
+    public DateTime Date { get; set; }
+    public string? Location { get; set; }
+    public List<GetFinalPredictionDtoWithUser>? FinalPredictions { get; set; } // Use a DTO for artist details
+}
+
 public class GetSubCompetitionAndResultsDto
 {
     public string Id { get; set; }

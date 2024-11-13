@@ -39,7 +39,8 @@ public class AutoMapperProfiles : Profile
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.User))
             .ForMember(dest => dest.Artist, opt => opt.MapFrom(src => src.Artist))
-            .ForMember(dest => dest.PredictedPlacement, opt => opt.MapFrom(src => src.PredictedPlacement));
+            .ForMember(dest => dest.PredictedPlacement, opt => opt.MapFrom(src => src.PredictedPlacement))
+            .ReverseMap();
 
         CreateMap<ResultOfSubCompetition, ResultOfSubCompetitionDto>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
@@ -82,8 +83,28 @@ public class AutoMapperProfiles : Profile
 
         // Map ApplicationUser to UserDto
         CreateMap<ApplicationUser, UserDto>()
-            .ForMember(dest => dest.Predictions, opt => opt.MapFrom(src => src.Predictions));
-        
+            .ForMember(dest => dest.Predictions, opt => opt.MapFrom(src => src.Predictions))
+            .ReverseMap();
+
+        // Map FinalPrediction to FinalPredictionDto
+        CreateMap<FinalPrediction, GetFinalPredictionDto>().ReverseMap();
+        CreateMap<FinalPrediction, AddFinalPredictionDto>().ReverseMap();
+        CreateMap<FinalPrediction, UpdateSubCompetitionDto>().ReverseMap();
+        CreateMap<FinalPrediction, DeleteFinalPredictionDto>().ReverseMap();
+
+        CreateMap<FinalPrediction, GetFinalPredictionDtoWithUser>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.User))
+            .ForMember(dest => dest.Artist, opt => opt.MapFrom(src => src.Artist))
+            .ForMember(dest => dest.FinalPlacement, opt => opt.MapFrom(src => src.FinalPlacement))
+            .ReverseMap();
+
+        CreateMap<FinalPrediction, FinalPredictionDto>()
+            .ForMember(dest => dest.Artist, opt => opt.MapFrom(src => src.Artist))
+            .ForMember(dest => dest.SubCompetition, opt => opt.MapFrom(src => src.SubCompetition))
+            .ReverseMap();
+
+        CreateMap<FinalPrediction, AddBatchFinalPredictionDto>().ReverseMap();
 
     }
 }

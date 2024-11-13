@@ -16,6 +16,10 @@ public class FinalPrediction
     public string ArtistId { get; set; } = Guid.NewGuid().ToString();
     public virtual Artist Artist { get; set; }
 
+    [Required]
+    public string SubCompetitionId { get; set; } = Guid.NewGuid().ToString();
+    public virtual SubCompetition SubCompetition { get; set; }
+
     public eFinalPlacement FinalPlacement { get; set; }
 
 }

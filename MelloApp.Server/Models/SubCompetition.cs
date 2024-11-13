@@ -16,6 +16,7 @@ public class SubCompetition
 
     public virtual ICollection<Artist>? Artists { get; set; }
     public virtual ICollection<Prediction>? Predictions { get; set; }
+    public virtual ICollection<FinalPrediction>? FinalPredictions { get; set; }
     public virtual ICollection<ResultOfSubCompetition>? Results { get; set; }
     public virtual ICollection<ScoreAfterSubCompetition>? ScoresAfterSubCompetitions { get; set; }
 }

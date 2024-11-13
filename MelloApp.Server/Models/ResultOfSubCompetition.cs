@@ -7,6 +7,7 @@ public class ResultOfSubCompetition
 {
     public string Id { get; set; } = Guid.NewGuid().ToString();
     public ePlacement Placement { get; set; }
+    public eFinalPlacement? FinalPlacement { get; set; }
 
     [Required]
     public string ArtistId { get; set; }

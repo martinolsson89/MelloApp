@@ -18,6 +18,8 @@ public class ApplicationUser : IdentityUser
     [MaxLength(200)]
     public string? AvatarImageUrl { get; set; }
 
+    public bool HasMadeBet { get; set; } = false;
+
     public virtual ICollection<ScoreAfterSubCompetition>? Scores { get; set; }
     public virtual Leaderboard? Leaderboard { get; set; }
     public virtual ICollection<Prediction>? Predictions { get; set; }

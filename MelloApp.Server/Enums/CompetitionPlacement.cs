@@ -6,7 +6,7 @@ public enum ePlacement
 {
     [Description("Final")] Final,
 
-    [Description("SemiFinal")] SemiFinal,
+    [Description("Finalkval")] FinalKval,
 
     [Description("Åker Ut")] ÅkerUt
 }

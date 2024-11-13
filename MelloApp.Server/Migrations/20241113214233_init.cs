@@ -33,6 +33,7 @@ namespace MelloApp.Server.Migrations
                     FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     AvatarImageUrl = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    HasMadeBet = table.Column<bool>(type: "bit", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -247,6 +248,7 @@ namespace MelloApp.Server.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ArtistId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    SubCompetitionId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     FinalPlacement = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -264,6 +266,12 @@ namespace MelloApp.Server.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_FinalPredictions_SubCompetitions_SubCompetitionId",
+                        column: x => x.SubCompetitionId,
+                        principalTable: "SubCompetitions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -305,6 +313,7 @@ namespace MelloApp.Server.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Placement = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FinalPlacement = table.Column<int>(type: "int", nullable: true),
                     ArtistId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     SubCompetitionId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
@@ -373,6 +382,11 @@ namespace MelloApp.Server.Migrations
                 name: "IX_FinalPredictions_ArtistId",
                 table: "FinalPredictions",
                 column: "ArtistId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FinalPredictions_SubCompetitionId",
+                table: "FinalPredictions",
+                column: "SubCompetitionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_FinalPredictions_UserId",

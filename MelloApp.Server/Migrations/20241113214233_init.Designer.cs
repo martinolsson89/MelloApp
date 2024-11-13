@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MelloApp.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241112140230_init")]
+    [Migration("20241113214233_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -52,6 +52,9 @@ namespace MelloApp.Server.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("HasMadeBet")
+                        .HasColumnType("bit");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -150,6 +153,10 @@ namespace MelloApp.Server.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("SubCompetitionId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -157,6 +164,8 @@ namespace MelloApp.Server.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ArtistId");
+
+                    b.HasIndex("SubCompetitionId");
 
                     b.HasIndex("UserId");
 
@@ -223,6 +232,9 @@ namespace MelloApp.Server.Migrations
                     b.Property<string>("ArtistId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<int?>("FinalPlacement")
+                        .HasColumnType("int");
 
                     b.Property<string>("Placement")
                         .IsRequired()
@@ -439,6 +451,12 @@ namespace MelloApp.Server.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("MelloApp.Server.Models.SubCompetition", "SubCompetition")
+                        .WithMany("FinalPredictions")
+                        .HasForeignKey("SubCompetitionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("MelloApp.Server.Data.ApplicationUser", "User")
                         .WithMany("FinalPredictions")
                         .HasForeignKey("UserId")
@@ -446,6 +464,8 @@ namespace MelloApp.Server.Migrations
                         .IsRequired();
 
                     b.Navigation("Artist");
+
+                    b.Navigation("SubCompetition");
 
                     b.Navigation("User");
                 });
@@ -600,6 +620,8 @@ namespace MelloApp.Server.Migrations
             modelBuilder.Entity("MelloApp.Server.Models.SubCompetition", b =>
                 {
                     b.Navigation("Artists");
+
+                    b.Navigation("FinalPredictions");
 
                     b.Navigation("Predictions");
 

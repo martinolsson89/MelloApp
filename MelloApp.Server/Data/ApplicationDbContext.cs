@@ -103,8 +103,15 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
                 .HasForeignKey(fp => fp.ArtistId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Add indexes to improve performance
-            modelBuilder.Entity<Prediction>()
+            //FinalPrediction -> SubCompetition (many-to-one)
+            modelBuilder.Entity<FinalPrediction>()
+                .HasOne(fp => fp.SubCompetition)
+                .WithMany(sc => sc.FinalPredictions)
+                .HasForeignKey(fp => fp.SubCompetitionId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+        // Add indexes to improve performance
+        modelBuilder.Entity<Prediction>()
                 .HasIndex(p => new { p.UserId, p.SubCompetitionId });
 
             // Configure Prediction.PredictedPlacement to store enum as string
