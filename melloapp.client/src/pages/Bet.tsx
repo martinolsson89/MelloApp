@@ -13,7 +13,7 @@ import {
     MenuItem,
     SelectChangeEvent,
     Button,
-    Alert
+    Alert,
 } from '@mui/material';
 import Navbar from '../components/Navbar';
 import AuthorizeView from '../components/AuthorizeView';
@@ -23,6 +23,12 @@ enum ePlacement {
     Final = 'Final',
     FinalKval = 'FinalKval',
     ÅkerUt = 'ÅkerUt',
+}
+
+// Define the eFinalPlacement enum
+enum eFinalPlacement {
+    Vinnare = 'Vinnare',
+    Tvåa = 'Tvåa',
 }
 
 // Define types for SubCompetition and Artist
@@ -49,6 +55,13 @@ interface Prediction {
     subCompetitionId: string;
 }
 
+interface FinalPrediction {
+    finalPlacement: eFinalPlacement;
+    userId: string;
+    artistId: string;
+    subCompetitionId: string;
+}
+
 interface User {
     userId: string;
     email: string;
@@ -58,7 +71,9 @@ interface User {
 
 function Bet() {
     const [subCompetitions, setSubCompetitions] = useState<SubCompetition[]>([]);
+    const [allArtists, setAllArtists] = useState<Artist[]>([]);
     const [predictions, setPredictions] = useState<{ [key: string]: ePlacement }>({});
+    const [finalPredictions, setFinalPredictions] = useState<{[key in eFinalPlacement]?: string;}>({});
 
     const emptyUser: User = { userId: '', email: '', firstName: '', lastName: '' };
     const [user, setUser] = useState(emptyUser);
@@ -87,6 +102,10 @@ function Bet() {
                 if (response.status === 200) {
                     let data = await response.json();
                     setSubCompetitions(data);
+
+                    // Extract all artists
+                    const artists = data.flatMap((sub: SubCompetition) => sub.artists);
+                    setAllArtists(artists);
                 } else {
                     throw new Error('Error fetching sub-competitions');
                 }
@@ -106,6 +125,16 @@ function Bet() {
         });
     };
 
+    const handleFinalPredictionChange = (
+        event: SelectChangeEvent<unknown>,
+        placement: eFinalPlacement
+    ) => {
+        setFinalPredictions({
+            ...finalPredictions,
+            [placement]: event.target.value as string,
+        });
+    };
+
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault();
 
@@ -119,12 +148,12 @@ function Bet() {
 
             // Check if all predictions are made for this sub-competition
             if (subPredictions.some((placement) => !placement)) {
-                setErrorMessage(`Lägg in gissningar på alla bidrag för ${subCompetition.name}.`);
+                setErrorMessage(`Please make a prediction for every artist in ${subCompetition.name}.`);
                 return;
             }
 
             // Count the number of predictions for each placement
-            const counts = {
+            const counts: { [key in ePlacement]: number } = {
                 [ePlacement.Final]: 0,
                 [ePlacement.FinalKval]: 0,
                 [ePlacement.ÅkerUt]: 0,
@@ -141,34 +170,61 @@ function Bet() {
                 counts[ePlacement.ÅkerUt] !== 2
             ) {
                 setErrorMessage(
-                    `För ${subCompetition.name}, måste du välja 2 artister för varje placering: Final, FinalKval, & Åker Ut.`
+                    `In ${subCompetition.name}, you must select exactly 2 artists for each placement: Final, FinalKval, and Åker Ut.`
                 );
                 return;
             }
         }
 
-        const userId = user.userId;
-
-        if (!userId) {
-            setErrorMessage('Går inte att verifiera användare, prova att logga ut och in.');
+        // Validation for final predictions
+        if (
+            !finalPredictions[eFinalPlacement.Vinnare] ||
+            !finalPredictions[eFinalPlacement.Tvåa]
+        ) {
+            setErrorMessage('Please select both the winner and the runner-up in the final.');
             return;
         }
 
+        if (
+            finalPredictions[eFinalPlacement.Vinnare] === finalPredictions[eFinalPlacement.Tvåa]
+        ) {
+            setErrorMessage('The winner and runner-up cannot be the same artist.');
+            return;
+        }
 
+        const userId = user.userId;
 
+        // Prepare payloads for predictions and final predictions
         const predictionPayload: { predictions: Prediction[] } = {
             predictions: Object.keys(predictions).map((artistId) => ({
-                predictedPlacement: predictions[artistId],
+                predictedPlacement: predictions[artistId] as string,
                 userId: userId,
                 artistId: artistId,
                 subCompetitionId:
-                    subCompetitions.find((sub) => sub.artists.some((artist) => artist.id === artistId))?.id ||
-                    '',
+                    subCompetitions.find((sub) =>
+                        sub.artists.some((artist) => artist.id === artistId)
+                    )?.id || '',
             })),
         };
 
+        const finalPredictionPayload: { predictions: FinalPrediction[] } = {
+            predictions: Object.keys(finalPredictions).map((placement) => {
+                const artistId = finalPredictions[placement as eFinalPlacement];
+                const subCompetitionId =
+                    allArtists.find((artist) => artist.id === artistId)?.subCompetitionId || '';
+
+                return {
+                    finalPlacement: placement as string,
+                    userId: userId,
+                    artistId: artistId!,
+                    subCompetitionId: subCompetitionId,
+                };
+            }),
+        };
+
         try {
-            const response = await fetch('/Prediction/batch', {
+            // Submit regular predictions
+            const predictionResponse = await fetch('/Prediction/batch', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -176,14 +232,25 @@ function Bet() {
                 body: JSON.stringify(predictionPayload),
             });
 
-            if (response.ok) {
-                alert('Predictions submitted successfully!');
+            // Submit final predictions
+            const finalPredictionResponse = await fetch('/FinalPrediction/batch', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(finalPredictionPayload),
+            });
+
+            if (predictionResponse.ok && finalPredictionResponse.ok) {
+                alert('All predictions submitted successfully!');
                 setPredictions({});
+                setFinalPredictions({});
             } else {
                 throw new Error('Failed to submit predictions');
             }
         } catch (error) {
             console.error(error);
+            setErrorMessage('An error occurred while submitting your predictions. Please try again.');
         }
     };
 
@@ -233,7 +300,9 @@ function Bet() {
                                                     sx={{
                                                         ml: 2,
                                                         width: 150,
-                                                        bgcolor: predictions[artist.id] ? 'inherit' : 'rgba(255, 0, 0, 0.1)',
+                                                        bgcolor: predictions[artist.id]
+                                                            ? 'inherit'
+                                                            : 'rgba(255, 0, 0, 0.1)',
                                                     }}
                                                 >
                                                     <MenuItem value="">
@@ -251,6 +320,55 @@ function Bet() {
                             </CardContent>
                         </Card>
                     ))}
+
+                    {/* Card for Winner Prediction */}
+                    <Card sx={{ mb: 4 }}>
+                        <CardHeader title="Vinnare i finalen" />
+                        <CardContent>
+                            <Select
+                                value={finalPredictions[eFinalPlacement.Vinnare] || ''}
+                                onChange={(e) =>
+                                    handleFinalPredictionChange(e, eFinalPlacement.Vinnare)
+                                }
+                                displayEmpty
+                                sx={{ width: '100%' }}
+                            >
+                                <MenuItem value="">
+                                    <em>Välj artist</em>
+                                </MenuItem>
+                                {allArtists.map((artist) => (
+                                    <MenuItem key={artist.id} value={artist.id}>
+                                        {artist.name} - {artist.song}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </CardContent>
+                    </Card>
+
+                    {/* Card for Runner-up Prediction */}
+                    <Card sx={{ mb: 4 }}>
+                        <CardHeader title="Tvåa i finalen" />
+                        <CardContent>
+                            <Select
+                                value={finalPredictions[eFinalPlacement.Tvåa] || ''}
+                                onChange={(e) =>
+                                    handleFinalPredictionChange(e, eFinalPlacement.Tvåa)
+                                }
+                                displayEmpty
+                                sx={{ width: '100%' }}
+                            >
+                                <MenuItem value="">
+                                    <em>Välj artist</em>
+                                </MenuItem>
+                                {allArtists.map((artist) => (
+                                    <MenuItem key={artist.id} value={artist.id}>
+                                        {artist.name} - {artist.song}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </CardContent>
+                    </Card>
+
                     <Button type="submit" variant="contained" color="primary">
                         Skicka in gissningarna
                     </Button>
@@ -258,9 +376,7 @@ function Bet() {
                 {/* Display error message if any */}
                 {errorMessage && (
                     <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-                        <Alert severity="error">
-                            {errorMessage}
-                        </Alert>
+                        <Alert severity="error">{errorMessage}</Alert>
                     </Box>
                 )}
             </Box>

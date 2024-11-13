@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using MelloApp.Server.Enums;
 using MelloApp.Server.Models.Account;
 
@@ -6,6 +7,7 @@ namespace MelloApp.Server.Models.Dto;
 
 public class AddPredictionDto
 {
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public ePlacement PredictedPlacement { get; set; }
     public string? UserId { get; set; }
 
@@ -19,6 +21,7 @@ public class UpdatePredictionDto
 {
     [Required]
     public string Id { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public ePlacement PredictedPlacement { get; set; }
     public string? UserId { get; set; }
 
@@ -36,6 +39,7 @@ public class DeletePredictionDto
 public class GetPredictionDto
 {
     public string Id { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public ePlacement PredictedPlacement { get; set; }
     public string? UserId { get; set; }
 
@@ -51,6 +55,7 @@ public class AddBatchPredictionDto
 
 public class PredictionDto
 {
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public ePlacement PredictedPlacement { get; set; }
 
     public string? ArtistId { get; set; }
@@ -70,6 +75,7 @@ public class PredictionWithUserDto
 
     public ArtistDto? Artist { get; set; }
 
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public ePlacement PredictedPlacement { get; set; }
     
 }

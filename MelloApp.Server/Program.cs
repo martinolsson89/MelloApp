@@ -1,4 +1,5 @@
 
+using System.Text.Json.Serialization;
 using MelloApp.Server.Data;
 using MelloApp.Server.Interface;
 using MelloApp.Server.Mappings;
@@ -49,6 +50,10 @@ namespace MelloApp.Server
 
             // Register SeedData service
             builder.Services.AddTransient<SeedData>();
+            builder.Services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
 
 
             // Add services to the container.

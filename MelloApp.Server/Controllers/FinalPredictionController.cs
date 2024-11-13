@@ -120,7 +120,7 @@ namespace MelloApp.Server.Controllers
         }
 
         // POST: /FinalPrediction/Batch
-        [HttpPost("Batch")]
+        [HttpPost("batch")]
         public async Task<IActionResult> CreateBatchFinalPrediction([FromBody] AddBatchFinalPredictionDto batchFinalPredictionDto)
         {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Get the user ID of the logged-in user

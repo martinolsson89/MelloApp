@@ -78,7 +78,11 @@ export default defineConfig({
             '^/Prediction/batch': {
                 target: 'https://localhost:7263/',
                 secure: false
-            }
+            },
+            '^/FinalPrediction/batch': {
+                target: 'https://localhost:7263/',
+                secure: false
+            },
         },
         port: 5173,
         https: {
