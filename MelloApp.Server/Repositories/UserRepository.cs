@@ -19,6 +19,7 @@ public class UserRepository : IRepository<ApplicationUser>
             .ThenInclude(p => p.Artist)
             .Include(u => u.Predictions)!
             .ThenInclude(p => p.SubCompetition)
+            .Include(u => u.FinalPredictions)
             .ToListAsync();
 
         return users;
@@ -27,14 +28,16 @@ public class UserRepository : IRepository<ApplicationUser>
     public async Task<ApplicationUser?> GetByIdAsync(string id)
     {
         var user = await _context.Users
-            .Include(u => u.Predictions)!
+            .Include(u => u.Predictions)
             .ThenInclude(p => p.Artist)
-            .Include(u => u.Predictions)!
+            .Include(u => u.Predictions)
             .ThenInclude(p => p.SubCompetition)
+            .Include(u => u.FinalPredictions)
             .FirstOrDefaultAsync(u => u.Id == id);
 
         return user;
     }
+
 
     public Task<ApplicationUser> CreateAsync(ApplicationUser model)
     {

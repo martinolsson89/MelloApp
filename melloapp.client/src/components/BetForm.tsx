@@ -110,7 +110,7 @@ function BetForm({ subCompetitions, allArtists, user, onBetSubmitted }: BetFormP
 
       // Check if all predictions are made for this sub-competition
       if (subPredictions.some((placement) => !placement)) {
-        setErrorMessage(`Välje en placering för varje artist i ${subCompetition.name}.`);
+        setErrorMessage(`Du har missat att välja en placering för varje artist i ${subCompetition.name}.`);
         return;
       }
 
@@ -218,10 +218,10 @@ function BetForm({ subCompetitions, allArtists, user, onBetSubmitted }: BetFormP
                 setFinalPredictions({});
                 onBetSubmitted(); // Correct reference
             } else {
-                throw new Error('Failed to update bet status');
+                throw new Error('Misslyckades att uppdatera tips status');
             }
       } else {
-        throw new Error('Failed to submit predictions');
+        throw new Error('Misslyckades att skicka tips');
       }
     } catch (error) {
       console.error(error);
@@ -236,17 +236,17 @@ function BetForm({ subCompetitions, allArtists, user, onBetSubmitted }: BetFormP
           <Card key={subCompetition.id} sx={{ mb: 4 }}>
             <CardHeader
               title={subCompetition.name}
-              subheader={`${subCompetition.date} - ${subCompetition.location}`}
+              subheader={`${new Date(subCompetition.date).toISOString().replace('T', ' ').slice(0, 11) } - ${subCompetition.location}`}
             />
             <CardContent>
-              <Typography variant="h6">Artists:</Typography>
+              <Typography variant="h6">Bidrag:</Typography>
               <List>
                 {subCompetition.artists.map((artist) => (
                   <div key={artist.id}>
                     <ListItem sx={{ display: 'flex', alignItems: 'center' }}>
                       <ListItemText
-                        primary={`${artist.startingNumber}. ${artist.name}`}
-                        secondary={`Song: ${artist.song}`}
+                        primary={`${artist.startingNumber}. ${artist.song}`}
+                        secondary={`Artist: ${artist.name}`}
                       />
                       <Select
                         value={predictions[artist.id] || ''}
@@ -319,17 +319,16 @@ function BetForm({ subCompetitions, allArtists, user, onBetSubmitted }: BetFormP
             </Select>
           </CardContent>
         </Card>
-
+        {/* Display error message if any */}
+         {errorMessage && (
+            <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
+                <Alert severity="error">{errorMessage}</Alert>
+            </Box>
+         )}
         <Button type="submit" variant="contained" color="primary">
-          Skicka in gissningarna
+          Skicka in tips
         </Button>
           </form>
-          {/* Display error message if any */}
-          {errorMessage && (
-              <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-                  <Alert severity="error">{errorMessage}</Alert>
-              </Box>
-          )}
     </>
   );
 }

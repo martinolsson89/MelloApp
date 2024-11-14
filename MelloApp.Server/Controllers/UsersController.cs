@@ -5,6 +5,8 @@ using MelloApp.Server.Models.Account;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace MelloApp.Server.Controllers
 {
@@ -47,6 +49,27 @@ namespace MelloApp.Server.Controllers
                 return NotFound();
             }
 
+            var userDto = _mapper.Map<UserDto>(user);
+
+            return Ok(userDto);
+        }
+
+        // GET: /getUserInfo
+        [HttpGet("getUserInfo")]
+        [Authorize]
+        public async Task<IActionResult> GetUser()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Get the user from the database
+            var user = await _repository.GetByIdAsync(userId);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // Map the user entity to a DTO
             var userDto = _mapper.Map<UserDto>(user);
 
             return Ok(userDto);

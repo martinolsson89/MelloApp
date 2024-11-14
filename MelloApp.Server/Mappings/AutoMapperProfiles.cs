@@ -86,6 +86,12 @@ public class AutoMapperProfiles : Profile
             .ForMember(dest => dest.Predictions, opt => opt.MapFrom(src => src.Predictions))
             .ReverseMap();
 
+        // Map ApplicationUser to UserDto
+        CreateMap<ApplicationUser, UserDto>()
+            .ForMember(dest => dest.Predictions, opt => opt.MapFrom(src => src.Predictions))
+            .ForMember(dest => dest.FinalPredictions, opt => opt.MapFrom(src => src.FinalPredictions))
+            .ReverseMap();
+
         // Map FinalPrediction to FinalPredictionDto
         CreateMap<FinalPrediction, GetFinalPredictionDto>().ReverseMap();
         CreateMap<FinalPrediction, AddFinalPredictionDto>().ReverseMap();

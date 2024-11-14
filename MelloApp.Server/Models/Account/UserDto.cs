@@ -10,8 +10,8 @@ public class UserDto
     public string Email { get; set; }
     public string? AvatarImageUrl { get; set; }
     public bool HasMadeBet { get; set; } = false;
-
     public List<PredictionDto> Predictions { get; set; } = new List<PredictionDto>();
+    public List<FinalPredictionDto> FinalPredictions { get; set; } = new List<FinalPredictionDto>();
 
 }
 

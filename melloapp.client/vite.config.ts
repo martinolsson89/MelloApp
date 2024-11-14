@@ -87,6 +87,10 @@ export default defineConfig({
                 target: 'https://localhost:7263/',
                 secure: false
             },
+             '^/Users/getUserInfo': {
+                target: 'https://localhost:7263/',
+                secure: false
+            },
         },
         port: 5173,
         https: {

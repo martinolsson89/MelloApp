@@ -1,10 +1,13 @@
-﻿import { useState, useEffect } from 'react';
+﻿// Bet.tsx
+
+import { useState, useEffect } from 'react';
 import { Typography, Box } from '@mui/material';
 import Navbar from '../components/Navbar';
 import AuthorizeView from '../components/AuthorizeView';
-import BetForm from '../components/BetForm'; // Import the new component
+import BetForm from '../components/BetForm';
+import BetReceipt from '../components/BetReceipt';
 
-// Define types for SubCompetition, Artist, and User
+// Define types for SubCompetition, Artist, and UserDto
 interface Artist {
     id: string;
     name: string;
@@ -21,45 +24,58 @@ interface SubCompetition {
     artists: Artist[];
 }
 
-interface User {
-    userId: string;
+interface PredictionDto {
+    predictedPlacement: string;
+    artistId: string;
+    artist: Artist;
+    subCompetitionId: string;
+    subCompetition: SubCompetition;
+}
+
+interface FinalPredictionDto {
+    finalPlacement: string;
+    artistId: string;
+    artist: Artist;
+    subCompetitionId: string;
+    subCompetition: SubCompetition;
+}
+
+interface UserDto {
+    id: string;
     email: string;
     firstName: string;
     lastName: string;
     hasMadeBet: boolean;
+    predictions: PredictionDto[];
+    finalPredictions: FinalPredictionDto[];
 }
 
 function Bet() {
     const [subCompetitions, setSubCompetitions] = useState<SubCompetition[]>([]);
     const [allArtists, setAllArtists] = useState<Artist[]>([]);
-    const emptyUser: User = { userId: '', email: '', firstName: '', lastName: '', hasMadeBet: false };
-    const [user, setUser] = useState(emptyUser);
+    const [userData, setUserData] = useState<UserDto | null>(null);
     const [hasBet, setHasBet] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
-
+    const [randomSentence, setRandomSentence] = useState('');
 
     useEffect(() => {
-        // Fetch data from the backend
-        async function fetchUserId() {
+        // Fetch all data from the backend
+        async function fetchData() {
             try {
-                let response = await fetch('/Account/pingauthme');
-                if (response.status === 200) {
-                    let data = await response.json();
-                    setUser(data);
+                // Fetch user data with predictions
+                const userResponse = await fetch('/Users/getUserInfo');
+                if (userResponse.ok) {
+                    const data: UserDto = await userResponse.json();
+                    setUserData(data);
                     setHasBet(data.hasMadeBet);
                 } else {
                     throw new Error('Error fetching user data');
                 }
-            } catch (error) {
-                console.error(error);
-            }
-        }
 
-        async function fetchSubCompetitions() {
-            try {
-                let response = await fetch('/SubCompetition/GetSubCompetitionsWithArtists');
-                if (response.status === 200) {
-                    let data = await response.json();
+                // Fetch sub-competitions and artists
+                const subCompetitionsResponse = await fetch('/SubCompetition/GetSubCompetitionsWithArtists');
+                if (subCompetitionsResponse.ok) {
+                    const data: SubCompetition[] = await subCompetitionsResponse.json();
                     setSubCompetitions(data);
 
                     // Extract all artists
@@ -68,6 +84,10 @@ function Bet() {
                 } else {
                     throw new Error('Error fetching sub-competitions');
                 }
+
+                // Generate random sentence
+                GenerateSentences();
+
                 setIsLoading(false);
             } catch (error) {
                 console.error(error);
@@ -75,9 +95,19 @@ function Bet() {
             }
         }
 
-        fetchUserId();
-        fetchSubCompetitions();
+        function GenerateSentences() {
+            const sentences = [
+                'Hur många poäng får du i år ',
+                'Är det i år du vinner släktkampen ',
+                'Blir du årets Mellodiva ',
+            ];
 
+            const randomIndex = Math.floor(Math.random() * sentences.length);
+
+            setRandomSentence(sentences[randomIndex]);
+        }
+
+        fetchData();
     }, []);
 
     return (
@@ -94,26 +124,31 @@ function Bet() {
                     borderRadius: 2,
                     bgcolor: 'rgba(255, 255, 255, 0.7)',
                 }}
-            >   {isLoading ? (
-                <Typography variant="h6">Laddar...</Typography>
-                ) : hasBet ? ( <Typography variant="h6">Ditt tips är inskickat och registrerat.</Typography>
+            >
+                {isLoading ? (
+                    <Typography variant="h6">Laddar...</Typography>
+                ) : hasBet ? (
+                    <>
+                        <BetReceipt userData={userData} />
+                    </>
                 ) : (
-                <>
-                <Typography variant="h4" gutterBottom>
-                    Här fyller du i ditt tips för Melodifestivalen 2025.
-                </Typography>
-                <Typography variant="subtitle1" sx={{ mb: 3 }}>
-                    Hur många poäng får du i år {user.firstName}?
-                </Typography>
+                    <>
+                        <Typography variant="h4" gutterBottom>
+                            Här fyller du i ditt tips!
+                        </Typography>
+                        <Typography variant="subtitle1" sx={{ mb: 3 }}>
+                            {randomSentence}
+                            {userData?.firstName}?
+                        </Typography>
 
-                {/* Pass the necessary props to BetForm */}
-                <BetForm
-                    subCompetitions={subCompetitions}
-                    allArtists={allArtists}
-                    user={user}
-                    onBetSubmitted={() => setHasBet(true) }
-                />
-                </>
+                        {/* Pass the necessary props to BetForm */}
+                        <BetForm
+                            subCompetitions={subCompetitions}
+                            allArtists={allArtists}
+                            user={userData}
+                            onBetSubmitted={() => setHasBet(true)}
+                        />
+                    </>
                 )}
             </Box>
         </AuthorizeView>
