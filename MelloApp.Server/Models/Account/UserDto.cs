@@ -8,7 +8,21 @@ public class UserDto
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string Email { get; set; }
+    public string? AvatarImageUrl { get; set; }
+    public bool HasMadeBet { get; set; } = false;
 
     public List<PredictionDto> Predictions { get; set; } = new List<PredictionDto>();
+
+}
+
+public class UpdateBetUserDto
+{
+    public bool HasMadeBet { get; set; } = false;
+}
+
+public class UpdateUserDto
+{
+    public string? AvatarImageUrl { get; set; }
+    public bool HasMadeBet { get; set; } = false;
 
 }

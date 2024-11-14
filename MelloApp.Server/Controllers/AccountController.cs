@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using AutoMapper;
 using MelloApp.Server.Models.Account;
 
 namespace MelloApp.Server.Controllers
@@ -15,13 +16,16 @@ namespace MelloApp.Server.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager)
+            SignInManager<ApplicationUser> signInManager,
+            IMapper mapper)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _mapper = mapper;
         }
 
         // POST: /Account/register
@@ -110,9 +114,78 @@ namespace MelloApp.Server.Controllers
                 UserId = user.Id,
                 Email = user.Email,
                 FirstName = user.FirstName,
-                LastName = user.LastName
+                LastName = user.LastName,
+                HasMadeBet = user.HasMadeBet
                 // Include other non-sensitive user properties as needed
             });
+        }
+
+        // PUT: /Account/updateBet
+        [HttpPut("updateBet")]
+        [Authorize]
+        public async Task<IActionResult> UpdateBet([FromBody] UpdateBetUserDto model)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Get the user from the database
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            user.HasMadeBet = model.HasMadeBet;
+
+            // Save the changes
+            var result = await _userManager.UpdateAsync(user);
+
+            if (result.Succeeded)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest(result.Errors);
+            }
+        }
+
+        // PUT: /Account/updateBet
+        [HttpPut("update")]
+        [Authorize]
+        public async Task<IActionResult> Update(string id, [FromBody] UpdateUserDto model)
+        {
+            // Validate the model
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // Get the user from the database
+            var user = await _userManager.FindByIdAsync(id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // Map only the allowed properties from the model to the user entity
+            user.AvatarImageUrl = model.AvatarImageUrl;
+            user.HasMadeBet = model.HasMadeBet;
+            // Add other properties as needed, ensuring they are safe to update
+
+            // Save the changes
+            var result = await _userManager.UpdateAsync(user);
+
+            if (result.Succeeded)
+            {
+                return Ok();
+            }
+            else
+            {
+                // Return validation errors to the client
+                return BadRequest(result.Errors);
+            }
         }
     }
 }

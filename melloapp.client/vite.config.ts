@@ -83,6 +83,10 @@ export default defineConfig({
                 target: 'https://localhost:7263/',
                 secure: false
             },
+            '^/Account/updateBet': {
+                target: 'https://localhost:7263/',
+                secure: false
+            },
         },
         port: 5173,
         https: {
