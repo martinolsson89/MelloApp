@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using MelloApp.Server.Data;
+using MelloApp.Server.Models.Account;
 
 namespace MelloApp.Server.Models.Dto;
 
@@ -8,7 +9,7 @@ public class GetLeaderboardDto
     public string Id { get; set; }
     public int Points { get; set; }
     public string UserId { get; set; }
-    public string UserName { get; set; } // Include User details if needed
+    public GetUserDto User { get; set; }
 }
 
 public class AddLeaderboardDto

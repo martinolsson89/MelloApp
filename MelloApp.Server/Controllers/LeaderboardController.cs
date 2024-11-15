@@ -29,7 +29,7 @@ namespace MelloApp.Server.Controllers
         {
             var leaderboards = await _repository.GetAllAsync();
 
-            var leaderboardsDto = _mapper.Map<List<Leaderboard>>(leaderboards);
+            var leaderboardsDto = _mapper.Map<List<GetLeaderboardDto>>(leaderboards);
 
             return Ok(leaderboardsDto);
         }

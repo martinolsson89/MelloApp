@@ -91,6 +91,14 @@ export default defineConfig({
                 target: 'https://localhost:7263/',
                 secure: false
             },
+            '^/Account/updateAvatar': {
+                target: 'https://localhost:7263/',
+                secure: false
+            },
+            '^/Leaderboard': {
+                target: 'https://localhost:7263/',
+                secure: false
+            },
         },
         port: 5173,
         https: {

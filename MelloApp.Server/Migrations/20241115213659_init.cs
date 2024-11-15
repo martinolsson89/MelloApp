@@ -32,7 +32,7 @@ namespace MelloApp.Server.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    AvatarImageUrl = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    AvatarImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     HasMadeBet = table.Column<bool>(type: "bit", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),

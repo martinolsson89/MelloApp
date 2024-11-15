@@ -58,57 +58,69 @@ function Bet() {
     const [isLoading, setIsLoading] = useState(true);
     const [randomSentence, setRandomSentence] = useState('');
 
-    useEffect(() => {
-        // Fetch all data from the backend
-        async function fetchData() {
-            try {
-                // Fetch user data with predictions
-                const userResponse = await fetch('/Users/getUserInfo');
-                if (userResponse.ok) {
-                    const data: UserDto = await userResponse.json();
-                    setUserData(data);
-                    setHasBet(data.hasMadeBet);
-                } else {
-                    throw new Error('Error fetching user data');
-                }
-
-                // Fetch sub-competitions and artists
-                const subCompetitionsResponse = await fetch('/SubCompetition/GetSubCompetitionsWithArtists');
-                if (subCompetitionsResponse.ok) {
-                    const data: SubCompetition[] = await subCompetitionsResponse.json();
-                    setSubCompetitions(data);
-
-                    // Extract all artists
-                    const artists = data.flatMap((sub: SubCompetition) => sub.artists);
-                    setAllArtists(artists);
-                } else {
-                    throw new Error('Error fetching sub-competitions');
-                }
-
-                // Generate random sentence
-                GenerateSentences();
-
-                setIsLoading(false);
-            } catch (error) {
-                console.error(error);
-                setIsLoading(false);
+    // Move data fetching functions outside of useEffect
+    async function fetchUserData() {
+        try {
+            const userResponse = await fetch('/Users/getUserInfo');
+            if (userResponse.ok) {
+                const data: UserDto = await userResponse.json();
+                setUserData(data);
+                setHasBet(data.hasMadeBet);
+            } else {
+                throw new Error('Error fetching user data');
             }
+        } catch (error) {
+            console.error(error);
         }
+    }
 
-        function GenerateSentences() {
-            const sentences = [
-                'Hur många poäng får du i år ',
-                'Är det i år du vinner släktkampen ',
-                'Blir du årets Mellodiva ',
-            ];
+    async function fetchSubCompetitions() {
+        try {
+            const subCompetitionsResponse = await fetch('/SubCompetition/GetSubCompetitionsWithArtists');
+            if (subCompetitionsResponse.ok) {
+                const data: SubCompetition[] = await subCompetitionsResponse.json();
+                setSubCompetitions(data);
 
-            const randomIndex = Math.floor(Math.random() * sentences.length);
+                // Extract all artists
+                const artists = data.flatMap((sub: SubCompetition) => sub.artists);
+                setAllArtists(artists);
+            } else {
+                throw new Error('Error fetching sub-competitions');
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
-            setRandomSentence(sentences[randomIndex]);
+    function GenerateSentences() {
+        const sentences = [
+            'Hur många poäng får du i år ',
+            'Är det i år du vinner släktkampen ',
+            'Blir du årets Mellodiva ',
+        ];
+
+        const randomIndex = Math.floor(Math.random() * sentences.length);
+
+        setRandomSentence(sentences[randomIndex]);
+    }
+    useEffect(() => {
+        async function fetchData() {
+            setIsLoading(true);
+            await fetchUserData();
+            await fetchSubCompetitions();
+            GenerateSentences();
+            setIsLoading(false);
         }
 
         fetchData();
     }, []);
+
+    // Handle bet submission
+    const handleBetSubmitted = async () => {
+        setIsLoading(true);
+        await fetchUserData(); // Re-fetch user data to get the latest predictions
+        setIsLoading(false);
+    };
 
     return (
         <AuthorizeView>
@@ -146,7 +158,7 @@ function Bet() {
                             subCompetitions={subCompetitions}
                             allArtists={allArtists}
                             user={userData}
-                            onBetSubmitted={() => setHasBet(true)}
+                            onBetSubmitted={handleBetSubmitted}
                         />
                     </>
                 )}

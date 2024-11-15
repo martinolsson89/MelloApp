@@ -1,9 +1,8 @@
 ﻿import { useState } from 'react';
-import { AppBar, Toolbar, Typography, Button, Box, IconButton, Menu, MenuItem, Avatar } from '@mui/material';
+import { AppBar, Toolbar, Typography, Button, Box, IconButton, Menu, MenuItem } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useNavigate } from 'react-router-dom';
 import LogoutLink from './LogoutLink';
-import leoAvatar from '../assets/avatar/leo.jpg'; 
 
 
 function Navbar() {
@@ -45,7 +44,6 @@ function Navbar() {
                           {item.label}
                       </Button>
                   ))}
-                  <Avatar alt="Remy Sharp" src={leoAvatar} />
                   <LogoutLink>
                       <Button color="inherit">Logga ut</Button>
                   </LogoutLink>

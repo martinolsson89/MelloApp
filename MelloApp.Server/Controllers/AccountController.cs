@@ -115,7 +115,8 @@ namespace MelloApp.Server.Controllers
                 Email = user.Email,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                HasMadeBet = user.HasMadeBet
+                HasMadeBet = user.HasMadeBet,
+                AvatarImageUrl = user.AvatarImageUrl
                 // Include other non-sensitive user properties as needed
             });
         }
@@ -172,6 +173,39 @@ namespace MelloApp.Server.Controllers
             // Map only the allowed properties from the model to the user entity
             user.AvatarImageUrl = model.AvatarImageUrl;
             user.HasMadeBet = model.HasMadeBet;
+            // Add other properties as needed, ensuring they are safe to update
+
+            // Save the changes
+            var result = await _userManager.UpdateAsync(user);
+
+            if (result.Succeeded)
+            {
+                return Ok();
+            }
+            else
+            {
+                // Return validation errors to the client
+                return BadRequest(result.Errors);
+            }
+        }
+
+        // PUT: /Account/updateAvatar
+        [HttpPut("updateAvatar")]
+        [Authorize]
+        public async Task<IActionResult> Update([FromBody] UpdateAvatarDto model)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Get the user from the database
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // Map only the allowed properties from the model to the user entity
+            user.AvatarImageUrl = model.AvatarImageUrl;
             // Add other properties as needed, ensuring they are safe to update
 
             // Save the changes

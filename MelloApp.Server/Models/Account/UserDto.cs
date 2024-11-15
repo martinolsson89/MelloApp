@@ -14,6 +14,15 @@ public class UserDto
     public List<FinalPredictionDto> FinalPredictions { get; set; } = new List<FinalPredictionDto>();
 
 }
+public class GetUserDto
+{
+    public string Id { get; set; }
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public string? AvatarImageUrl { get; set; }
+    public bool HasMadeBet { get; set; } = false;
+    
+}
 
 public class UpdateBetUserDto
 {
@@ -25,4 +34,9 @@ public class UpdateUserDto
     public string? AvatarImageUrl { get; set; }
     public bool HasMadeBet { get; set; } = false;
 
+}
+
+public class UpdateAvatarDto
+{
+    public string? AvatarImageUrl { get; set; }
 }

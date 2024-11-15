@@ -31,8 +31,7 @@ namespace MelloApp.Server.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("AvatarImageUrl")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()

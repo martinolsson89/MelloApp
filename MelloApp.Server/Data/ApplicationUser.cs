@@ -15,7 +15,6 @@ public class ApplicationUser : IdentityUser
     [MaxLength(50)]
     public string? LastName { get; set; }
 
-    [MaxLength(200)]
     public string? AvatarImageUrl { get; set; }
 
     public bool HasMadeBet { get; set; } = false;

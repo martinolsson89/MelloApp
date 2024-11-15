@@ -49,7 +49,10 @@ public class AutoMapperProfiles : Profile
             .ReverseMap();
 
 
-        CreateMap<Leaderboard, GetLeaderboardDto>().ReverseMap();
+        CreateMap<Leaderboard, GetLeaderboardDto>()
+            .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.User))
+            .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
+            .ReverseMap();
         CreateMap<Leaderboard, AddLeaderboardDto>().ReverseMap();
         CreateMap<Leaderboard, UpdateLeaderboardDto>().ReverseMap();
         CreateMap<Leaderboard, DeleteLeaderboardDto>().ReverseMap();
@@ -79,6 +82,7 @@ public class AutoMapperProfiles : Profile
         CreateMap<ScoreAfterSubCompetition, DeleteScoreAfterSubCompetitionDto>().ReverseMap();
 
         // ApplicationUser UserDto
+        CreateMap<ApplicationUser, GetUserDto>().ReverseMap();
         CreateMap<ApplicationUser, UserDto>().ReverseMap();
 
         // Map ApplicationUser to UserDto
@@ -91,6 +95,8 @@ public class AutoMapperProfiles : Profile
             .ForMember(dest => dest.Predictions, opt => opt.MapFrom(src => src.Predictions))
             .ForMember(dest => dest.FinalPredictions, opt => opt.MapFrom(src => src.FinalPredictions))
             .ReverseMap();
+
+        CreateMap<ApplicationUser, UpdateAvatarDto>().ReverseMap();
 
         // Map FinalPrediction to FinalPredictionDto
         CreateMap<FinalPrediction, GetFinalPredictionDto>().ReverseMap();

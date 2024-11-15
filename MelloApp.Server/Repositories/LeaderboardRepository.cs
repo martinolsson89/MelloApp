@@ -15,9 +15,12 @@ public class LeaderboardRepository : IRepository<Leaderboard>
     }
     public async Task<List<Leaderboard>> GetAllAsync()
     {
-        var users = await _context.Leaderboards.ToListAsync();
+        var leaderboards = await _context.Leaderboards
+            .Include(l => l.User)
+            .OrderByDescending(l => l.Points) // Assuming you want the highest points first
+            .ToListAsync();
 
-        return users;
+        return leaderboards;
     }
 
     public async Task<Leaderboard?> GetByIdAsync(string id)

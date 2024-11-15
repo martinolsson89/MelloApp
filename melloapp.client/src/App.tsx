@@ -6,6 +6,8 @@ import Register from './pages/Register';
 import Schedule from './pages/Schedule';
 import Bet from './pages/Bet';
 import Rules from './pages/Rules';
+import MyAccount from './pages/MyAccount';
+import Leaderboard from './pages/Leaderboard';
 
 
 
@@ -19,6 +21,8 @@ function App() {
                 <Route path="/schedule" element={<Schedule />} />
                 <Route path="/bet" element={<Bet />} />
                 <Route path="/rules" element={<Rules />} />
+                <Route path="/my-account" element={<MyAccount />} />
+                <Route path="/leaderboard" element={<Leaderboard />} />
             </Routes>
         </BrowserRouter>
     );

@@ -92,11 +92,11 @@ namespace MelloApp.Server
             app.MapFallbackToFile("/index.html");
 
             // Seed data
-            //using (var scope = app.Services.CreateScope())
-            //{
-            //    var seedData = scope.ServiceProvider.GetRequiredService<SeedData>();
-            //    await seedData.InitializeData();
-            //}
+            using (var scope = app.Services.CreateScope())
+            {
+                var seedData = scope.ServiceProvider.GetRequiredService<SeedData>();
+                await seedData.InitializeData();
+            }
 
 
             app.Run();

@@ -25,6 +25,14 @@ public class UserRepository : IRepository<ApplicationUser>
         return users;
     }
 
+    public async Task<ApplicationUser?> GetUserByIdAsync(string id)
+    {
+        var user = await _context.Users
+            .FirstOrDefaultAsync(u => u.Id == id);
+
+        return user;
+    }
+
     public async Task<ApplicationUser?> GetByIdAsync(string id)
     {
         var user = await _context.Users
@@ -44,9 +52,21 @@ public class UserRepository : IRepository<ApplicationUser>
         throw new NotImplementedException();
     }
 
-    public Task<ApplicationUser?> UpdateAsync(string id, ApplicationUser model)
+    public async Task<ApplicationUser?> UpdateAsync(string id, ApplicationUser model)
     {
-        throw new NotImplementedException();
+        var user = await _context.Users
+            .FirstOrDefaultAsync(u => u.Id == id);
+
+        if (user == null)
+        {
+            return null;
+        }
+
+        user.AvatarImageUrl = model.AvatarImageUrl;
+
+        await _context.SaveChangesAsync();
+
+        return user;
     }
 
     public Task<ApplicationUser?> DeleteAsync(string id)

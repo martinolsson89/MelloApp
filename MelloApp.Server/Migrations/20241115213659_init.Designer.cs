@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MelloApp.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241113214233_init")]
+    [Migration("20241115213659_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -34,8 +34,7 @@ namespace MelloApp.Server.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("AvatarImageUrl")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
