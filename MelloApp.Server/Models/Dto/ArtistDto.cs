@@ -56,3 +56,13 @@ public class ArtistDto
     public string Song { get; set; }
     public int StartingNumber { get; set; }
 }
+
+public class ArtistWithPredictionsDto
+{
+    public string Id { get; set; }
+    public string Name { get; set; }
+    public string Song { get; set; }
+    public int StartingNumber { get; set; }
+
+    public List<PredictionWithUserDto> Predictions { get; set; }
+}

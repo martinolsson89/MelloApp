@@ -117,7 +117,7 @@ function MyAccount() {
                 <Avatar
                     alt={userData?.firstName}
                     src={userData?.avatarImageUrl || defaultProfilePic}
-                    sx={{ width: 100, height: 100, mb: 2 }}
+                    sx={{ width: 125, height: 125, mb: 2 }}
                 />
 
                 <Typography variant="h6" gutterBottom>

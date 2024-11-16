@@ -27,6 +27,7 @@ function Navbar() {
         { label: 'Regler', path: '/rules' },
         { label: 'Schema', path: '/schedule' },
         { label: 'Rösta', path: '/bet' },
+        { label: 'TipsHörnan', path: '/bet-overview' },
         { label: 'Ledartavla', path: '/leaderboard' },
         { label: 'Mitt konto', path: '/my-account' },
     ];

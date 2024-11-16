@@ -148,34 +148,6 @@ namespace MelloApp.Server.Controllers
             return Ok(subCompetitionDto);
         }
 
-        // GET: /SubCompetition/GetSubCompetitionWitPrediction
-        [Authorize]
-        [HttpGet("GetSubCompetitionWitPrediction")]
-        public async Task<IActionResult> GetSubCompetitionWitPrediction()
-        {
-            var subCompetitions = await _repository.GetSubCompetitionWitPredictionAsync();
-
-            var subCompetitionsDto = _mapper.Map<List<GetSubCompetitionAndPredictionsDto>>(subCompetitions);
-
-            return Ok(subCompetitionsDto);
-        }
-
-        [Authorize]
-        [HttpGet("GetSubCompetitionWitPrediction/{id}")]
-        public async Task<IActionResult> GetSubCompetitionWitPrediction(string id)
-        {
-            var subCompetition = await _repository.GetSubCompetitionWitPredictionAsync(id);
-
-            if (subCompetition == null)
-            {
-                return NotFound();
-            }
-
-            var subCompetitionDto = _mapper.Map<GetSubCompetitionAndPredictionsDto>(subCompetition);
-
-            return Ok(subCompetitionDto);
-        }
-
         // GET: /SubCompetition/GetSubCompetitionWithResult
         [Authorize]
         [HttpGet("GetSubCompetitionWithResult")]
@@ -203,5 +175,52 @@ namespace MelloApp.Server.Controllers
 
             return Ok(subCompetitionDto);
         }
+
+        [Authorize]
+        [HttpGet("GetSubCompetitionsWithArtistsAndPredictions")]
+        public async Task<IActionResult> GetSubCompetitionsWithArtistsAndPredictions()
+        {
+            var subCompetitions = await _repository.GetSubCompetitionsWithArtistsAndPredictionsAsync();
+
+            var subCompetitionsDto = new List<GetSubCompetitionWithArtistsAndPredictionsDto>();
+
+            foreach (var subCompetition in subCompetitions)
+            {
+                // Map SubCompetition to DTO
+                var subCompetitionDto = _mapper.Map<GetSubCompetitionWithArtistsAndPredictionsDto>(subCompetition);
+
+                // Group predictions by artist ID
+                var predictionsByArtist = subCompetition.Predictions
+                    .GroupBy(p => p.Artist.Id)
+                    .ToDictionary(g => g.Key, g => g.ToList());
+
+                // Map Artists and their Predictions
+                subCompetitionDto.Artists = subCompetition.Artists.Select(artist =>
+                {
+                    var artistDto = _mapper.Map<ArtistWithPredictionsDto>(artist);
+
+                    // Get predictions for this artist
+                    if (predictionsByArtist.TryGetValue(artist.Id, out var artistPredictions))
+                    {
+                        // Map Predictions to DTOs
+                        artistDto.Predictions = _mapper.Map<List<PredictionWithUserDto>>(artistPredictions);
+                    }
+                    else
+                    {
+                        artistDto.Predictions = new List<PredictionWithUserDto>();
+                    }
+
+                    return artistDto;
+                }).ToList();
+
+                subCompetitionsDto.Add(subCompetitionDto);
+            }
+
+            // Order subcompetitions by date
+            var orderedSubCompetitionsDto = subCompetitionsDto.OrderBy(sc => sc.Date).ToList();
+
+            return Ok(orderedSubCompetitionsDto);
+        }
+
     }
 }

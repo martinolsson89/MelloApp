@@ -23,12 +23,13 @@ namespace MelloApp.Server
 
             builder.Services.AddScoped<ISubCompetitionRepository, SubCompetitionRepository>();
             builder.Services.AddScoped<IRepository<Artist>, ArtistRepository>();
-            builder.Services.AddScoped<IRepository<ScoreAfterSubCompetition>, ScoreAfterSubCompetitionRepository>();
             builder.Services.AddScoped<IRepository<ResultOfSubCompetition>, ResultOfSubCompetitionRepository>();
             builder.Services.AddScoped<IPredictionRepository, PredictionRepository>();
             builder.Services.AddScoped<IRepository<Leaderboard>, LeaderboardRepository>();
             builder.Services.AddScoped<IRepository<ApplicationUser>, UserRepository>();
             builder.Services.AddScoped<IFinalPredictionRepository, FinalPredictionRepository>();
+            builder.Services.AddScoped<IScoreAfterSubCompetitionRepository, ScoreAfterSubCompetitionRepository>();
+
 
 
             builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));

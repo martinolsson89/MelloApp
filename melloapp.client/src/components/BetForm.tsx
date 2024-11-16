@@ -132,7 +132,7 @@ function BetForm({ subCompetitions, allArtists, user, onBetSubmitted }: BetFormP
         counts[ePlacement.ÅkerUt] !== 2
       ) {
         setErrorMessage(
-          `I ${subCompetition.name}, måste du välja 2 artists för varje placering: Final, FinalKval, och Åker Ut.`
+          `I ${subCompetition.name}, måste du välja max 2 artister för varje placering: Final, FinalKval, och Åker Ut.`
         );
         return;
       }

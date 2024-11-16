@@ -72,7 +72,10 @@ function Schedule() {
                         <Card key={subCompetition.id} sx={{ mb: 4, minWidth: {xs: 300, md: 350, lg: 500}  }}>
                         <CardHeader
                             title={subCompetition.name}
-                            subheader={`${subCompetition.date} - ${subCompetition.location}`}
+                                subheader={`${new Date(subCompetition.date)
+                                    .toISOString()
+                                    .replace('T', ' ')
+                                    .slice(0, 11)} 20:00 - ${subCompetition.location}`}
                         />
                         <CardContent>
                             <Typography variant="h6">Bidrag:</Typography>

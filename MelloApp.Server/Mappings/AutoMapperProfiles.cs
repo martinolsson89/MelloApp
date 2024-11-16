@@ -16,11 +16,16 @@ public class AutoMapperProfiles : Profile
         CreateMap<Artist, UpdateArtistDto>().ReverseMap();
         CreateMap<Artist, DeleteArtistDto>().ReverseMap();
 
+        CreateMap<Artist, ArtistWithPredictionsDto>().ReverseMap();
+
+
         CreateMap<SubCompetition, SubCompetitionDto>().ReverseMap();
         CreateMap<SubCompetition, GetSubCompetitionDto>().ReverseMap();
         CreateMap<SubCompetition, AddSubCompetitionDto>().ReverseMap();
         CreateMap<SubCompetition, UpdateSubCompetitionDto>().ReverseMap();
         CreateMap<SubCompetition, DeleteSubCompetitionDto>().ReverseMap();
+
+        CreateMap<SubCompetition, GetSubCompetitionNameDto>().ReverseMap();
 
         CreateMap<SubCompetition, GetSubCompetitionAndArtistsDto>()
             .ForMember(dest => dest.Artists, opt => opt.MapFrom(src => src.Artists))
@@ -34,8 +39,12 @@ public class AutoMapperProfiles : Profile
             .ForMember(dest => dest.Results, opt => opt.MapFrom(src => src.Results))
             .ReverseMap();
 
+
+        CreateMap<SubCompetition, GetSubCompetitionWithArtistsAndPredictionsDto>().ReverseMap();
+
+
         // Map Prediction to PredictionDto
-        CreateMap<Prediction, PredictionWithUserDto>()
+        CreateMap<Prediction, PredictionWithUserAndArtistDto>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.User))
             .ForMember(dest => dest.Artist, opt => opt.MapFrom(src => src.Artist))
@@ -69,6 +78,11 @@ public class AutoMapperProfiles : Profile
         CreateMap<Prediction, DeletePredictionDto>().ReverseMap();
         CreateMap<Prediction, AddBatchPredictionDto>().ReverseMap();
 
+        CreateMap<Prediction, PredictionWithUserDto>()
+            .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.User))
+            .ReverseMap();
+
+
         // ResultOfSubCompetition
         CreateMap<ResultOfSubCompetition, GetResultOfSubCompetitionDto>().ReverseMap();
         CreateMap<ResultOfSubCompetition, AddResultOfSubCompetitionDto>().ReverseMap();
@@ -76,7 +90,10 @@ public class AutoMapperProfiles : Profile
         CreateMap<ResultOfSubCompetition, DeleteResultOfSubCompetitionDto>().ReverseMap();
 
         // ScoreAfterSubCompetition
-        CreateMap<ScoreAfterSubCompetition, GetScoreAfterSubCompetitionDto>().ReverseMap();
+        CreateMap<ScoreAfterSubCompetition, GetScoreAfterSubCompetitionDto>()
+            .ForMember(dest => dest.SubCompetitionName, opt => opt.MapFrom(src => src.SubCompetition))
+            .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.User))
+            .ReverseMap();
         CreateMap<ScoreAfterSubCompetition, AddScoreAfterSubCompetitionDto>().ReverseMap();
         CreateMap<ScoreAfterSubCompetition, UpdateScoreAfterSubCompetitionDto>().ReverseMap();
         CreateMap<ScoreAfterSubCompetition, DeleteScoreAfterSubCompetitionDto>().ReverseMap();
@@ -117,6 +134,29 @@ public class AutoMapperProfiles : Profile
             .ReverseMap();
 
         CreateMap<FinalPrediction, AddBatchFinalPredictionDto>().ReverseMap();
+
+        //Mapping for SubCompetition Leaderboards
+
+        // Mapping from ScoreAfterSubCompetition to UserScoreDto
+        CreateMap<ScoreAfterSubCompetition, UserScoreDto>()
+            .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.User.Id))
+            .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.User.FirstName))
+            .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.User.LastName))
+            .ForMember(dest => dest.AvatarImageUrl, opt => opt.MapFrom(src => src.User.AvatarImageUrl))
+            .ForMember(dest => dest.Points, opt => opt.MapFrom(src => src.Points));
+
+// Mapping from SubCompetition to SubCompetitionWithScoresDto
+        CreateMap<SubCompetition, SubCompetitionWithScoresDto>()
+            .ForMember(dest => dest.SubCompetitionId, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+            .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date))
+            .ForMember(dest => dest.UserScores, opt => opt.MapFrom(src => src.ScoresAfterSubCompetitions))
+            .AfterMap((src, dest) =>
+            {
+                // Order the UserScores by Points descending
+                dest.UserScores = dest.UserScores.OrderByDescending(u => u.Points).ToList();
+            });
+
 
     }
 }

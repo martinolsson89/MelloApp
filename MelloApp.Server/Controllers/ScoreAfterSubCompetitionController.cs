@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MelloApp.Server.Interface;
 using MelloApp.Server.Models;
+using MelloApp.Server.Models.Account;
 using MelloApp.Server.Models.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -14,9 +15,9 @@ namespace MelloApp.Server.Controllers
     {
         private readonly ILogger<ScoreAfterSubCompetition> _logger;
         private readonly IMapper _mapper;
-        private readonly IRepository<ScoreAfterSubCompetition> _repository;
+        private readonly IScoreAfterSubCompetitionRepository _repository;
 
-        public ScoreAfterSubCompetitionController(ILogger<ScoreAfterSubCompetition> logger, IMapper mapper, IRepository<ScoreAfterSubCompetition> repository)
+        public ScoreAfterSubCompetitionController(ILogger<ScoreAfterSubCompetition> logger, IMapper mapper, IScoreAfterSubCompetitionRepository repository)
         {
             _logger = logger;
             _mapper = mapper;
@@ -106,5 +107,23 @@ namespace MelloApp.Server.Controllers
 
             return Ok(deletedScoreAfterSubCompetitionDto);
         }
+
+        //GET: ScoreAfterSubCompetition/GetLeaderboardBySubCompetition
+
+        [Authorize]
+        [HttpGet("GetLeaderboardBySubCompetition")]
+        public async Task<IActionResult> GetLeaderboardBySubCompetition()
+        {
+            var subCompetitions = await _repository.GetScoresGroupedBySubCompetitionAsync();
+
+            var subCompetitionLeaderboards = _mapper.Map<List<SubCompetitionWithScoresDto>>(subCompetitions);
+
+            // Order the SubCompetitions by Date
+            subCompetitionLeaderboards = subCompetitionLeaderboards.OrderBy(sc => sc.Date).ToList();
+
+            return Ok(subCompetitionLeaderboards);
+        }
+
+
     }
 }

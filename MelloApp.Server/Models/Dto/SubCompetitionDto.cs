@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using MelloApp.Server.Models.Account;
 
 namespace MelloApp.Server.Models.Dto;
 
@@ -47,6 +48,12 @@ public class GetSubCompetitionDto
     public string? Location { get; set; }
 }
 
+public class GetSubCompetitionNameDto
+{
+    public string Id { get; set; }
+    public string Name { get; set; }
+}
+
 
 public class GetSubCompetitionAndArtistsDto
 {
@@ -63,7 +70,7 @@ public class GetSubCompetitionAndPredictionsDto
     public string Name { get; set; }
     public DateTime Date { get; set; }
     public string? Location { get; set; }
-    public List<PredictionWithUserDto>? Predictions { get; set; } // Use a DTO for artist details
+    public List<PredictionWithUserAndArtistDto>? Predictions { get; set; } // Use a DTO for artist details
 }
 
 public class GetSubCompetitionAndFinalPredictionsDto
@@ -91,5 +98,23 @@ public class SubCompetitionDto
     public DateTime Date { get; set; }
     public string? Location { get; set; }
 }
+
+public class SubCompetitionWithScoresDto
+{
+    public string SubCompetitionId { get; set; }
+    public string Name { get; set; }
+    public DateTime Date { get; set; }
+    public List<UserScoreDto> UserScores { get; set; }
+}
+
+public class GetSubCompetitionWithArtistsAndPredictionsDto
+{
+    public string Id { get; set; }
+    public string Name { get; set; }
+    public DateTime Date { get; set; }
+    public string? Location { get; set; }
+    public List<ArtistWithPredictionsDto> Artists { get; set; }
+}
+
 
 

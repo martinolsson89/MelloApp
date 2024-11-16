@@ -1,6 +1,7 @@
 ﻿using MelloApp.Server.Data;
 using MelloApp.Server.Interface;
 using MelloApp.Server.Models;
+using MelloApp.Server.Models.Dto;
 using Microsoft.EntityFrameworkCore;
 
 namespace MelloApp.Server.Repositories;
@@ -86,30 +87,6 @@ public class SubCompetitionRepository : ISubCompetitionRepository
         return subCompetition;
     }
 
-    public Task<List<SubCompetition>> GetSubCompetitionWitPredictionAsync()
-    {
-        var subCompetitions = _context.SubCompetitions
-            .Include(sc => sc.Predictions)!
-            .ThenInclude(p => p.User)         // Include the User entity
-            .Include(sc => sc.Predictions)!
-            .ThenInclude(p => p.Artist)       // Include the Artist entity
-            .ToListAsync();
-
-        return subCompetitions;
-    }
-
-    public async Task<SubCompetition> GetSubCompetitionWitPredictionAsync(string id)
-    {
-        var subCompetition = await _context.SubCompetitions
-            .Include(sc => sc.Predictions)!
-            .ThenInclude(p => p.User)
-            .Include(sc => sc.Predictions)!
-            .ThenInclude(p => p.Artist)
-            .FirstOrDefaultAsync(sc => sc.Id == id);
-
-        return subCompetition;
-    }
-
     public Task<List<SubCompetition>> GetSubCompetitionWithResultAsync()
     {
         var subCompetitions = _context.SubCompetitions
@@ -129,4 +106,19 @@ public class SubCompetitionRepository : ISubCompetitionRepository
 
         return subCompetition;
     }
+
+    public async Task<List<SubCompetition>> GetSubCompetitionsWithArtistsAndPredictionsAsync()
+    {
+        var subCompetitions = await _context.SubCompetitions
+            .Include(sc => sc.Artists)
+            .Include(sc => sc.Predictions)
+            .ThenInclude(p => p.User)
+            .Include(sc => sc.Predictions)
+            .ThenInclude(p => p.Artist)
+            .OrderBy(sc => sc.Date)
+            .ToListAsync();
+
+        return subCompetitions;
+    }
+
 }

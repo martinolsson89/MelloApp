@@ -64,10 +64,9 @@ public class PredictionDto
     public string? SubCompetitionId { get; set; }
 
     public SubCompetitionDto? SubCompetition { get; set; }
-
 }
 
-public class PredictionWithUserDto
+public class PredictionWithUserAndArtistDto
 {
     public string Id { get; set; }
 
@@ -79,3 +78,16 @@ public class PredictionWithUserDto
     public ePlacement PredictedPlacement { get; set; }
     
 }
+
+public class PredictionWithUserDto
+{
+    public string Id { get; set; }
+
+    public GetUserDto? User { get; set; }
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public ePlacement PredictedPlacement { get; set; }
+    
+}
+
+

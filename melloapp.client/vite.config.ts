@@ -99,6 +99,14 @@ export default defineConfig({
                 target: 'https://localhost:7263/',
                 secure: false
             },
+            '^/ScoreAfterSubCompetition/GetLeaderboardBySubCompetition': {
+                target: 'https://localhost:7263/',
+                secure: false
+            },
+            '^/SubCompetition/GetSubCompetitionsWithArtistsAndPredictions': {
+                target: 'https://localhost:7263/',
+                secure: false
+            },
         },
         port: 5173,
         https: {

@@ -8,6 +8,7 @@ import Bet from './pages/Bet';
 import Rules from './pages/Rules';
 import MyAccount from './pages/MyAccount';
 import Leaderboard from './pages/Leaderboard';
+import BetOverview from './pages/BetOverview';
 
 
 
@@ -23,6 +24,7 @@ function App() {
                 <Route path="/rules" element={<Rules />} />
                 <Route path="/my-account" element={<MyAccount />} />
                 <Route path="/leaderboard" element={<Leaderboard />} />
+                <Route path="/bet-overview" element={<BetOverview />} />
             </Routes>
         </BrowserRouter>
     );

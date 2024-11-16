@@ -1,8 +1,15 @@
-﻿import { Typography, Box, Divider } from '@mui/material';
+﻿import { Typography, Box, Divider, Button } from '@mui/material';
 import AuthorizeView from "../components/AuthorizeView.tsx";
 import Navbar from "../components/Navbar.tsx";
+import { useNavigate } from 'react-router-dom';
 
 function Rules() {
+    const navigate = useNavigate();
+
+    const handleNavigation = (path: string) => {
+        navigate(path);
+    };
+
     return (
         <AuthorizeView>
             <Navbar />
@@ -25,31 +32,44 @@ function Rules() {
                 <Typography variant="h6" gutterBottom>
                     Vanliga frågor:
                 </Typography>
-                <Typography variant="body1" align="left" sx={{ mb: 2 }}>
+                <Typography variant="body1" align="left" sx={{ mb: 2, textDecoration: 'underline' }}>
                     <span style={{ fontWeight: 'bold' }}>Vart lämnar jag in mitt tips?</span>
                 </Typography>
                 <Typography variant="body1" align="left" sx={{ mb: 2 }}>
-                    <span style={{ fontWeight: 'bold' }}>Svar:</span> Du klickar på <span style={{ fontWeight: 'bold' }}>Rösta</span> uppe menyn eller på de tre linjerna upp till höger om du använder mobilen.
+                    <span style={{ fontWeight: 'bold' }}>Svar:</span> Du klickar antingen på <span style={{ fontWeight: 'bold' }}><Button onClick={() => handleNavigation('/bet')}> Rösta </Button></span> här eller i menyn. Där du kan fylla i ditt tips och skicka in det.
                 </Typography>
-                <Typography variant="body1" align="left" sx={{ mb: 2 }}>
+                <Typography variant="body1" align="left" sx={{ mb: 2, textDecoration: 'underline' }}>
                     <span style={{ fontWeight: 'bold' }}>Hur gör jag för att tippa?</span>
                 </Typography>
                 <Typography variant="body1" align="left" sx={{ mb: 2 }}>
                     <span style={{ fontWeight: 'bold' }}>Svar:</span> När du klickat dig in på röstningsidan ser du en lista med alla deltävlingar och bidrag. Du väljer i rullistan vilket alternativ du tippar på (Final, Kvalfinal, Åker ut).
                     Längst ner väljer du vilken artist/låt som kommer vinna resp. komma tvåa i finalen. När du är nöjd klickar du på knappen: <span style={{ fontWeight: 'bold' }}>Skicka in tips</span>, klart!
                 </Typography>
+                <Typography variant="body1" align="left" sx={{ mb: 2, textDecoration: 'underline' }}>
+                    <span style={{ fontWeight: 'bold' }}>Vart ser jag hur de andra i släkten har tippat?</span>
+                </Typography>
                 <Typography variant="body1" align="left" sx={{ mb: 2 }}>
+                    <span style={{ fontWeight: 'bold' }}>Svar:</span> Du klickar antingen på <span style={{ fontWeight: 'bold' }}><Button onClick={() => handleNavigation('/bet-overview')}> Tipshörnan </Button></span> här eller i menyn. Det är dock oklart om det hjälper dig...
+                </Typography>
+                <Typography variant="body1" align="left" sx={{ mb: 2, textDecoration: 'underline' }}>
                     <span style={{ fontWeight: 'bold' }}>När stänger tippningen?</span>
                 </Typography>
                 <Typography variant="body1" align="left" sx={{ mb: 2 }}>
                     <span style={{ fontWeight: 'bold' }}>Svar:</span> Du kan tippa fram till till och med <span style={{ fontWeight: 'bold' }}>31 januari.</span>
                 </Typography>
-                <Typography variant="body1" align="left" sx={{ mb: 2 }}>
+                <Typography variant="body1" align="left" sx={{ mb: 2, textDecoration: 'underline' }}>
                     <span style={{ fontWeight: 'bold' }}>Kan jag ändra mitt tips?</span>
                 </Typography>
                 <Typography variant="body1" align="left" sx={{ mb: 2 }}>
                     <span style={{ fontWeight: 'bold' }}>Svar:</span> Nej, När du skickat in ditt tips kan du inte ändra det.
                 </Typography>
+                <Typography variant="body1" align="left" sx={{ mb: 2, textDecoration: 'underline' }}>
+                    <span style={{ fontWeight: 'bold' }}>Hur lägger jag till en egen profilbild?</span>
+                </Typography>
+                <Typography variant="body1" align="left" sx={{ mb: 2 }}>
+                    <span style={{ fontWeight: 'bold' }}>Svar:</span> Du klickar antingen på <span style={{ fontWeight: 'bold' }}><Button onClick={() => handleNavigation('/my-account')}> Mitt konto </Button></span> här eller i menyn. Där kan du klistra in en länk till en bild från nätet.
+                </Typography>
+
                 
                 <Divider sx={{ my: 2 }} />
 

@@ -1,11 +1,13 @@
 ﻿using MelloApp.Server.Data;
 using MelloApp.Server.Interface;
 using MelloApp.Server.Models;
+using MelloApp.Server.Models.Account;
+using MelloApp.Server.Models.Dto;
 using Microsoft.EntityFrameworkCore;
 
 namespace MelloApp.Server.Repositories;
 
-public class ScoreAfterSubCompetitionRepository : IRepository<ScoreAfterSubCompetition>
+public class ScoreAfterSubCompetitionRepository : IScoreAfterSubCompetitionRepository
 {
     private readonly ApplicationDbContext _context;
 
@@ -15,7 +17,10 @@ public class ScoreAfterSubCompetitionRepository : IRepository<ScoreAfterSubCompe
     }
     public async Task<List<ScoreAfterSubCompetition>> GetAllAsync()
     {
-       var scores = await _context.ScoresAfterSubCompetitions.ToListAsync();
+       var scores = await _context.ScoresAfterSubCompetitions.OrderBy(s => s.SubCompetition)
+           .Include(sc => sc.SubCompetition)
+           .Include(s => s.User)
+           .ToListAsync();
 
        return scores;
     }
@@ -63,4 +68,16 @@ public class ScoreAfterSubCompetitionRepository : IRepository<ScoreAfterSubCompe
         await _context.SaveChangesAsync();
         return existingScoreAfterSubCompetition;
     }
+
+    public async Task<List<SubCompetition>> GetScoresGroupedBySubCompetitionAsync()
+    {
+        var subCompetitions = await _context.SubCompetitions
+            .Include(sc => sc.ScoresAfterSubCompetitions)
+            .ThenInclude(s => s.User)
+            .ToListAsync();
+
+        return subCompetitions;
+    }
+
+
 }

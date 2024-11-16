@@ -73,6 +73,7 @@ namespace MelloApp.Server.Controllers
 
             return Ok(new
             {
+
                 Email = email
             });
         }

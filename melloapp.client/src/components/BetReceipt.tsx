@@ -141,7 +141,7 @@ function BetReceipt({ userData }: BetReceiptProps) {
                         subheader={`${new Date(group.subCompetition.date)
                             .toISOString()
                             .replace('T', ' ')
-                            .slice(0, 11)} - ${group.subCompetition.location}`}
+                            .slice(0, 11)} 20:00 - ${group.subCompetition.location}`}
                     />
                     <CardContent>
                         <List>
