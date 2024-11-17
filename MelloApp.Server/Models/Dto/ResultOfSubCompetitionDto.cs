@@ -1,10 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MelloApp.Server.Enums;
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace MelloApp.Server.Models.Dto;
 
 public class AddResultOfSubCompetitionDto
 {
-    public int Placement { get; set; }
+    public ePlacement Placement { get; set; }
     public string? ArtistId { get; set; }
     public string? SubCompetitionId { get; set; }
     
@@ -14,7 +16,10 @@ public class UpdateResultOfSubCompetitionDto
 {
     [Required]
     public string Id { get; set; }
-    public int Placement { get; set; }
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+
+    public ePlacement Placement { get; set; }
     public string? ArtistId { get; set; }
     public string? SubCompetitionId { get; set; }
     
@@ -30,7 +35,9 @@ public class DeleteResultOfSubCompetitionDto
 public class GetResultOfSubCompetitionDto
 {
     public string Id { get; set; }
-    public int Placement { get; set; }
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public ePlacement Placement { get; set; }
     public string? ArtistId { get; set; }
     public string? SubCompetitionId { get; set; }
     
@@ -41,6 +48,9 @@ public class ResultOfSubCompetitionDto
     public string Id { get; set; }
 
     public ArtistDto Artist { get; set; }
-    public int Placement { get; set; }
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+
+    public ePlacement Placement { get; set; }
     
 }

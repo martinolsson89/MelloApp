@@ -16,6 +16,8 @@ public class FinalPredictionRepository : IFinalPredictionRepository
     public async Task<List<FinalPrediction>> GetAllAsync()
     {
         var finalPredictions = await _context.FinalPredictions.ToListAsync();
+
+
         return finalPredictions;
     }
 

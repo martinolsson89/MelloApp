@@ -107,6 +107,14 @@ export default defineConfig({
                 target: 'https://localhost:7263/',
                 secure: false
             },
+            '^/FinalPrediction': {
+                target: 'https://localhost:7263/',
+                secure: false
+            },
+            '^/ResultOfSubCompetition': {
+                target: 'https://localhost:7263/',
+                secure: false
+            },
         },
         port: 5173,
         https: {

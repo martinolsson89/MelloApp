@@ -1,187 +1,414 @@
 ﻿import { useState, useEffect } from 'react';
 import {
-    Typography,
-    Box,
-    List,
-    ListItem,
-    ListItemText,
-    Divider,
-    Avatar,
-    ListItemAvatar,
-    Grid,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Typography,
+  Box,
+  List,
+  ListItem,
+  ListItemText,
+  Divider,
+  Avatar,
+  ListItemAvatar,
+  Grid,
 } from '@mui/material';
 import Navbar from '../components/Navbar';
 import AuthorizeView from '../components/AuthorizeView';
 import defaultProfilePic from '../assets/avatar/anonymous-user.webp';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 interface GetSubCompetitionWithArtistsAndPredictionsDto {
-    id: string;
-    name: string;
-    date: string;
-    location: string;
-    artists: Artist[];
+  id: string;
+  name: string;
+  date: string;
+  location: string;
+  artists: Artist[];
 }
 
 interface Artist {
-    id: string;
-    name: string;
-    song: string;
-    startingNumber: number;
-    predictions: Prediction[];
+  id: string;
+  name: string;
+  song: string;
+  startingNumber: number;
+  predictions: Prediction[];
+  placement?: string; // Added optional placement property
 }
 
 interface Prediction {
-    id: string;
-    predictedPlacement: string;
-    user: User;
+  id: string;
+  predictedPlacement: string;
+  user: User;
 }
 
 interface User {
-    id: string;
-    firstName: string;
-    lastName: string;
-    avatarImageUrl: string;
-    hasMadeBet: boolean;
+  id: string;
+  firstName: string;
+  lastName: string;
+  avatarImageUrl: string;
+  hasMadeBet: boolean;
+}
+
+interface FinalPrediction {
+  id: string;
+  finalPlacement: string;
+  userId: string;
+  artistId: string;
+  subcompetitionId: string;
+}
+
+interface ResultOfSubCompetition {
+  id: string;
+  placement: string;
+  artistId: string;
+  subCompetitionId: string;
 }
 
 function BetOverview() {
-    const [betOverviewData, setBetOverviewData] = useState<GetSubCompetitionWithArtistsAndPredictionsDto[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+  const [betOverviewData, setBetOverviewData] = useState<GetSubCompetitionWithArtistsAndPredictionsDto[]>([]);
+  const [finalPredictionData, setFinalPredictionData] = useState<FinalPrediction[]>([]);
+  const [resultsData, setResultsData] = useState<ResultOfSubCompetition[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
-        async function fetchData() {
-            try {
-                let response = await fetch('/SubCompetition/GetSubCompetitionsWithArtistsAndPredictions');
-                if (response.status === 200) {
-                    let data = await response.json();
-                    console.log('API Data:', data); // Inspect data
-                    setBetOverviewData(data);
-                    setIsLoading(false);
-                } else {
-                    throw new Error('Error fetching data');
-                }
-            } catch (error) {
-                console.error(error);
-                setError('Kunde inte hämta tips-data');
-                setIsLoading(false);
-            }
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        let response = await fetch('/SubCompetition/GetSubCompetitionsWithArtistsAndPredictions');
+        if (response.status === 200) {
+          let data = await response.json();
+          console.log('API Data:', data); // Inspect data
+          setBetOverviewData(data);
+        } else {
+          throw new Error('Error fetching data');
         }
+      } catch (error) {
+        console.error(error);
+        setError('Kunde inte hämta tips-data');
+      }
+    }
 
-        fetchData();
-    }, []);
+    async function fetchFinalPrediction() {
+      try {
+        let response = await fetch('/FinalPrediction');
+        if (response.status === 200) {
+          let data = await response.json();
+          console.log('API Data FinalPrediction:', data);
+          setFinalPredictionData(data);
+        } else {
+          throw new Error('Error fetching data');
+        }
+      } catch (error) {
+        console.error(error);
+        setError('Kunde inte hämta tips-data');
+      }
+    }
 
-    // Filter users who have made bets and sort artists by startingNumber
-    const filteredBetOverviewData = betOverviewData.map((subComp) => ({
-        ...subComp,
-        artists:
-            subComp.artists
-                ?.map((artist) => ({
-                    ...artist,
-                    predictions: artist.predictions?.filter((prediction) => prediction.user.hasMadeBet) || [],
-                }))
-                .sort((a, b) => a.startingNumber - b.startingNumber) || [],
-    }));
+    async function fetchResultsData() {
+      try {
+        let response = await fetch('/ResultOfSubCompetition');
+        if (response.status === 200) {
+          let data = await response.json();
+          console.log('API Data Results:', data);
+          setResultsData(data);
+        } else {
+          throw new Error('Error fetching results data');
+        }
+      } catch (error) {
+        console.error(error);
+        setError('Kunde inte hämta resultatsdata');
+      }
+    }
 
-    return (
-        <AuthorizeView>
-            <Navbar />
-            {isLoading ? (
-                <Box sx={{ mt: 4, textAlign: 'center' }}>
-                    <Typography variant="h6">Laddar...</Typography>
-                </Box>
-            ) : error ? (
-                <Box sx={{ mt: 4, textAlign: 'center' }}>
-                    <Typography variant="h6" color="error">
-                        {error}
-                    </Typography>
-                </Box>
-            ) : (
-                <Box
-                    sx={{
-                        mt: 4,
-                        textAlign: 'left',
-                        mx: 'auto',
-                        p: 3,
-                        boxShadow: 3,
-                        borderRadius: 2,
-                        bgcolor: '#f3e5f5',
-                        maxWidth: 1200,
-                    }}
-                >
-                    <Typography variant="h4" gutterBottom>
-                        Tipshörnan
-                    </Typography>
-                    <Typography variant="body1">
-                        Här kan du se hur släkten har tippat i Mello.
-                    </Typography>
-                    <Divider sx={{ my: 2 }} />
+    setIsLoading(true);
+    Promise.all([fetchData(), fetchFinalPrediction(), fetchResultsData()])
+      .then(() => {
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.error(error);
+        setError('Kunde inte hämta data');
+        setIsLoading(false);
+      });
+  }, []);
 
-                    {/* Display each subcompetition in its own Box */}
-                    {filteredBetOverviewData.map((subComp) => (
+  // Create a mapping of artistId to result
+  const artistResultsMap: { [artistId: string]: ResultOfSubCompetition } = {};
+  resultsData.forEach((result) => {
+    artistResultsMap[result.artistId] = result;
+  });
+
+  // Filter users who have made bets and sort artists by startingNumber
+  const filteredBetOverviewData = betOverviewData.map((subComp) => ({
+    ...subComp,
+    artists:
+      subComp.artists
+        ?.map((artist) => ({
+          ...artist,
+          predictions: artist.predictions?.filter((prediction) => prediction.user.hasMadeBet) || [],
+          placement: artistResultsMap[artist.id]?.placement, // Add placement if available
+        }))
+        .sort((a, b) => a.startingNumber - b.startingNumber) || [],
+  }));
+
+  const placementDisplayName = (placement: string) => {
+    switch (placement) {
+      case 'Final':
+        return 'Final';
+      case 'FinalKval':
+        return 'Finalkval';
+      case 'ÅkerUt':
+        return 'Åker Ut';
+      default:
+        return 'Oklar placering';
+    }
+  };
+
+  // Create a mapping of userId to User
+  const userMap: { [key: string]: User } = {};
+  betOverviewData.forEach((subComp) => {
+    subComp.artists.forEach((artist) => {
+      artist.predictions.forEach((prediction) => {
+        userMap[prediction.user.id] = prediction.user;
+      });
+    });
+  });
+
+  // Create a mapping of artistId to Artist
+  const artistMap: { [key: string]: Artist } = {};
+  betOverviewData.forEach((subComp) => {
+    subComp.artists.forEach((artist) => {
+      artistMap[artist.id] = artist;
+    });
+  });
+
+  // Group final predictions by artistId
+  const finalPredictionsByArtist = finalPredictionData.reduce((acc, finalPrediction) => {
+    const artistId = finalPrediction.artistId;
+    if (!acc[artistId]) {
+      acc[artistId] = {
+        artist: artistMap[artistId],
+        predictions: [],
+      };
+    }
+    const user = userMap[finalPrediction.userId];
+    if (user) {
+      acc[artistId].predictions.push({
+        finalPlacement: finalPrediction.finalPlacement,
+        user: user,
+      });
+    }
+    return acc;
+  }, {} as {
+    [artistId: string]: {
+      artist: Artist;
+      predictions: Array<{ finalPlacement: string; user: User }>;
+    };
+  });
+
+  // Convert the object to an array for easy mapping
+  const finalPredictionsArray = Object.values(finalPredictionsByArtist);
+
+  return (
+    <AuthorizeView>
+      <Navbar />
+      {isLoading ? (
+        <Box sx={{ mt: 4, textAlign: 'center' }}>
+          <Typography variant="h6">Laddar...</Typography>
+        </Box>
+      ) : error ? (
+        <Box sx={{ mt: 4, textAlign: 'center' }}>
+          <Typography variant="h6" color="error">
+            {error}
+          </Typography>
+        </Box>
+      ) : (
+        <Box
+          sx={{
+            mt: 4,
+            textAlign: 'left',
+            mx: 'auto',
+            p: 3,
+            boxShadow: 3,
+            borderRadius: 2,
+            bgcolor: '#f3e5f5',
+            maxWidth: 1200,
+          }}
+        >
+          <Typography variant="h4" gutterBottom>
+            Tipshörnan
+          </Typography>
+          <Typography variant="body1">Här kan du se hur släkten har tippat i Mello.</Typography>
+          <Divider sx={{ my: 2 }} />
+
+          {/* Display each subcompetition in its own collapsible Accordion */}
+          {filteredBetOverviewData.map((subComp) => (
+            <Accordion key={subComp.id} sx={{ mb: 2 }} defaultExpanded>
+              {/* Accordion Summary */}
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls={`panel-${subComp.id}-content`}
+                id={`panel-${subComp.id}-header`}
+              >
+                <Typography variant="h5">
+                  {subComp.name}: {new Date(subComp.date).toLocaleDateString()} - {subComp.location}
+                </Typography>
+              </AccordionSummary>
+
+              {/* Accordion Details */}
+              <AccordionDetails>
+                <Divider sx={{ my: 1 }} />
+                {/* Artists displayed horizontally using Grid */}
+                <Grid container spacing={2}>
+                  {subComp.artists?.map((artist) => (
+                    <Grid item xs={12} sm={6} md={4} lg={3} key={artist.id}>
+                      <Box
+                        sx={{
+                          p: 2,
+                          //border: '1px solid #ccc',
+                          //borderRadius: 2,
+                          height: '100%',
+                        }}
+                      >
+                        <Typography variant="h6" gutterBottom>
+                          {artist.startingNumber}. {artist.song}
+                        </Typography>
+                        <Typography variant="subtitle1" gutterBottom>
+                          "{artist.name}"
+                        </Typography>
+
+                        {/* Display placement if available */}
+                              {artist.placement !== undefined && (
+                                  <Typography variant="body1" gutterBottom>
+                                      Placering:{" "}
+                                      <Typography
+                                          component="span"
+                                          sx={{ fontWeight: "bold" }}
+                                      >
+                                          {placementDisplayName(artist.placement)}
+                                      </Typography>
+                                  </Typography>
+                              )}
+
+
+                        <Divider sx={{ my: 1 }} />
+                        <List dense>
+                          {artist.predictions?.map((prediction) => (
+                            <ListItem key={prediction.id} alignItems="flex-start">
+                              <ListItemAvatar>
+                                <Avatar
+                                  src={prediction.user.avatarImageUrl || defaultProfilePic}
+                                  alt={`${prediction.user.firstName} ${prediction.user.lastName}`}
+                                  
+                                />
+                              </ListItemAvatar>
+                              {/* Display placement if available */}
+                                  {artist.placement !== undefined && artist.placement == prediction.predictedPlacement ? (
+                                      <ListItemText
+                                          primary={`${prediction.user.firstName} ${prediction.user.lastName}`}
+                                          secondary={
+                                              <Typography>
+                                                  Tippat:{" "}
+                                                  <Typography
+                                                      component="span"
+                                                      sx={{ fontWeight: "bold" }}
+                                                  >
+                                                      {placementDisplayName(prediction.predictedPlacement)}
+                                                  </Typography>
+                                              </Typography>
+                                          }
+                                      />
+
+
+                                ) : (
+                                 <ListItemText
+                                primary={`${prediction.user.firstName} ${prediction.user.lastName}`}
+                                secondary={`Tippat: ${placementDisplayName(
+                                  prediction.predictedPlacement
+                                )}`}
+                              />
+                                )}
+                              
+                            </ListItem>
+                          ))}
+                        </List>
+                      </Box>
+                    </Grid>
+                  ))}
+                </Grid>
+              </AccordionDetails>
+            </Accordion>
+          ))}
+
+          {/* Display Final Predictions */}
+          <Accordion sx={{ mb: 2 }} defaultExpanded>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls={`panel-final-content`}
+              id={`panel-final-header`}
+            >
+              <Typography variant="h5">Final: 2025-03-08 - Stockholm</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Divider sx={{ my: 1 }} />
+              {finalPredictionsArray.length > 0 ? (
+                <Grid container spacing={2}>
+                  {finalPredictionsArray.map((group) => {
+                    const { artist, predictions } = group;
+
+                    if (!artist) {
+                      // Skip if artist not found
+                      return null;
+                    }
+
+                    return (
+                      <Grid item xs={12} sm={6} md={4} lg={3} key={artist.id}>
                         <Box
-                            key={subComp.id}
-                            sx={{
-                                mb: 4,
-                                p: 2,
-                                boxShadow: 2,
-                                borderRadius: 2,
-                                bgcolor: 'white',
-                            }}
+                          sx={{
+                            p: 2,
+                            //border: '1px solid #ccc',
+                            //borderRadius: 2,
+                            height: '100%',
+                          }}
                         >
-                            <Typography variant="h5" gutterBottom>
-                                {subComp.name} - {new Date(subComp.date)
-                                    .toISOString()
-                                    .replace('T', ' ')
-                                    .slice(0, 11)}
-                            </Typography>
-                            <Divider sx={{ my: 1 }} />
-
-                            {/* Artists displayed horizontally using Grid */}
-                            <Grid container spacing={2}>
-                                {subComp.artists?.map((artist) => (
-                                    <Grid item xs={12} sm={6} md={4} lg={3} key={artist.id}>
-                                        <Box
-                                            sx={{
-                                                p: 2,
-                                                border: '1px solid #ccc',
-                                                borderRadius: 2,
-                                                height: '80%',
-                                            }}
-                                        >
-                                            <Typography variant="h6" gutterBottom>
-                                                {artist.startingNumber}. {artist.song}
-                                            </Typography>
-                                            <Typography variant="subtitle1" gutterBottom>
-                                                "{artist.name}"
-                                            </Typography>
-                                            <Divider sx={{ my: 1 }} />
-                                            <List dense>
-                                                {artist.predictions?.map((prediction) => (
-                                                    <ListItem key={prediction.id} alignItems="flex-start">
-                                                        <ListItemAvatar>
-                                                            <Avatar
-                                                                src={prediction.user.avatarImageUrl || defaultProfilePic}
-                                                                alt={`${prediction.user.firstName} ${prediction.user.lastName}`}
-                                                            />
-                                                        </ListItemAvatar>
-                                                        <ListItemText
-                                                            primary={`${prediction.user.firstName} ${prediction.user.lastName}`}
-                                                            secondary={`Tippat: ${prediction.predictedPlacement}`}
-                                                        />
-                                                    </ListItem>
-                                                ))}
-                                            </List>
-                                        </Box>
-                                    </Grid>
-                                ))}
-                            </Grid>
+                          <Typography variant="h6" gutterBottom>
+                            {artist.name}
+                          </Typography>
+                          <Typography variant="subtitle1" gutterBottom>
+                            "{artist.song}"
+                          </Typography>
+                          <Divider sx={{ my: 1 }} />
+                          <List dense>
+                            {predictions.map((prediction, index) => (
+                              <ListItem key={index} alignItems="flex-start">
+                                <ListItemAvatar>
+                                  <Avatar
+                                    src={prediction.user.avatarImageUrl || defaultProfilePic}
+                                    alt={`${prediction.user.firstName} ${prediction.user.lastName}`}
+                                    
+                                  />
+                                </ListItemAvatar>
+                                <ListItemText
+                                  primary={`${prediction.user.firstName} ${prediction.user.lastName}`}
+                                  secondary={`Tippat: ${prediction.finalPlacement}`}
+                                />
+                              </ListItem>
+                            ))}
+                          </List>
                         </Box>
-                    ))}
-                </Box>
-            )}
-        </AuthorizeView>
-    );
+                      </Grid>
+                    );
+                  })}
+                </Grid>
+              ) : (
+                <Typography variant="body1">Inga finaltips tillgängliga.</Typography>
+              )}
+            </AccordionDetails>
+          </Accordion>
+        </Box>
+      )}
+    </AuthorizeView>
+  );
 }
 
 export default BetOverview;
