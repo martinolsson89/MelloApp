@@ -1,4 +1,4 @@
-﻿import { useState, FormEvent } from 'react';
+﻿import { useState, FormEvent, ReactNode } from 'react';
 import {
   Typography,
   Box,
@@ -78,7 +78,7 @@ function BetForm({ subCompetitions, allArtists, user, onBetSubmitted }: BetFormP
   const [finalPredictions, setFinalPredictions] = useState<{
     [key in eFinalPlacement]?: string;
   }>({});
-  const [errorMessage, setErrorMessage] = useState('');
+ const [errorMessage, setErrorMessage] = useState<ReactNode>('');
 
   const handlePredictionChange = (event: SelectChangeEvent<unknown>, artistId: string) => {
     setPredictions({
@@ -110,7 +110,11 @@ function BetForm({ subCompetitions, allArtists, user, onBetSubmitted }: BetFormP
 
       // Check if all predictions are made for this sub-competition
       if (subPredictions.some((placement) => !placement)) {
-        setErrorMessage(`Du har missat att välja en placering för varje artist i ${subCompetition.name}.`);
+          setErrorMessage(
+              <>
+                  Du har missat att tippa en placering för varje artist i <strong>{subCompetition.name}</strong>.
+              </>
+          );
         return;
       }
 
@@ -131,11 +135,39 @@ function BetForm({ subCompetitions, allArtists, user, onBetSubmitted }: BetFormP
         counts[ePlacement.FinalKval] !== 2 ||
         counts[ePlacement.ÅkerUt] !== 2
       ) {
-        setErrorMessage(
-          `I ${subCompetition.name}, måste du välja max 2 artister för varje placering: Final, FinalKval, och Åker Ut.`
+          setErrorMessage(
+              <>
+                  I <strong>{subCompetition.name}</strong>, får du välja <strong>max 2 artister</strong> för varje placering: Final, FinalKval, och Åker Ut.
+              </>
         );
         return;
-      }
+        }
+
+        const artistGoingOut = subCompetition.artists
+            .filter((artist) => predictions[artist.id] === ePlacement.ÅkerUt)
+            .map((artist) => artist.id);
+
+        const winnerId = finalPredictions[eFinalPlacement.Vinnare];
+        const secondplaceId = finalPredictions[eFinalPlacement.Tvåa];
+
+        if (winnerId && artistGoingOut.includes(winnerId)) {
+            setErrorMessage(
+                <>
+                    Vill du verkligen tippa att artisten <strong>åker ut</strong> i sin deltävling men ändå vinner <strong>finalen</strong>?
+                </>
+            );
+            return;
+
+        }
+        if (secondplaceId && artistGoingOut.includes(secondplaceId)) {
+            setErrorMessage(
+                <>
+                    Vill du verkligen tippa att artisten <strong>åker ut</strong> i sin deltävling men ändå kommer tvåa i <strong>finalen</strong>?
+                </>
+            );
+            return;
+        }
+
     }
 
     // Validation for final predictions
@@ -143,16 +175,25 @@ function BetForm({ subCompetitions, allArtists, user, onBetSubmitted }: BetFormP
       !finalPredictions[eFinalPlacement.Vinnare] ||
       !finalPredictions[eFinalPlacement.Tvåa]
     ) {
-      setErrorMessage('Välj en artist som vinnare och en som kommer två i finalen');
+        setErrorMessage(
+            <>
+                Välj <strong>en</strong> artist som vinnare och en som kommer två i finalen
+            </>
+        );
       return;
     }
 
     if (
       finalPredictions[eFinalPlacement.Vinnare] === finalPredictions[eFinalPlacement.Tvåa]
     ) {
-      setErrorMessage('Vinnaren och tvåan i finalen kan inte vara samma artist.');
+        setErrorMessage(
+            <>
+                <strong>Vinnaren</strong> och <strong>tvåan</strong> i finalen kan inte vara <strong>samma</strong> artist.
+            </>
+        );
       return;
-    }
+      }
+
 
     const userId = user.userId;
 
@@ -203,23 +244,23 @@ function BetForm({ subCompetitions, allArtists, user, onBetSubmitted }: BetFormP
         body: JSON.stringify(finalPredictionPayload),
       });
 
-        if (predictionResponse.ok && finalPredictionResponse.ok) {
-            // Update HasMadeBet in backend
-            const updateBetResponse = await fetch('/Account/updateBet', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ hasMadeBet: true }),
-            });
-            if (updateBetResponse.ok) {
-                alert('Ditt tips är nu registrerat!');
-                setPredictions({});
-                setFinalPredictions({});
-                onBetSubmitted(); // Correct reference
-            } else {
-                throw new Error('Misslyckades att uppdatera tips status');
-            }
+      if (predictionResponse.ok && finalPredictionResponse.ok) {
+        // Update HasMadeBet in backend
+        const updateBetResponse = await fetch('/Account/updateBet', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ hasMadeBet: true }),
+        });
+        if (updateBetResponse.ok) {
+          alert('Ditt tips är nu registrerat!');
+          setPredictions({});
+          setFinalPredictions({});
+          onBetSubmitted(); // Correct reference
+        } else {
+          throw new Error('Misslyckades att uppdatera tips status');
+        }
       } else {
         throw new Error('Misslyckades att skicka tips');
       }
@@ -236,7 +277,7 @@ function BetForm({ subCompetitions, allArtists, user, onBetSubmitted }: BetFormP
           <Card key={subCompetition.id} sx={{ mb: 4 }}>
             <CardHeader
               title={subCompetition.name}
-              subheader={`${new Date(subCompetition.date).toISOString().replace('T', ' ').slice(0, 11) } - ${subCompetition.location}`}
+              subheader={`${new Date(subCompetition.date).toISOString().replace('T', ' ').slice(0, 11)} - ${subCompetition.location}`}
             />
             <CardContent>
               <Typography variant="h6">Bidrag:</Typography>
@@ -320,15 +361,15 @@ function BetForm({ subCompetitions, allArtists, user, onBetSubmitted }: BetFormP
           </CardContent>
         </Card>
         {/* Display error message if any */}
-         {errorMessage && (
-            <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
-                <Alert severity="error">{errorMessage}</Alert>
-            </Box>
-         )}
+        {errorMessage && (
+          <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
+            <Alert severity="error">{errorMessage}</Alert>
+          </Box>
+        )}
         <Button type="submit" variant="contained" color="primary">
           Skicka in tips
         </Button>
-          </form>
+      </form>
     </>
   );
 }

@@ -251,7 +251,10 @@ function BetOverview() {
                 id={`panel-${subComp.id}-header`}
               >
                 <Typography variant="h5">
-                  {subComp.name}: {new Date(subComp.date).toLocaleDateString()} - {subComp.location}
+                          {subComp.name}: {new Date(subComp.date)
+                              .toISOString()
+                              .replace('T', ' ')
+                              .slice(0, 11)} - {subComp.location}
                 </Typography>
               </AccordionSummary>
 
@@ -280,7 +283,7 @@ function BetOverview() {
                         {/* Display placement if available */}
                               {artist.placement !== undefined && (
                                   <Typography variant="body1" gutterBottom>
-                                      Placering:{" "}
+                                      Resultat:{" "}
                                       <Typography
                                           component="span"
                                           sx={{ fontWeight: "bold" }}
