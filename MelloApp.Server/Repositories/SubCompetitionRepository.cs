@@ -17,7 +17,9 @@ public class SubCompetitionRepository : ISubCompetitionRepository
 
     public async Task<List<SubCompetition>> GetAllAsync()
     {
-        var subCompetitions = await _context.SubCompetitions.ToListAsync();
+        var subCompetitions = await _context.SubCompetitions
+            .OrderBy(sc => sc.Date)
+            .ToListAsync();
 
         return subCompetitions;
     }
@@ -81,7 +83,7 @@ public class SubCompetitionRepository : ISubCompetitionRepository
     public async Task<SubCompetition> GetSubCompetitionWithArtistAsync(string id)
     {
         var subCompetition = await _context.SubCompetitions
-            .Include(sc => sc.Artists)
+            .Include(sc => sc.Artists.OrderBy(a => a.StartingNumber))
             .FirstOrDefaultAsync(sc => sc.Id == id);
 
         return subCompetition;

@@ -3,6 +3,7 @@ import { AppBar, Toolbar, Typography, Button, Box, IconButton, Menu, MenuItem } 
 import MenuIcon from '@mui/icons-material/Menu';
 import { useNavigate } from 'react-router-dom';
 import LogoutLink from './LogoutLink';
+import AuthorizeAdminView from './AuthorizeAdminView';
 
 
 function Navbar() {
@@ -29,7 +30,7 @@ function Navbar() {
         { label: 'Rösta', path: '/bet' },
         { label: 'TipsHörnan', path: '/bet-overview' },
         { label: 'Ledartavla', path: '/leaderboard' },
-        { label: 'Mitt konto', path: '/my-account' },
+        { label: 'Mitt konto', path: '/my-account' }
     ];
 
   return (
@@ -45,6 +46,11 @@ function Navbar() {
                           {item.label}
                       </Button>
                   ))}
+                  <AuthorizeAdminView>
+                        <Button color="inherit" onClick={() => handleNavigation('/admin-center')}>
+                            Admin
+                      </Button>
+                   </AuthorizeAdminView>
                   <LogoutLink>
                       <Button color="inherit">Logga ut</Button>
                   </LogoutLink>
@@ -73,6 +79,11 @@ function Navbar() {
                           {item.label}
                       </MenuItem>
                   ))}
+                  <AuthorizeAdminView>
+                      <MenuItem onClick={() => handleNavigation('/admin-center')}>
+                            Admin
+                      </MenuItem>
+                  </AuthorizeAdminView>
                   <MenuItem onClick={handleMenuClose}>
                       <LogoutLink>
                           <Button color="inherit">Logga ut</Button>

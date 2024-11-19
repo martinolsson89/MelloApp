@@ -133,8 +133,8 @@ namespace MelloApp.Server.Controllers
         }
 
         [Authorize]
-        [HttpGet("GetSubCompetitionWithArtist/{id}")]
-        public async Task<IActionResult> GetSubCompetitionWithArtist(string id)
+        [HttpGet("GetSubCompetitionWithArtists/{id}")]
+        public async Task<IActionResult> GetSubCompetitionWithArtists(string id)
         {
             var subCompetition = await _repository.GetSubCompetitionWithArtistAsync(id);
 

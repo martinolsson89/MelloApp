@@ -89,6 +89,8 @@ public class AutoMapperProfiles : Profile
         CreateMap<ResultOfSubCompetition, UpdateResultOfSubCompetitionDto>().ReverseMap();
         CreateMap<ResultOfSubCompetition, DeleteResultOfSubCompetitionDto>().ReverseMap();
 
+        CreateMap<ResultOfSubCompetition, AddBatchResultOfSubCompetitionDto>().ReverseMap();
+
         // ScoreAfterSubCompetition
         CreateMap<ScoreAfterSubCompetition, GetScoreAfterSubCompetitionDto>()
             .ForMember(dest => dest.SubCompetitionName, opt => opt.MapFrom(src => src.SubCompetition))

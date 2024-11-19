@@ -4,6 +4,7 @@ using MelloApp.Server.Models;
 using MelloApp.Server.Models.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,11 +14,11 @@ namespace MelloApp.Server.Controllers
     [ApiController]
     public class ResultOfSubCompetitionController : ControllerBase
     {
-        private readonly IRepository<ResultOfSubCompetition> _repository;
+        private readonly IResultOfSubCompetitionRepository _repository;
         private readonly ILogger<ResultOfSubCompetitionController> _logger;
         private readonly IMapper _mapper;
 
-        public ResultOfSubCompetitionController(IRepository<ResultOfSubCompetition> repository,
+        public ResultOfSubCompetitionController(IResultOfSubCompetitionRepository repository,
             ILogger<ResultOfSubCompetitionController> logger, IMapper mapper)
         {
             _repository = repository;
@@ -111,6 +112,32 @@ namespace MelloApp.Server.Controllers
             var resultOfSubCompetitionResponse = _mapper.Map<GetResultOfSubCompetitionDto>(resultOfSubCompetition);
 
             return Ok(resultOfSubCompetitionResponse);
+        }
+
+        // POST: /ResultOfSubCompetition/Batch
+        [Authorize(Roles = "Admin")]
+        [HttpPost("Batch")]
+        public async Task<IActionResult> CreateBatchResultOfSubCompetition(
+            [FromBody] AddBatchResultOfSubCompetitionDto resultOfSubCompetitionDto)
+        {
+            if (ModelState.IsValid)
+            {
+
+                if (resultOfSubCompetitionDto.Results == null || !resultOfSubCompetitionDto.Results.Any())
+                {
+                    return BadRequest("No predictions provided.");
+                }
+
+                var resultsOfSubCompetitions = _mapper.Map<IEnumerable<ResultOfSubCompetition>>(resultOfSubCompetitionDto.Results);
+
+               resultsOfSubCompetitions = await _repository.CreateBatchAsync(resultsOfSubCompetitions);
+
+               var resultsOfSubCompetitionsResponse = _mapper.Map<List<GetResultOfSubCompetitionDto>>(resultsOfSubCompetitions);
+
+                return Ok(resultsOfSubCompetitionsResponse);
+            }
+
+            return BadRequest(ModelState);
         }
     }
 }

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MelloApp.Server.Repositories;
 
-public class ResultOfSubCompetitionRepository : IRepository<ResultOfSubCompetition>
+public class ResultOfSubCompetitionRepository : IResultOfSubCompetitionRepository
 {
     private readonly ApplicationDbContext _context;
 
@@ -60,5 +60,13 @@ public class ResultOfSubCompetitionRepository : IRepository<ResultOfSubCompetiti
         await _context.SaveChangesAsync();
 
         return existingResultOfSubCompetition;
+    }
+
+    public async Task<IEnumerable<ResultOfSubCompetition>> CreateBatchAsync(IEnumerable<ResultOfSubCompetition> resultOfSub)
+    {
+        await _context.ResultsOfSubCompetitions.AddRangeAsync(resultOfSub);
+        await _context.SaveChangesAsync();
+
+        return resultOfSub;
     }
 }

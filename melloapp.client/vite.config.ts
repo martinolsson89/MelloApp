@@ -111,6 +111,18 @@ export default defineConfig({
                 target: 'https://localhost:7263/',
                 secure: false
             },
+            '^/ResultOfSubCompetition/Batch': {
+                target: 'https://localhost:7263/',
+                secure: false
+            },
+            '^/SubCompetition': {
+                target: 'https://localhost:7263/',
+                secure: false
+            },
+            '^/SubCompetition/GetSubCompetitionWithArtists{id}': {
+                target: 'https://localhost:7263/',
+                secure: false
+            },
             '^/ResultOfSubCompetition': {
                 target: 'https://localhost:7263/',
                 secure: false

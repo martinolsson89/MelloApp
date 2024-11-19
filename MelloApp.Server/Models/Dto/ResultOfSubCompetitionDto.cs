@@ -12,6 +12,11 @@ public class AddResultOfSubCompetitionDto
     
 }
 
+public class AddBatchResultOfSubCompetitionDto
+{
+    public List<AddResultOfSubCompetitionDto> Results { get; set; }
+}
+
 public class UpdateResultOfSubCompetitionDto
 {
     [Required]

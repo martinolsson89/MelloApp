@@ -9,6 +9,8 @@ import Rules from './pages/Rules';
 import MyAccount from './pages/MyAccount';
 import Leaderboard from './pages/Leaderboard';
 import BetOverview from './pages/BetOverview';
+import AdminCenter from './pages/AdminCenter';
+import AddSubCompetitionResults from './components/AddSubCompetitionResults';
 
 
 
@@ -25,6 +27,8 @@ function App() {
                 <Route path="/my-account" element={<MyAccount />} />
                 <Route path="/leaderboard" element={<Leaderboard />} />
                 <Route path="/bet-overview" element={<BetOverview />} />
+                <Route path="/admin-center" element={<AdminCenter />} />
+                <Route path="/admin-center/add-results" element={<AddSubCompetitionResults />} />
             </Routes>
         </BrowserRouter>
     );
