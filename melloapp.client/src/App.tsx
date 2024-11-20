@@ -11,6 +11,7 @@ import Leaderboard from './pages/Leaderboard';
 import BetOverview from './pages/BetOverview';
 import AdminCenter from './pages/AdminCenter';
 import AddSubCompetitionResults from './components/AddSubCompetitionResults';
+import AddSubCompetitionScores from './components/AddSubCompetitionScores';
 
 
 
@@ -29,6 +30,7 @@ function App() {
                 <Route path="/bet-overview" element={<BetOverview />} />
                 <Route path="/admin-center" element={<AdminCenter />} />
                 <Route path="/admin-center/add-results" element={<AddSubCompetitionResults />} />
+                <Route path="/admin-center/add-scores" element={<AddSubCompetitionScores />} />
             </Routes>
         </BrowserRouter>
     );

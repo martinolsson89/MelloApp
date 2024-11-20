@@ -222,5 +222,38 @@ namespace MelloApp.Server.Controllers
             return Ok(orderedSubCompetitionsDto);
         }
 
+        [Authorize]
+        [HttpGet("GetSubCompetitionWithArtistsAndPredictions/{id}")]
+        public async Task<IActionResult> GetSubCompetitionWithArtistsAndPredictions(string id)
+        {
+            var subCompetition = await _repository.GetSubCompetitionWithArtistsAndPredictionsAsync(id);
+
+            if (subCompetition == null)
+            {
+                return NotFound();
+            }
+
+            var subCompetitionDto = _mapper.Map<GetSubCompetitionWithArtistsAndPredictionsDto>(subCompetition);
+
+
+            return Ok(subCompetitionDto);
+        }
+
+        [Authorize]
+        [HttpGet("GetSubCompetitionsWithArtistsAndPredictionAndResults/{id}")]
+        public async Task<IActionResult> GetSubCompetitionsWithArtistsAndPredictionAndResults(string id)
+        {
+            var subCompetition = await _repository.GetSubCompetitionsWithArtistsAndPredictionsAndResultsAsync(id);
+
+            if (subCompetition == null)
+            {
+                return NotFound();
+            }
+
+            var subCompetitionDto = _mapper.Map<GetSubCompetitionWithArtistsPredictionsAndResultsDto>(subCompetition);
+
+            return Ok(subCompetitionDto);
+        }
+
     }
 }

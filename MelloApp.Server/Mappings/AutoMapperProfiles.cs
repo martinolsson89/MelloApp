@@ -41,6 +41,8 @@ public class AutoMapperProfiles : Profile
 
 
         CreateMap<SubCompetition, GetSubCompetitionWithArtistsAndPredictionsDto>().ReverseMap();
+        CreateMap<SubCompetition, GetSubCompetitionWithArtistsPredictionsAndResultsDto>().ReverseMap();
+
 
 
         // Map Prediction to PredictionDto

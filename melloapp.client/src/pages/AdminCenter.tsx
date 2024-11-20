@@ -36,6 +36,12 @@ const AdminCenter: React.FC = () => {
                     >
                         Lägg till resultat för deltävling
                     </Button>
+                    <Button
+                        variant="contained"
+                        onClick={() => navigate('/admin-center/add-scores')}
+                    >
+                        Lägg till resultat för deltävling
+                    </Button>
                     {/* Add more buttons for other functionalities */}
                 </Stack>
             </Box>

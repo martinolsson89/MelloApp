@@ -15,6 +15,8 @@ public interface ISubCompetitionRepository : IRepository<SubCompetition>
 
     Task<List<SubCompetition>> GetSubCompetitionsWithArtistsAndPredictionsAsync();
 
+    Task<SubCompetition> GetSubCompetitionWithArtistsAndPredictionsAsync(string id);
 
+    Task<SubCompetition> GetSubCompetitionsWithArtistsAndPredictionsAndResultsAsync(string id);
 
 }

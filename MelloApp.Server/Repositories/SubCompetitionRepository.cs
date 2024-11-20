@@ -99,16 +99,6 @@ public class SubCompetitionRepository : ISubCompetitionRepository
         return subCompetitions;
     }
 
-    public async Task<SubCompetition> GetSubCompetitionWithResultAsync(string id)
-    {
-        var subCompetition = await _context.SubCompetitions
-            .Include(sc => sc.Results)
-            .ThenInclude(r => r.Artist)
-            .FirstOrDefaultAsync(sc => sc.Id == id);
-
-        return subCompetition;
-    }
-
     public async Task<List<SubCompetition>> GetSubCompetitionsWithArtistsAndPredictionsAsync()
     {
         var subCompetitions = await _context.SubCompetitions
@@ -122,5 +112,70 @@ public class SubCompetitionRepository : ISubCompetitionRepository
 
         return subCompetitions;
     }
+
+    public async Task<SubCompetition> GetSubCompetitionWithResultAsync(string id)
+    {
+        var subCompetition = await _context.SubCompetitions
+            .Include(sc => sc.Results)
+            .ThenInclude(r => r.Artist)
+            .FirstOrDefaultAsync(sc => sc.Id == id);
+
+        return subCompetition;
+    }
+
+
+    public async Task<SubCompetition> GetSubCompetitionWithArtistsAndPredictionsAsync(string id)
+    {
+        var subCompetition = await _context.SubCompetitions
+            .Include(sc => sc.Artists)
+            .Include(sc => sc.Predictions)
+            .ThenInclude(p => p.User)
+            .Include(sc => sc.Predictions)
+            .ThenInclude(p => p.Artist)
+            .FirstOrDefaultAsync(sc => sc.Id == id);
+
+        if (subCompetition != null && subCompetition.Artists != null)
+        {
+            subCompetition.Artists = subCompetition.Artists
+                .OrderBy(a => a.StartingNumber)
+                .ToList();
+        }
+
+        return subCompetition;
+    }
+
+
+    public async Task<SubCompetition> GetSubCompetitionsWithArtistsAndPredictionsAndResultsAsync(string id)
+    {
+        var subCompetition = await _context.SubCompetitions
+            .Include(sc => sc.Artists)
+            .Include(sc => sc.Predictions)
+            .ThenInclude(p => p.User)
+            .Include(sc => sc.Predictions)
+            .ThenInclude(p => p.Artist)
+            .Include(sc => sc.Results)
+            .ThenInclude(r => r.Artist)
+            .FirstOrDefaultAsync(sc => sc.Id == id);
+
+        if (subCompetition != null)
+        {
+            if (subCompetition.Artists != null)
+            {
+                subCompetition.Artists = subCompetition.Artists
+                    .OrderBy(a => a.StartingNumber)
+                    .ToList();
+            }
+
+            if (subCompetition.Results != null)
+            {
+                subCompetition.Results = subCompetition.Results
+                    .OrderBy(r => r.Artist.StartingNumber)
+                    .ToList();
+            }
+        }
+
+        return subCompetition;
+    }
+
 
 }

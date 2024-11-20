@@ -127,6 +127,10 @@ export default defineConfig({
                 target: 'https://localhost:7263/',
                 secure: false
             },
+            '^/SubCompetition/GetSubCompetitionsWithArtistsAndPredictionAndResults/{id}': {
+                target: 'https://localhost:7263/',
+                secure: false
+            },
         },
         port: 5173,
         https: {

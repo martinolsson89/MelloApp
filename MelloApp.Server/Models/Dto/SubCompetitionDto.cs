@@ -117,5 +117,16 @@ public class GetSubCompetitionWithArtistsAndPredictionsDto
     public List<ArtistWithPredictionsDto> Artists { get; set; }
 }
 
+public class GetSubCompetitionWithArtistsPredictionsAndResultsDto
+{
+    public string Id { get; set; }
+    public string Name { get; set; }
+    public DateTime Date { get; set; }
+    public string? Location { get; set; }
+    public List<ArtistWithPredictionsDto> Artists { get; set; }
+    public List<ResultOfSubCompetitionDto> Results { get; set; }
+
+}
+
 
 
