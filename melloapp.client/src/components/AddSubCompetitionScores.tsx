@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import {
     Box,
     Typography,
@@ -9,10 +9,15 @@ import {
     Button,
     CircularProgress,
     Alert,
+    SelectChangeEvent,
+    Avatar,
+    Divider
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import AuthorizeAdminView from './AuthorizeAdminView';
 import Navbar from './Navbar';
+import defaultProfilePic from '../assets/avatar/anonymous-user.webp';
+
 
 interface SubCompetition {
     id: string;
@@ -21,17 +26,65 @@ interface SubCompetition {
     location: string;
 }
 
+interface Users {
+    id: string;
+    firstName: string;
+    lastName: string;
+    avatarImageUrl: string;
+    points: number;
+}
+
+
 function AddSubCompetitionScores() {
     const [subCompetitions, setSubCompetitions] = useState<SubCompetition[]>([]);
     const [subCompLoading, setSubCompLoading] = useState<boolean>(false);
     const [selectedSubCompetitionId, setSelectedSubCompetitionId] = useState<string>('');
+    const [showButton, setShowButton] = useState<boolean>(false);
     const [error, setError] = useState<string>('');
+
+    const[userPoints, setUserPoints] = useState<Users[]>([]);
 
     const navigate = useNavigate();
 
     const handleNavigation = (path: string) => {
         navigate(path);
     };
+
+    const handleOnChange = (e: SelectChangeEvent<string>) => {
+        const selectedId = e.target.value;
+        setSelectedSubCompetitionId(selectedId);
+        console.log('Selected SubCompetition ID:', selectedId);
+        setShowButton(true);
+    }
+
+    const handleSubmit = () => {
+        fetch(`https://localhost:7263/Points/${selectedSubCompetitionId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify(selectedSubCompetitionId),
+        })
+            .then(async (response) => {
+                if (response.ok) {
+                    const addedScores: Users[] = await response.json(); // Parse the returned JSON into the interface
+                    setUserPoints(addedScores); // Update the state with the new scores
+                    alert('Poängen beräknades och lades till framgångsrikt!');
+                } else {
+                    const errorText = await response.text();
+                    throw new Error(errorText || 'Failed to submit results');
+                }
+            })
+            .catch((error) => {
+                console.error('Error submitting results:', error);
+                alert(`Kunde inte skicka in resultat. Fel: ${error.message}`);
+            });
+
+            fetch('/Users')
+    }
+
+
 
     // Fetch sub-competitions on component mount
     useEffect(() => {
@@ -52,6 +105,7 @@ function AddSubCompetitionScores() {
             });
     }, []);
 
+
   return (
     <AuthorizeAdminView>
         <Navbar />
@@ -65,7 +119,10 @@ function AddSubCompetitionScores() {
                 borderRadius: 2,
                 bgcolor: 'white',
             }}
-        >
+          >
+              <Typography variant="h4" gutterBottom>
+                  Lägg till poäng efter deltävling
+              </Typography>
             {error && (
                 <Alert severity="error" sx={{ mb: 2 }}>
                     {error}
@@ -82,7 +139,7 @@ function AddSubCompetitionScores() {
                         labelId="subcompetition-select-label"
                         value={selectedSubCompetitionId}
                         label="Välj deltävling"
-                        onChange={(e) => setSelectedSubCompetitionId(e.target.value as string)}
+                        onChange={handleOnChange}
                     >
                         {subCompetitions.map((subComp) => (
                             <MenuItem key={subComp.id} value={subComp.id}>
@@ -94,11 +151,47 @@ function AddSubCompetitionScores() {
                         ))}
                     </Select>
                 </FormControl>
-                        <Button variant="contained" onClick={() => handleNavigation('/admin-center')}>
+                        <Button variant="contained" color="secondary" onClick={() => handleNavigation('/admin-center')}>
                     Go Back
                 </Button>
                 </>
-            )}
+              )}
+              {showButton && (
+                  <Button variant="contained" sx={{ mx: 2 }} onClick={() => handleSubmit()}>Beräkna & lägg till poäng</Button>
+              
+              )}
+              {userPoints && (
+                  <>
+                  <Divider sx={{ my: 4}} />
+                      <Typography sx={{mb:4}} variant="h5" gutterBottom>Poäng som lades till:</Typography>
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+                          {userPoints.map((user) => (
+                              <Box key={user.id} sx={{
+                                  m: 1,
+                                  display: 'flex',
+                                  flexDirection: 'column',
+                                  alignItems: 'center', // Align children (avatar, name, points) to the center
+                                  textAlign: 'center', }}>
+                                <Avatar
+                                    src={user.avatarImageUrl || defaultProfilePic}
+                                    alt={`${user.firstName} ${user.lastName}`}
+                                    sx={{ width: 56, height: 56, mb:1 }}
+
+                                />
+                                <Typography variant="body2" gutterBottom>
+                                    {user.firstName} {user.lastName}
+                                </Typography>
+                                <Typography variant="body1" gutterBottom>
+                                    Poäng: {user.points}
+                                </Typography>
+                            </Box>
+                        ))}
+                        </Box>
+
+                  </>
+              
+              
+              )}
         </Box>
     </AuthorizeAdminView>
   )

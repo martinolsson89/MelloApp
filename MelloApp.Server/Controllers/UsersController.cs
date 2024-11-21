@@ -32,7 +32,7 @@ namespace MelloApp.Server.Controllers
         {
             var users = await _repository.GetAllAsync();
 
-            var usersDto = _mapper.Map<List<UserDto>>(users);
+            var usersDto = _mapper.Map<List<GetUserDto>>(users);
 
             return Ok(usersDto);
         }
@@ -49,7 +49,7 @@ namespace MelloApp.Server.Controllers
                 return NotFound();
             }
 
-            var userDto = _mapper.Map<UserDto>(user);
+            var userDto = _mapper.Map<GetUserDto>(user);
 
             return Ok(userDto);
         }

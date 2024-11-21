@@ -49,9 +49,12 @@ function Home() {
                     </Grid>
 
                     <Divider sx={{ my: 4 }} />
+                    <Typography variant="body1">
+                        Klicka på<Button variant="text" href='/rules'>regler</Button>för att få mer information och läsa reglerna.
+                    </Typography>
 
                     <Typography variant="body1">
-                        Kom igång med tippandet:
+                        Om du inte bryr dig om regler och sådant strunt, kan du börja tippa direkt!
                     </Typography>
                     <Button
                         variant="contained"
@@ -61,6 +64,7 @@ function Home() {
                     >
                         Rösta nu!
                     </Button>
+
                 </Box>
             </Container>
         </AuthorizeView>

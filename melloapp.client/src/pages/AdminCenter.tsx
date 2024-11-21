@@ -38,6 +38,7 @@ const AdminCenter: React.FC = () => {
                     </Button>
                     <Button
                         variant="contained"
+                        sx={{ backgroundColor: 'green' }}
                         onClick={() => navigate('/admin-center/add-scores')}
                     >
                         Lägg till resultat för deltävling

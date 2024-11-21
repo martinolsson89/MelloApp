@@ -131,6 +131,14 @@ export default defineConfig({
                 target: 'https://localhost:7263/',
                 secure: false
             },
+            '^/Points/{subCompetitionId}': {
+                target: 'https://localhost:7263/',
+                secure: false
+            },
+            '^/Users': {
+                target: 'https://localhost:7263/',
+                secure: false
+            },
         },
         port: 5173,
         https: {

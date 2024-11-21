@@ -29,6 +29,7 @@ namespace MelloApp.Server
             builder.Services.AddScoped<IRepository<ApplicationUser>, UserRepository>();
             builder.Services.AddScoped<IFinalPredictionRepository, FinalPredictionRepository>();
             builder.Services.AddScoped<IScoreAfterSubCompetitionRepository, ScoreAfterSubCompetitionRepository>();
+            builder.Services.AddScoped<PointsCalculationService>();
 
 
 
@@ -63,6 +64,18 @@ namespace MelloApp.Server
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            // Add CORS policy
+            builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(policy =>
+                {
+                    policy.WithOrigins("https://localhost:5173") // Your frontend URL
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials(); // If using cookies
+                });
+            });
+
             var app = builder.Build();
 
             app.UseDefaultFiles();
@@ -84,6 +97,8 @@ namespace MelloApp.Server
             }
 
             app.UseHttpsRedirection();
+
+            app.UseCors(); // Enable CORS
 
             app.UseAuthorization();
 

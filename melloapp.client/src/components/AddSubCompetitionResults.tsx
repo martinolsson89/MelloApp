@@ -16,6 +16,12 @@ import { useNavigate } from 'react-router-dom';
 import AuthorizeAdminView from '../components/AuthorizeAdminView';
 import Navbar from '../components/Navbar';
 
+
+enum ePlacement {
+    Final = 'Final',
+    FinalKval = 'FinalKval',
+    ÅkerUt = 'ÅkerUt',
+}
 interface SubCompetition {
     id: string;
     name: string;
@@ -127,6 +133,27 @@ const AddSubCompetitionResults: React.FC = () => {
             subCompetitionId: selectedSubCompetitionId,
         }));
 
+        // Count the number of predictions for each placement
+        const counts: { [key in ePlacement]: number } = {
+            [ePlacement.Final]: 0,
+            [ePlacement.FinalKval]: 0,
+            [ePlacement.ÅkerUt]: 0,
+        };
+
+        results.forEach((result) => {
+            counts[result.placement as ePlacement] += 1;
+        });
+
+        // Validate counts
+        if(
+            counts[ePlacement.Final] !== 2 ||
+            counts[ePlacement.FinalKval] !== 2 ||
+            counts[ePlacement.ÅkerUt] !== 2
+        ) {
+            alert('Du måste ha fylla i två resultat av varje typ.(Final, FinalKval, Åker ut)');
+            return;
+        }
+
         setLoading(true);
 
         fetch('/ResultOfSubCompetition/Batch', {
@@ -206,7 +233,7 @@ const AddSubCompetitionResults: React.FC = () => {
                         ))}
                     </Select>
                 </FormControl>
-                        <Button variant="contained" onClick={() => handleNavigation('/admin-center')}>
+                            <Button variant="contained" color="secondary" sx={{mb:2}} onClick={() => handleNavigation('/admin-center')}>
                     Go Back
                 </Button>
                 </>

@@ -36,7 +36,7 @@ function Rules() {
                     <span style={{ fontWeight: 'bold' }}>Vart lämnar jag in mitt tips?</span>
                 </Typography>
                 <Typography variant="body1" align="left" sx={{ mb: 2 }}>
-                    <span style={{ fontWeight: 'bold' }}>Svar:</span> Du klickar antingen på <span style={{ fontWeight: 'bold' }}><Button onClick={() => handleNavigation('/bet')}> Rösta </Button></span> här eller i menyn. Där du kan fylla i ditt tips och skicka in det.
+                    <span style={{ fontWeight: 'bold' }}>Svar:</span> Du klickar antingen på<span style={{ fontWeight: 'bold' }}><Button onClick={() => handleNavigation('/bet')}> Rösta </Button></span>här eller i menyn. Där du kan fylla i ditt tips och skicka in det.
                 </Typography>
                 <Typography variant="body1" align="left" sx={{ mb: 2, textDecoration: 'underline' }}>
                     <span style={{ fontWeight: 'bold' }}>Hur gör jag för att tippa?</span>
@@ -49,7 +49,7 @@ function Rules() {
                     <span style={{ fontWeight: 'bold' }}>Vart ser jag hur de andra i släkten har tippat?</span>
                 </Typography>
                 <Typography variant="body1" align="left" sx={{ mb: 2 }}>
-                    <span style={{ fontWeight: 'bold' }}>Svar:</span> Du klickar antingen på <span style={{ fontWeight: 'bold' }}><Button onClick={() => handleNavigation('/bet-overview')}> Tipshörnan </Button></span> här eller i menyn. Det är dock oklart om det hjälper dig...
+                    <span style={{ fontWeight: 'bold' }}>Svar:</span> Du klickar antingen på<span style={{ fontWeight: 'bold' }}><Button onClick={() => handleNavigation('/bet-overview')}>Tipshörnan </Button></span> här eller i menyn. Det är dock oklart om det hjälper dig...
                 </Typography>
                 <Typography variant="body1" align="left" sx={{ mb: 2, textDecoration: 'underline' }}>
                     <span style={{ fontWeight: 'bold' }}>När stänger tippningen?</span>
@@ -67,7 +67,7 @@ function Rules() {
                     <span style={{ fontWeight: 'bold' }}>Hur lägger jag till en egen profilbild?</span>
                 </Typography>
                 <Typography variant="body1" align="left" sx={{ mb: 2 }}>
-                    <span style={{ fontWeight: 'bold' }}>Svar:</span> Du klickar antingen på <span style={{ fontWeight: 'bold' }}><Button onClick={() => handleNavigation('/my-account')}> Mitt konto </Button></span> här eller i menyn. Där kan du klistra in en länk till en bild från nätet.
+                    <span style={{ fontWeight: 'bold' }}>Svar:</span> Du klickar antingen på<span style={{ fontWeight: 'bold' }}><Button onClick={() => handleNavigation('/my-account')}> Mitt konto </Button></span>här eller i menyn. Där kan du klistra in en länk till en bild från nätet.
                 </Typography>
 
                 

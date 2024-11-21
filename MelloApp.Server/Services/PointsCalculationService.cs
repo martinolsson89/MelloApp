@@ -1,6 +1,7 @@
 ﻿using MelloApp.Server.Data;
 using MelloApp.Server.Enums;
 using MelloApp.Server.Models;
+using MelloApp.Server.Models.Account;
 using Microsoft.EntityFrameworkCore;
 
 namespace MelloApp.Server.Services;
@@ -14,8 +15,10 @@ public class PointsCalculationService
         _context = context;
     }
 
-    public async Task CalculateAndStorePointsAsync(string subCompetitionId)
+    public async Task<List<UserScoreDto>> CalculateAndStorePointsAsync(string subCompetitionId)
     {
+        var addedPoints = new List<UserScoreDto>();
+
         var subCompetition = await _context.SubCompetitions
             .Include(sc => sc.Predictions)
             .ThenInclude(p => p.User)
@@ -57,7 +60,13 @@ public class PointsCalculationService
             var existingScore = await _context.ScoresAfterSubCompetitions
                 .FirstOrDefaultAsync(s => s.UserId == kvp.Key && s.SubCompetitionId == subCompetitionId);
 
-            if (existingScore == null)
+            var user = subCompetition.Predictions
+                .Where(p => p.UserId == kvp.Key)
+                .Select(p => p.User)
+                .FirstOrDefault();
+
+
+            if (existingScore != null)
             {
                 existingScore.Points = kvp.Value;
             }
@@ -70,6 +79,17 @@ public class PointsCalculationService
                     Points = kvp.Value
                 };
                 _context.ScoresAfterSubCompetitions.Add(score);
+
+                var userScoreDto = new UserScoreDto
+                {
+                    UserId = user.Id,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    AvatarImageUrl = user.AvatarImageUrl,
+                    Points = kvp.Value
+                };
+
+                addedPoints.Add(userScoreDto);
             }
         }
 
@@ -78,6 +98,8 @@ public class PointsCalculationService
         // Update leaderboard
 
         await UpdateLeaderboardAsync(userPoints);
+
+        return addedPoints;
     }
 
     private int GetPointsForPrediction(ePlacement predictedPlacement, ePlacement actualPlacement)

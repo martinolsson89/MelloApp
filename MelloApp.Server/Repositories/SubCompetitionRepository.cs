@@ -110,6 +110,18 @@ public class SubCompetitionRepository : ISubCompetitionRepository
             .OrderBy(sc => sc.Date)
             .ToListAsync();
 
+        // Order the predictions in each sub-competition by the user's first name
+        foreach (var subCompetition in subCompetitions)
+        {
+            if (subCompetition.Predictions != null)
+            {
+                subCompetition.Predictions = subCompetition.Predictions
+                    .OrderBy(p => p.User.FirstName)
+                    .ToList();
+            }
+        }
+
+
         return subCompetitions;
     }
 

@@ -51,3 +51,4 @@ public class UserScoreDto
     public string AvatarImageUrl { get; set; }
     public int Points { get; set; }
 }
+
