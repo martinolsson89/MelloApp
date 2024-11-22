@@ -41,7 +41,7 @@ function SubCompetitionPoints({ subCompetitionData }: SubCompetitionProps) {
             boxShadow: 3,
             borderRadius: 2,
             bgcolor: 'rgba(255, 255, 255, 0.7)',
-            maxWidth: 800,
+            width: { xs: '92%', sm: '92%', md:'auto' },
           }}
         >
           <Typography variant="h6" gutterBottom>

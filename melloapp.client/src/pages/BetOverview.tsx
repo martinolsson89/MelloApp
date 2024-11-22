@@ -268,11 +268,12 @@ function BetOverview() {
                       <Box
                         sx={{
                           p: 2,
-                          //border: '1px solid #ccc',
-                          //borderRadius: 2,
-                          height: '100%',
+                          border: '1px solid #ccc',
+                          borderRadius: 2,
+                          height: '90%',
                         }}
-                      >
+                          >
+                        <Box sx={{ backgroundColor: 'lightblue', borderRadius: 2, p: 2 }}>
                         <Typography variant="h6" gutterBottom>
                           {artist.startingNumber}. {artist.song}
                         </Typography>
@@ -293,11 +294,15 @@ function BetOverview() {
                                   </Typography>
                               )}
 
-
+                        </Box>
                         <Divider sx={{ my: 1 }} />
                         <List dense>
-                          {artist.predictions?.map((prediction) => (
-                            <ListItem key={prediction.id} alignItems="flex-start">
+                          {artist.predictions?.map((prediction, index) => (
+                              <ListItem key={index} alignItems="flex-start"
+                                  sx={{
+                                      backgroundColor: index % 2 === 0 ? '#f2f3f5' : 'white',
+                                      borderRadius: 2,
+                              }}>
                               <ListItemAvatar>
                                 <Avatar
                                   src={prediction.user.avatarImageUrl || defaultProfilePic}
@@ -350,7 +355,7 @@ function BetOverview() {
               aria-controls={`panel-final-content`}
               id={`panel-final-header`}
             >
-              <Typography variant="h5">Final: 2025-03-08 - Stockholm</Typography>
+            <Typography variant="h5">Final: 2025-03-08 - Stockholm</Typography>
             </AccordionSummary>
             <AccordionDetails>
               <Divider sx={{ my: 1 }} />
@@ -369,21 +374,28 @@ function BetOverview() {
                         <Box
                           sx={{
                             p: 2,
-                            //border: '1px solid #ccc',
-                            //borderRadius: 2,
-                            height: '100%',
+                            border: '1px solid #ccc',
+                            borderRadius: 2,
+                            height: '90%',
                           }}
-                        >
+                            >
+                          <Box sx={{ backgroundColor: 'lightblue', borderRadius: 2, p: 2 }}>
                           <Typography variant="h6" gutterBottom>
                             {artist.name}
                           </Typography>
                           <Typography variant="subtitle1" gutterBottom>
                             "{artist.song}"
-                          </Typography>
+                           </Typography>
+                           </Box>
                           <Divider sx={{ my: 1 }} />
                           <List dense>
                             {predictions.map((prediction, index) => (
-                              <ListItem key={index} alignItems="flex-start">
+                                <ListItem key={index} alignItems="flex-start"
+                                    sx={{
+                                        backgroundColor: index % 2 === 0 ? '#f2f3f5' : 'white',
+                                        borderRadius: 2,
+                                    }}
+                                >
                                 <ListItemAvatar>
                                   <Avatar
                                     src={prediction.user.avatarImageUrl || defaultProfilePic}
