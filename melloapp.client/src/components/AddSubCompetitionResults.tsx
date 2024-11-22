@@ -145,7 +145,7 @@ const AddSubCompetitionResults: React.FC = () => {
         });
 
         // Validate counts
-        if(
+        if (
             counts[ePlacement.Final] !== 2 ||
             counts[ePlacement.FinalKval] !== 2 ||
             counts[ePlacement.ÅkerUt] !== 2
@@ -189,104 +189,104 @@ const AddSubCompetitionResults: React.FC = () => {
 
     return (
         <AuthorizeAdminView>
-        <Navbar />
-        <Box
-            sx={{
-                mt: 4,
-                textAlign: 'center',
-                mx: 'auto',
-                p: 3,
-                boxShadow: 3,
-                borderRadius: 2,
-                bgcolor: 'white',
-            }}
-        >
-            <Typography variant="h4" gutterBottom>
-                Lägg till resultat för deltävling
-            </Typography>
+            <Navbar />
+            <Box
+                sx={{
+                    mt: 4,
+                    textAlign: 'center',
+                    mx: 'auto',
+                    p: 3,
+                    boxShadow: 3,
+                    borderRadius: 2,
+                    bgcolor: 'white',
+                }}
+            >
+                <Typography variant="h4" gutterBottom>
+                    Lägg till resultat för deltävling
+                </Typography>
 
-            {error && (
-                <Alert severity="error" sx={{ mb: 2 }}>
-                    {error}
-                </Alert>
-            )}
+                {error && (
+                    <Alert severity="error" sx={{ mb: 2 }}>
+                        {error}
+                    </Alert>
+                )}
 
-            {subCompLoading ? (
-                <CircularProgress />
-            ) : (
-                <>
-                <FormControl fullWidth sx={{ mb: 2 }}>
-                    <InputLabel id="subcompetition-select-label">Välj deltävling</InputLabel>
-                    <Select
-                        labelId="subcompetition-select-label"
-                        value={selectedSubCompetitionId}
-                        label="Välj deltävling"
-                        onChange={(e) => setSelectedSubCompetitionId(e.target.value as string)}
-                    >
-                        {subCompetitions.map((subComp) => (
-                            <MenuItem key={subComp.id} value={subComp.id}>
-                                {subComp.name}: {new Date(subComp.date)
-                                    .toISOString()
-                                    .replace('T', ' ')
-                                    .slice(0, 11)} - {subComp.location}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-                            <Button variant="contained" color="secondary" sx={{mb:2}} onClick={() => handleNavigation('/admin-center')}>
-                    Go Back
-                </Button>
-                </>
-            )}
-
-            {loading ? (
-                <Box sx={{ mt: 2 }}>
+                {subCompLoading ? (
                     <CircularProgress />
-                </Box>
-            ) : artists.length > 0 ? (
-                <>
-                    <Typography variant="h6" gutterBottom>
-                        Ange resultat för artister
-                    </Typography>
-                    {artists.map((artist) => (
-                        <Box key={artist.id} sx={{ mb: 2 }}>
-                            <Typography variant="subtitle1">
-                                {artist.startingNumber}. {artist.name} - "{artist.song}"
-                            </Typography>
-                            <FormControl fullWidth sx={{ mt: 1 }}>
-                                <InputLabel id={`placement-select-label-${artist.id}`}>Resultat</InputLabel>
-                                <Select
-                                    labelId={`placement-select-label-${artist.id}`}
-                                    value={placements[artist.id] !== undefined ? placements[artist.id] : ''}
-                                    label="Resultat"
-                                    onChange={(e) => handlePlacementChange(artist.id, e.target.value as string)}
-                                >
-                                    {placementOptions.map((option) => (
-                                        <MenuItem key={option.value} value={option.value}>
-                                            {option.label}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Box>
-                    ))}
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={handleSubmit}
-                        disabled={loading}
-                        sx={{ mt: 2 }}
-                    >
-                        Skicka in resultat
-                    </Button>
-                </>
-            ) : (
-                selectedSubCompetitionId && (
-                    <Typography variant="body1">
-                        Inga artister tillgängliga för denna deltävling.
-                    </Typography>
-                )
-            )}
+                ) : (
+                    <>
+                        <FormControl fullWidth sx={{ mb: 2 }}>
+                            <InputLabel id="subcompetition-select-label">Välj deltävling</InputLabel>
+                            <Select
+                                labelId="subcompetition-select-label"
+                                value={selectedSubCompetitionId}
+                                label="Välj deltävling"
+                                onChange={(e) => setSelectedSubCompetitionId(e.target.value as string)}
+                            >
+                                {subCompetitions.map((subComp) => (
+                                    <MenuItem key={subComp.id} value={subComp.id}>
+                                        {subComp.name}: {new Date(subComp.date)
+                                            .toISOString()
+                                            .replace('T', ' ')
+                                            .slice(0, 11)} - {subComp.location}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        <Button variant="contained" color="secondary" sx={{ mb: 2 }} onClick={() => handleNavigation('/admin-center')}>
+                            Go Back
+                        </Button>
+                    </>
+                )}
+
+                {loading ? (
+                    <Box sx={{ mt: 2 }}>
+                        <CircularProgress />
+                    </Box>
+                ) : artists.length > 0 ? (
+                    <>
+                        <Typography variant="h6" gutterBottom>
+                            Ange resultat för artister
+                        </Typography>
+                        {artists.map((artist) => (
+                            <Box key={artist.id} sx={{ mb: 2 }}>
+                                <Typography variant="subtitle1">
+                                    {artist.startingNumber}. {artist.name} - "{artist.song}"
+                                </Typography>
+                                <FormControl fullWidth sx={{ mt: 1 }}>
+                                    <InputLabel id={`placement-select-label-${artist.id}`}>Resultat</InputLabel>
+                                    <Select
+                                        labelId={`placement-select-label-${artist.id}`}
+                                        value={placements[artist.id] !== undefined ? placements[artist.id] : ''}
+                                        label="Resultat"
+                                        onChange={(e) => handlePlacementChange(artist.id, e.target.value as string)}
+                                    >
+                                        {placementOptions.map((option) => (
+                                            <MenuItem key={option.value} value={option.value}>
+                                                {option.label}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </Box>
+                        ))}
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handleSubmit}
+                            disabled={loading}
+                            sx={{ mt: 2 }}
+                        >
+                            Skicka in resultat
+                        </Button>
+                    </>
+                ) : (
+                    selectedSubCompetitionId && (
+                        <Typography variant="body1">
+                            Inga artister tillgängliga för denna deltävling.
+                        </Typography>
+                    )
+                )}
             </Box>
         </AuthorizeAdminView>
     );

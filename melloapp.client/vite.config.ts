@@ -139,6 +139,14 @@ export default defineConfig({
                 target: 'https://localhost:7263/',
                 secure: false
             },
+            '^/Points/update-points-by-details': {
+                target: 'https://localhost:7263/',
+                secure: false
+            },
+            '^/HomeContent': {
+                target: 'https://localhost:7263/',
+                secure: false
+            },
         },
         port: 5173,
         https: {

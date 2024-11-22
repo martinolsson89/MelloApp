@@ -41,7 +41,21 @@ const AdminCenter: React.FC = () => {
                         sx={{ backgroundColor: 'green' }}
                         onClick={() => navigate('/admin-center/add-scores')}
                     >
-                        Lägg till resultat för deltävling
+                        Lägg till poäng för deltävlingar
+                    </Button>
+                    <Button
+                        variant="contained"
+                        sx={{ backgroundColor: 'orange' }}
+                        onClick={() => navigate('/admin-center/update-points')}
+                    >
+                        Uppdatera poäng
+                    </Button>
+                    <Button
+                        variant="contained"
+                        sx={{ backgroundColor: 'purple' }}
+                        onClick={() => navigate('/admin-center/update-home-content')}
+                    >
+                        Uppdatera Startsidan
                     </Button>
                     {/* Add more buttons for other functionalities */}
                 </Stack>

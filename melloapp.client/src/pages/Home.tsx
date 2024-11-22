@@ -1,9 +1,32 @@
-﻿import { Typography, Box, Divider, Button, Container, Grid } from '@mui/material';
+﻿import React, { useEffect, useState } from 'react';
+import { Typography, Box, Divider, Button, Container, Grid } from '@mui/material';
 import AuthorizeView, { AuthorizedUser } from "../components/AuthorizeView.tsx";
 import Navbar from "../components/Navbar.tsx";
 
 function Home() {
-    const imageUrl = 'https://mellopedia.svt.se/images/thumb/5/5e/Edvin_T%C3%B6rnblom_och_Kristina_Keyyo_Petrushina_programledare_2025.jpg/1599px-Edvin_T%C3%B6rnblom_och_Kristina_Keyyo_Petrushina_programledare_2025.jpg?20241107162646';
+    const [homeContent, setHomeContent] = useState({
+        title: '',
+        description: '',
+        imageUrl: '',
+    });
+
+    useEffect(() => {
+        const fetchHomeContent = async () => {
+            try {
+                const response = await fetch('/HomeContent');
+                if (response.ok) {
+                    const data = await response.json();
+                    setHomeContent(data);
+                } else {
+                    console.error('Failed to fetch home content.');
+                }
+            } catch (err) {
+                console.error('Error fetching home content:', err);
+            }
+        };
+
+        fetchHomeContent();
+    }, []);
 
     return (
         <AuthorizeView>
@@ -26,14 +49,14 @@ function Home() {
                     </Typography>
 
                     <Typography variant="h6" sx={{ mt: 3 }}>
-                        Varje vecka kommer vi presentera veckans ledare i tävlingen här!
+                        {homeContent.title}
                     </Typography>
 
                     <Grid container justifyContent="center" sx={{ mt: 4 }}>
                         <Grid item xs={12} sm={8} md={6}>
                             <Box
                                 component="img"
-                                src={imageUrl}
+                                src={homeContent.imageUrl}
                                 alt="Veckans ledare"
                                 sx={{
                                     width: '100%',
@@ -43,7 +66,7 @@ function Home() {
                                 }}
                             />
                             <Typography variant="body1" sx={{ mt: 1, color: 'text.secondary' }}>
-                                Edvin Törnblom och Kristina "Keyyo" Petrushina, programledare 2025.
+                                {homeContent.description}
                             </Typography>
                         </Grid>
                     </Grid>

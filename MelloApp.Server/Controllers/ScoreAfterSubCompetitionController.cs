@@ -91,6 +91,7 @@ namespace MelloApp.Server.Controllers
             return BadRequest(ModelState);
         }
 
+
         // DELETE: /ScoreAfterSubCompetition/{id}
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]

@@ -18,6 +18,20 @@ public class UpdateScoreAfterSubCompetitionDto
     public string? UserId { get; set; }
 }
 
+public class UpdatePointsByDetailsDto
+{
+    [Required]
+    public string FirstName { get; set; }
+
+    [Required]
+    public string LastName { get; set; }
+
+    [Required]
+    public string SubCompetitionName { get; set; }
+
+    public int Points { get; set; }
+}
+
 
 public class DeleteScoreAfterSubCompetitionDto
 {

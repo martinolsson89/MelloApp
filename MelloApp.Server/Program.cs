@@ -30,6 +30,7 @@ namespace MelloApp.Server
             builder.Services.AddScoped<IFinalPredictionRepository, FinalPredictionRepository>();
             builder.Services.AddScoped<IScoreAfterSubCompetitionRepository, ScoreAfterSubCompetitionRepository>();
             builder.Services.AddScoped<PointsCalculationService>();
+            builder.Services.AddScoped<LeaderboardService>();
 
 
 

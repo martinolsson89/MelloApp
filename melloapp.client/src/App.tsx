@@ -12,6 +12,8 @@ import BetOverview from './pages/BetOverview';
 import AdminCenter from './pages/AdminCenter';
 import AddSubCompetitionResults from './components/AddSubCompetitionResults';
 import AddSubCompetitionScores from './components/AddSubCompetitionScores';
+import UpdatePoints from './components/UpdatePoints';
+import UpdateHomeContent from './components/UpdateHomeContent';
 
 
 
@@ -31,6 +33,8 @@ function App() {
                 <Route path="/admin-center" element={<AdminCenter />} />
                 <Route path="/admin-center/add-results" element={<AddSubCompetitionResults />} />
                 <Route path="/admin-center/add-scores" element={<AddSubCompetitionScores />} />
+                <Route path="/admin-center/update-points" element={<UpdatePoints />} />
+                <Route path="/admin-center/update-home-content" element={<UpdateHomeContent />} />
             </Routes>
         </BrowserRouter>
     );
