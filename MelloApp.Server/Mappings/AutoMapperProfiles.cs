@@ -132,7 +132,7 @@ public class AutoMapperProfiles : Profile
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.User))
             .ForMember(dest => dest.Artist, opt => opt.MapFrom(src => src.Artist))
-            .ForMember(dest => dest.FinalPlacement, opt => opt.MapFrom(src => src.FinalPlacement))
+            .ForMember(dest => dest.FinalPredictedPlacement, opt => opt.MapFrom(src => src.FinalPredictedPlacement))
             .ReverseMap();
 
         CreateMap<FinalPrediction, FinalPredictionDto>()

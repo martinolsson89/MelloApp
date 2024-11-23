@@ -20,6 +20,6 @@ public class FinalPrediction
     public string SubCompetitionId { get; set; } = Guid.NewGuid().ToString();
     public virtual SubCompetition SubCompetition { get; set; }
 
-    public eFinalPlacement FinalPlacement { get; set; }
+    public eFinalPlacement FinalPredictedPlacement { get; set; }
 
 }

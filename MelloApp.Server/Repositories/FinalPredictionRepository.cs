@@ -46,7 +46,7 @@ public class FinalPredictionRepository : IFinalPredictionRepository
         existingFinalPrediction.UserId = model.UserId;
         existingFinalPrediction.ArtistId = model.ArtistId;
         existingFinalPrediction.SubCompetitionId = model.SubCompetitionId;
-        existingFinalPrediction.FinalPlacement = model.FinalPlacement;
+        existingFinalPrediction.FinalPredictedPlacement = model.FinalPredictedPlacement;
 
         await _context.SaveChangesAsync();
 

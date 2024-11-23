@@ -33,7 +33,7 @@ interface PredictionDto {
 }
 
 interface FinalPredictionDto {
-    finalPlacement: string;
+    finalPredictedPlacement: string;
     artistId: string;
     artist: Artist;
     subCompetitionId: string;
@@ -65,6 +65,7 @@ function Bet() {
             if (userResponse.ok) {
                 const data: UserDto = await userResponse.json();
                 setUserData(data);
+                console.log(data);
                 setHasBet(data.hasMadeBet);
             } else {
                 throw new Error('Error fetching user data');
@@ -80,6 +81,7 @@ function Bet() {
             if (subCompetitionsResponse.ok) {
                 const data: SubCompetition[] = await subCompetitionsResponse.json();
                 setSubCompetitions(data);
+                console.log(data);
 
                 // Extract all artists
                 const artists = data.flatMap((sub: SubCompetition) => sub.artists);
@@ -157,7 +159,7 @@ function Bet() {
                         <BetForm
                             subCompetitions={subCompetitions}
                             allArtists={allArtists}
-                            user={userData}
+                            user={userData!}
                             onBetSubmitted={handleBetSubmitted}
                         />
                     </>

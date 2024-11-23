@@ -9,7 +9,7 @@ namespace MelloApp.Server.Models.Dto;
 public class AddFinalPredictionDto
 {
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public eFinalPlacement FinalPlacement { get; set; }
+    public eFinalPlacement FinalPredictedPlacement { get; set; }
     public string? UserId { get; set; }
     public string? ArtistId { get; set; }
     public string? SubCompetitionId { get; set; }
@@ -20,7 +20,7 @@ public class UpdateFinalPredictionDto
     [Required]
     public string Id { get; set; }
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public eFinalPlacement FinalPlacement { get; set; }
+    public eFinalPlacement FinalPredictedPlacement { get; set; }
     public string? UserId { get; set; }
     public string? ArtistId { get; set; }
     public string? SubCompetitionId { get; set; }
@@ -36,7 +36,7 @@ public class GetFinalPredictionDto
 {
     public string Id { get; set; }
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public eFinalPlacement FinalPlacement { get; set; }
+    public eFinalPlacement FinalPredictedPlacement { get; set; }
     public string? UserId { get; set; }
     public string? ArtistId { get; set; }
     public string? SubCompetitionId { get; set; }
@@ -50,7 +50,7 @@ public class AddBatchFinalPredictionDto
 public class FinalPredictionDto
 {
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public eFinalPlacement FinalPlacement { get; set; }
+    public eFinalPlacement FinalPredictedPlacement { get; set; }
     public string? ArtistId { get; set; }
     public ArtistDto? Artist { get; set; }
 
@@ -62,7 +62,7 @@ public class GetFinalPredictionDtoWithUser
 {
     public string Id { get; set; }
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public eFinalPlacement FinalPlacement { get; set; }
+    public eFinalPlacement FinalPredictedPlacement { get; set; }
     public UserDto? User { get; set; }
     public ArtistDto? Artist { get; set; }
 }
