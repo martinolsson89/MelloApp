@@ -52,14 +52,14 @@ interface Prediction {
 }
 
 interface FinalPrediction {
-  finalPlacement: eFinalPlacement;
+  finalPredictedPlacement: eFinalPlacement;
   userId: string;
   artistId: string;
   subCompetitionId: string;
 }
 
 interface User {
-  userId: string;
+  id: string;
   email: string;
   firstName: string;
   lastName: string;
@@ -195,7 +195,7 @@ function BetForm({ subCompetitions, allArtists, user, onBetSubmitted }: BetFormP
       }
 
 
-    const userId = user.userId;
+    const userId = user.id;
 
     // Prepare payloads for predictions and final predictions
     const predictionPayload: { predictions: Prediction[] } = {
@@ -217,7 +217,7 @@ function BetForm({ subCompetitions, allArtists, user, onBetSubmitted }: BetFormP
           allArtists.find((artist) => artist.id === artistId)?.subCompetitionId || '';
 
         return {
-          finalPlacement: placement as string, // Ensure enum is serialized as string
+          finalPredictedPlacement: placement as string, // Ensure enum is serialized as string
           userId: userId,
           artistId: artistId!,
           subCompetitionId: subCompetitionId,

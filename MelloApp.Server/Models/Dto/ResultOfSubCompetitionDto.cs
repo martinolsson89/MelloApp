@@ -43,6 +43,10 @@ public class GetResultOfSubCompetitionDto
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public ePlacement Placement { get; set; }
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public eFinalPlacement? FinalPlacement { get; set; }
+
     public string? ArtistId { get; set; }
     public string? SubCompetitionId { get; set; }
     

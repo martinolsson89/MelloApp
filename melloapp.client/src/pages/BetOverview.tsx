@@ -60,6 +60,7 @@ interface FinalPrediction {
 interface ResultOfSubCompetition {
   id: string;
   placement: string;
+  finalPlacement: string;
   artistId: string;
   subCompetitionId: string;
 }
@@ -162,7 +163,18 @@ function BetOverview() {
       default:
         return 'Oklar placering';
     }
-  };
+    };
+
+    const finalPlacementDisplayName = (finalPlacement: string) => {
+        switch (finalPlacement) {
+            case 'Vinnare i finalen':
+                return 'Vinnare i finalen';
+            case '2a i finalen':
+                return '2a i finalen';
+            default:
+                return 'Oklar placering';
+        }
+    };
 
   // Create a mapping of userId to User
   const userMap: { [key: string]: User } = {};

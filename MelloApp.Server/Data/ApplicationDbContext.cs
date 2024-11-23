@@ -126,7 +126,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
             // Configure FinalPrediction.PredictedPlacement to store enum as string
             modelBuilder.Entity<FinalPrediction>()
-                .Property(fp => fp.FinalPlacement)
+                .Property(fp => fp.FinalPredictedPlacement)
                 .HasConversion<string>();
     }
 }

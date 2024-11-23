@@ -1,6 +1,5 @@
 ﻿// BetReceipt.tsx
 
-import React from 'react';
 import {
     Typography,
     Box,
@@ -41,7 +40,7 @@ interface PredictionDto {
 }
 
 interface FinalPredictionDto {
-    finalPlacement: string;
+    finalPredictedPlacement: string;
     artistId: string;
     artist: Artist;
     subCompetitionId: string;
@@ -172,7 +171,7 @@ function BetReceipt({ userData }: BetReceiptProps) {
                                     <ListItem>
                                         <ListItemText
                                             primary={`${finalPrediction.artist.name} - ${finalPrediction.artist.song}`}
-                                            secondary={`Ditt tips: ${finalPrediction.finalPlacement}`}
+                                            secondary={`Ditt tips: ${finalPrediction.finalPredictedPlacement}`}
                                         />
                                     </ListItem>
                                     <Divider />
