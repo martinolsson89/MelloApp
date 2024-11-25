@@ -9,15 +9,15 @@ public class FinalPrediction
     public string Id { get; set; } = Guid.NewGuid().ToString();
 
     [Required]
-    public string UserId { get; set; } = Guid.NewGuid().ToString();
+    public string UserId { get; set; }
     public virtual ApplicationUser User { get; set; }
 
     [Required]
-    public string ArtistId { get; set; } = Guid.NewGuid().ToString();
+    public string ArtistId { get; set; }
     public virtual Artist Artist { get; set; }
 
     [Required]
-    public string SubCompetitionId { get; set; } = Guid.NewGuid().ToString();
+    public string SubCompetitionId { get; set; }
     public virtual SubCompetition SubCompetition { get; set; }
 
     public eFinalPlacement FinalPredictedPlacement { get; set; }

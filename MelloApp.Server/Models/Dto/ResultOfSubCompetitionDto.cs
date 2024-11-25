@@ -6,7 +6,11 @@ namespace MelloApp.Server.Models.Dto;
 
 public class AddResultOfSubCompetitionDto
 {
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public ePlacement Placement { get; set; }
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public eFinalPlacement? FinalPlacement { get; set; }
     public string? ArtistId { get; set; }
     public string? SubCompetitionId { get; set; }
     
@@ -23,10 +27,21 @@ public class UpdateResultOfSubCompetitionDto
     public string Id { get; set; }
 
     [JsonConverter(typeof(JsonStringEnumConverter))]
+    public ePlacement? Placement { get; set; }
 
-    public ePlacement Placement { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public eFinalPlacement? FinalPlacement { get; set; }
     public string? ArtistId { get; set; }
     public string? SubCompetitionId { get; set; }
+    
+}
+
+public class UpdateBatchResultOfSubCompetitionDto
+{
+    public string? ArtistId { get; set; }
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public eFinalPlacement? FinalPlacement { get; set; }
     
 }
 

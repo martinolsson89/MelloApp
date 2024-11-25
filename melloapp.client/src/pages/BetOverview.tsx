@@ -33,6 +33,8 @@ interface Artist {
   startingNumber: number;
   predictions: Prediction[];
   placement?: string; // Added optional placement property
+  finalPlacement?: string; // Added optional finalPlacement property
+
 }
 
 interface Prediction {
@@ -51,7 +53,7 @@ interface User {
 
 interface FinalPrediction {
   id: string;
-  finalPlacement: string;
+  finalPredictedPlacement: string;
   userId: string;
   artistId: string;
   subcompetitionId: string;
@@ -147,7 +149,9 @@ function BetOverview() {
         ?.map((artist) => ({
           ...artist,
           predictions: artist.predictions?.filter((prediction) => prediction.user.hasMadeBet) || [],
-          placement: artistResultsMap[artist.id]?.placement, // Add placement if available
+            placement: artistResultsMap[artist.id]?.placement, // Add placement if available
+            finalPlacement: artistResultsMap[artist.id]?.finalPlacement, // Add finalPlacement if available
+
         }))
         .sort((a, b) => a.startingNumber - b.startingNumber) || [],
   }));
@@ -167,9 +171,9 @@ function BetOverview() {
 
     const finalPlacementDisplayName = (finalPlacement: string) => {
         switch (finalPlacement) {
-            case 'Vinnare i finalen':
+            case 'Vinnare':
                 return 'Vinnare i finalen';
-            case '2a i finalen':
+            case 'Tvåa':
                 return '2a i finalen';
             default:
                 return 'Oklar placering';
@@ -188,7 +192,7 @@ function BetOverview() {
 
   // Create a mapping of artistId to Artist
   const artistMap: { [key: string]: Artist } = {};
-  betOverviewData.forEach((subComp) => {
+    filteredBetOverviewData.forEach((subComp) => {
     subComp.artists.forEach((artist) => {
       artistMap[artist.id] = artist;
     });
@@ -206,7 +210,7 @@ function BetOverview() {
     const user = userMap[finalPrediction.userId];
     if (user) {
       acc[artistId].predictions.push({
-        finalPlacement: finalPrediction.finalPlacement,
+        finalPredictedPlacement: finalPrediction.finalPredictedPlacement,
         user: user,
       });
     }
@@ -214,7 +218,7 @@ function BetOverview() {
   }, {} as {
     [artistId: string]: {
       artist: Artist;
-      predictions: Array<{ finalPlacement: string; user: User }>;
+      predictions: Array<{ finalPredictedPlacement: string; user: User }>;
     };
   });
 
@@ -397,7 +401,16 @@ function BetOverview() {
                           </Typography>
                           <Typography variant="subtitle1" gutterBottom>
                             "{artist.song}"
-                           </Typography>
+                          </Typography>
+                                    {/* Display final placement if available */}
+                                    {artist.finalPlacement && (
+                                        <Typography variant="body1" gutterBottom>
+                                            Resultat i finalen:{" "}
+                                            <Typography component="span" sx={{ fontWeight: "bold" }}>
+                                                {finalPlacementDisplayName(artist.finalPlacement)}
+                                            </Typography>
+                                        </Typography>
+                                    )}
                            </Box>
                           <Divider sx={{ my: 1 }} />
                           <List dense>
@@ -417,7 +430,7 @@ function BetOverview() {
                                 </ListItemAvatar>
                                 <ListItemText
                                   primary={`${prediction.user.firstName} ${prediction.user.lastName}`}
-                                  secondary={`Tippat: ${prediction.finalPlacement}`}
+                                  secondary={`Tippat: ${prediction.finalPredictedPlacement}`}
                                 />
                               </ListItem>
                             ))}

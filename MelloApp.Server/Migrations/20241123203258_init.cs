@@ -249,7 +249,7 @@ namespace MelloApp.Server.Migrations
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ArtistId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     SubCompetitionId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    FinalPlacement = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    FinalPredictedPlacement = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {

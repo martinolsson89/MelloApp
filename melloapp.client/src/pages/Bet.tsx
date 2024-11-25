@@ -159,7 +159,7 @@ function Bet() {
                         <BetForm
                             subCompetitions={subCompetitions}
                             allArtists={allArtists}
-                            user={userData!}
+                            user={userData}
                             onBetSubmitted={handleBetSubmitted}
                         />
                     </>

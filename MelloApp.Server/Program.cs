@@ -26,7 +26,7 @@ namespace MelloApp.Server
             builder.Services.AddScoped<IResultOfSubCompetitionRepository, ResultOfSubCompetitionRepository>();
             builder.Services.AddScoped<IPredictionRepository, PredictionRepository>();
             builder.Services.AddScoped<IRepository<Leaderboard>, LeaderboardRepository>();
-            builder.Services.AddScoped<IRepository<ApplicationUser>, UserRepository>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IFinalPredictionRepository, FinalPredictionRepository>();
             builder.Services.AddScoped<IScoreAfterSubCompetitionRepository, ScoreAfterSubCompetitionRepository>();
             builder.Services.AddScoped<PointsCalculationService>();

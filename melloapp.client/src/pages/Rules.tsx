@@ -42,20 +42,26 @@ function Rules() {
                     <span style={{ fontWeight: 'bold' }}>Hur gör jag för att tippa?</span>
                 </Typography>
                 <Typography variant="body1" align="left" sx={{ mb: 2 }}>
-                    <span style={{ fontWeight: 'bold' }}>Svar:</span> När du klickat dig in på röstningsidan ser du en lista med alla deltävlingar och bidrag. Du väljer i rullistan vilket alternativ du tippar på (Final, Kvalfinal, Åker ut).
+                    <span style={{ fontWeight: 'bold' }}>Svar:</span> När du klickat dig in på röstningsidan ser du en lista med alla deltävlingar och bidrag. Du väljer i rullistan vilket alternativ du tippar (Final, Finalkval eller Åker ut).
                     Längst ner väljer du vilken artist/låt som kommer vinna resp. komma tvåa i finalen. När du är nöjd klickar du på knappen: <span style={{ fontWeight: 'bold' }}>Skicka in tips</span>, klart!
                 </Typography>
                 <Typography variant="body1" align="left" sx={{ mb: 2, textDecoration: 'underline' }}>
                     <span style={{ fontWeight: 'bold' }}>Vart ser jag hur de andra i släkten har tippat?</span>
                 </Typography>
                 <Typography variant="body1" align="left" sx={{ mb: 2 }}>
-                    <span style={{ fontWeight: 'bold' }}>Svar:</span> Du klickar antingen på<span style={{ fontWeight: 'bold' }}><Button onClick={() => handleNavigation('/bet-overview')}>Tipshörnan </Button></span> här eller i menyn. Det är dock oklart om det hjälper dig...
+                    <span style={{ fontWeight: 'bold' }}>Svar:</span> Du klickar antingen på<span style={{ fontWeight: 'bold' }}><Button onClick={() => handleNavigation('/bet-overview')}>Tipshörnan </Button></span> här eller i menyn. Här uppdateras också resultaten efter varje deltävling och finalen.
                 </Typography>
                 <Typography variant="body1" align="left" sx={{ mb: 2, textDecoration: 'underline' }}>
                     <span style={{ fontWeight: 'bold' }}>När stänger tippningen?</span>
                 </Typography>
                 <Typography variant="body1" align="left" sx={{ mb: 2 }}>
                     <span style={{ fontWeight: 'bold' }}>Svar:</span> Du kan tippa fram till till och med <span style={{ fontWeight: 'bold' }}>31 januari.</span>
+                </Typography>
+                <Typography variant="body1" align="left" sx={{ mb: 2, textDecoration: 'underline' }}>
+                    <span style={{ fontWeight: 'bold' }}>Vart ser jag mina poäng?</span>
+                </Typography>
+                <Typography variant="body1" align="left" sx={{ mb: 2 }}>
+                    <span style={{ fontWeight: 'bold' }}>Svar:</span> Klicka på<span style={{ fontWeight: 'bold' }}><Button onClick={() => handleNavigation('/leaderboard')}> Ledartavla </Button></span>här eller i menyn. Där ser du totalpoängen överst och sedan poäng för respektive deltävling under. 
                 </Typography>
                 <Typography variant="body1" align="left" sx={{ mb: 2, textDecoration: 'underline' }}>
                     <span style={{ fontWeight: 'bold' }}>Kan jag ändra mitt tips?</span>
@@ -67,7 +73,7 @@ function Rules() {
                     <span style={{ fontWeight: 'bold' }}>Hur lägger jag till en egen profilbild?</span>
                 </Typography>
                 <Typography variant="body1" align="left" sx={{ mb: 2 }}>
-                    <span style={{ fontWeight: 'bold' }}>Svar:</span> Du klickar antingen på<span style={{ fontWeight: 'bold' }}><Button onClick={() => handleNavigation('/my-account')}> Mitt konto </Button></span>här eller i menyn. Där kan du klistra in en länk till en bild från nätet.
+                    <span style={{ fontWeight: 'bold' }}>Svar:</span> Du klickar antingen på<span style={{ fontWeight: 'bold' }}><Button onClick={() => handleNavigation('/my-account')}> Mitt konto </Button></span>här eller i menyn. Där kan du klistra in en länk till en bild från nätet. Exempelvis kan du högerklicka på din profilbild på Facbook och välja 'Kopiera bildadress'.
                 </Typography>
 
                 

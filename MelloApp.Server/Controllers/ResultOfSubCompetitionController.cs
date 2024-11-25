@@ -139,6 +139,36 @@ namespace MelloApp.Server.Controllers
 
             return BadRequest(ModelState);
         }
+
+        // PUT: /ResultOfSubCompetition/batch
+        [Authorize(Roles = "Admin")]
+        [HttpPut("batch")]
+        public async Task<IActionResult> UpdateResultsOfSubCompetitions(
+            [FromBody] List<UpdateBatchResultOfSubCompetitionDto> resultOfSubCompetitionDtos)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var updatedResults = new List<ResultOfSubCompetition>();
+            foreach (var dto in resultOfSubCompetitionDtos)
+            {
+                var resultOfSubCompetition = _mapper.Map<ResultOfSubCompetition>(dto);
+                var updatedResult = await _repository.UpdateBatchAsync(resultOfSubCompetition);
+
+                if (updatedResult == null)
+                {
+                    return NotFound($"ResultOfSubCompetition with artistId {dto.ArtistId} not found.");
+                }
+
+                updatedResults.Add(updatedResult);
+            }
+
+            var resultOfSubCompetitionResponses = _mapper.Map<List<UpdateBatchResultOfSubCompetitionDto>>(updatedResults);
+            return Ok(resultOfSubCompetitionResponses);
+        }
+
     }
 }
 

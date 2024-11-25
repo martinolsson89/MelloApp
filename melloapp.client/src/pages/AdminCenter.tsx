@@ -1,7 +1,7 @@
 ﻿// AdminCenter.tsx
 
 import React from 'react';
-import { Box, Typography, Button, Stack } from '@mui/material';
+import { Box, Typography, Button, Stack, Divider } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import AuthorizeAdminView from '../components/AuthorizeAdminView';
 import Navbar from '../components/Navbar';
@@ -20,7 +20,7 @@ const AdminCenter: React.FC = () => {
                     p: 3,
                     boxShadow: 3,
                     borderRadius: 2,
-                    bgcolor: 'rgba(255, 255, 255, 0.7)',
+                    bgcolor: 'whitesmoke',
                 }}
             >
                 <Typography variant="h4" gutterBottom>
@@ -38,11 +38,27 @@ const AdminCenter: React.FC = () => {
                     </Button>
                     <Button
                         variant="contained"
+                        sx={{ backgroundColor: 'red' }}
+                        onClick={() => navigate('/admin-center/add-final-results')}
+                    >
+                        Lägg till resultat för final
+                    </Button>
+                    <Divider sx={{ my: 2 }} />
+                    <Button
+                        variant="contained"
                         sx={{ backgroundColor: 'green' }}
                         onClick={() => navigate('/admin-center/add-scores')}
                     >
                         Lägg till poäng för deltävlingar
                     </Button>
+                    <Button
+                        variant="contained"
+                        sx={{ backgroundColor: 'blue' }}
+                        onClick={() => navigate('/admin-center/add-final-score')}
+                    >
+                        Lägg till poäng för final
+                    </Button>
+                    <Divider sx={{ my: 2 }} />
                     <Button
                         variant="contained"
                         sx={{ backgroundColor: 'orange' }}

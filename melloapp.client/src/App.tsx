@@ -14,6 +14,8 @@ import AddSubCompetitionResults from './components/AddSubCompetitionResults';
 import AddSubCompetitionScores from './components/AddSubCompetitionScores';
 import UpdatePoints from './components/UpdatePoints';
 import UpdateHomeContent from './components/UpdateHomeContent';
+import AddFinalResults from './components/AddFinalResults';
+import AddFinalScore from './components/AddFinalScore';
 
 
 
@@ -35,6 +37,8 @@ function App() {
                 <Route path="/admin-center/add-scores" element={<AddSubCompetitionScores />} />
                 <Route path="/admin-center/update-points" element={<UpdatePoints />} />
                 <Route path="/admin-center/update-home-content" element={<UpdateHomeContent />} />
+                <Route path="/admin-center/add-final-results" element={<AddFinalResults />} />
+                <Route path="/admin-center/add-final-score" element={<AddFinalScore />} />
             </Routes>
         </BrowserRouter>
     );

@@ -30,42 +30,82 @@ function TotalPoints({ leaderboardData }: LeaderboardProps) {
                 mt: 4,
                 textAlign: 'left',
                 mx: 'auto',
-                p: 3,
+                // p: 3,
                 boxShadow: 3,
                 borderRadius: 2,
-                bgcolor: '#f3e5f5',
+                bgcolor: 'rgba(221, 196, 234, 0.95)',
                 maxWidth: 800,
             }}
         >
-            <Typography variant="h4" gutterBottom>
-                Totalpoäng:
-            </Typography>
-            <Divider />
+            <Box sx={{ backgroundColor: '#9739c1', boxShadow: 2, p: 2, textAlign: 'center' }}>
+                <Typography variant="h4" sx={{ color: 'white', fontWeight: 'bold' }} gutterBottom>
+                    Totalpoäng
+                </Typography>
+            </Box>
+            {/* <Divider sx={{m:2}} /> */}
+            <Box sx={{ px: 3 }}>
+                <List>
+                    {filteredLeaderboardData.map((entry, index) => (
+                        <div key={index}>
+                            <ListItem
+                                sx={{
+                                    backgroundColor: 'white',
+                                    borderRadius: 2,
+                                    my: 2,
+                                    boxShadow: 3,
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    alignItems: 'center', // Center items vertically
+                                    justifyContent: 'space-between', // Distribute space between items
+                                    p: 2, // Add padding for better spacing
+                                }}
+                            >
+                                {/* Rank */}
+                                <Typography
+                                    variant="h6"
+                                    fontWeight="bold"
+                                    sx={{ minWidth: '30px', textAlign: 'center' }}
+                                >
+                                    {`${index + 1}`}
+                                </Typography>
 
-            <List>
-                {filteredLeaderboardData.map((entry, index) => (
-                    <div key={entry.id}>
-                        <ListItem>
-                            <ListItemAvatar>
-                                <Avatar
-                                    src={entry.user.avatarImageUrl || defaultProfilePic}
-                                    alt={entry.user.firstName}
-                                    sx={{ width: 75, height: 75, m: 1 }}
+                                {/* Avatar */}
+                                <ListItemAvatar>
+                                    <Avatar
+                                        src={entry.user.avatarImageUrl || defaultProfilePic}
+                                        alt={entry.user.firstName}
+                                        sx={{ width: 56, height: 56 }}
+                                    />
+                                </ListItemAvatar>
+
+                                {/* Name */}
+                                <ListItemText
+                                    primary={
+                                        <Typography
+                                            variant="body1"
+                                            fontWeight="bold"
+                                            sx={{ ml: 2 }} // Add margin to separate from the avatar
+                                        >
+                                            {entry.user.firstName} {entry.user.lastName}
+                                        </Typography>
+                                    }
+                                    sx={{ flex: 1 }} // Take up available space for proper alignment
                                 />
-                            </ListItemAvatar>
-                            <ListItemText
-                                primary={`${index + 1}. ${entry.user.firstName}`}
-                                secondary={
-                                    <Typography variant="body2" fontWeight="bold">
-                                        Poäng: {entry.points}
-                                    </Typography>
-                                }
-                            />
-                        </ListItem>
-                        <Divider />
-                    </div>
-                ))}
-            </List>
+
+                                {/* Points */}
+                                <Typography
+                                    variant="body1"
+                                    fontWeight="bold"
+                                    sx={{ ml: 2, whiteSpace: 'nowrap' }} // Prevent line breaks
+                                >
+                                    Poäng: {entry.points}
+                                </Typography>
+                            </ListItem>
+
+                        </div>
+                    ))}
+                </List>
+            </Box>
         </Box>
     );
 }

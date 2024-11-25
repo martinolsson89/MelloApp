@@ -99,6 +99,28 @@ namespace MelloApp.Server.Controllers
             return Ok(new { Success = true });
         }
 
+        [Authorize(Roles = "Admin")]
+        [HttpPost("CalculatePointsFinal")]
+        public async Task<IActionResult> CalculatePointsFinal()
+        {
+            try
+            {
+                var result = await _leaderboardService.CalculateAndStoreFinalPoints();
+
+                if (result == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
 
     }
 

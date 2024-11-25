@@ -40,6 +40,7 @@ public class ResultOfSubCompetitionRepository : IResultOfSubCompetitionRepositor
         }
 
         existingResultOfSubCompetition.Placement = model.Placement;
+        existingResultOfSubCompetition.FinalPlacement = model.FinalPlacement;
         existingResultOfSubCompetition.ArtistId = model.ArtistId;
         existingResultOfSubCompetition.SubCompetitionId = model.SubCompetitionId;
 
@@ -68,5 +69,23 @@ public class ResultOfSubCompetitionRepository : IResultOfSubCompetitionRepositor
         await _context.SaveChangesAsync();
 
         return resultOfSub;
+    }
+
+    public async Task<ResultOfSubCompetition> UpdateBatchAsync(ResultOfSubCompetition resultOfSub)
+    {
+        var existingResultOfSubCompetition = await _context.ResultsOfSubCompetitions
+            .FirstOrDefaultAsync(r => r.ArtistId == resultOfSub.ArtistId);
+
+        if (existingResultOfSubCompetition == null)
+        {
+            return existingResultOfSubCompetition;
+        }
+
+        existingResultOfSubCompetition.FinalPlacement = resultOfSub.FinalPlacement;
+        existingResultOfSubCompetition.ArtistId = resultOfSub.ArtistId;
+
+        await _context.SaveChangesAsync();
+
+        return existingResultOfSubCompetition;
     }
 }

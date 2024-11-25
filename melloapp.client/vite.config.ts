@@ -147,6 +147,18 @@ export default defineConfig({
                 target: 'https://localhost:7263/',
                 secure: false
             },
+            '^/Artists': {
+                target: 'https://localhost:7263/',
+                secure: false
+            },
+            '^/ResultOfSubCompetition/batch': {
+                target: 'https://localhost:7263/',
+                secure: false
+            },
+            '^/Points/CalculatePointsFinal': {
+                target: 'https://localhost:7263/',
+                secure: false
+            },
         },
         port: 5173,
         https: {

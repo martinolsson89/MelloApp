@@ -66,11 +66,12 @@ public class SeedData
     private async Task CreateRandomUsers()
     {
         string[] firstNames = { "Frida", "Lena", "Eva", "Ove"};
+        string[] lastNames = { "Schylström", "Schylström", "Viberg", "Viberg" };
 
         for (int i = 0; i < firstNames.Length; i++)
         {
             string firstName = $"{firstNames[i]}";
-            string lastName = "User" + i;
+            string lastName = $"{lastNames[i]}";
             string email = $"{firstNames[i]}" + "@user.com";
             string password = "asdf12";
 

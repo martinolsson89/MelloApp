@@ -40,7 +40,7 @@ function SubCompetitionPoints({ subCompetitionData }: SubCompetitionProps) {
             p: 3,
             boxShadow: 3,
             borderRadius: 2,
-            bgcolor: 'rgba(255, 255, 255, 0.7)',
+            bgcolor: 'white',
             width: { xs: '92%', sm: '92%', md:'auto' },
           }}
         >
@@ -51,8 +51,11 @@ function SubCompetitionPoints({ subCompetitionData }: SubCompetitionProps) {
 
           <List>
             {entry.userScores.map((userScore, index) => (
-              <div key={userScore.userId}>
-                <ListItem>
+              <div key={index}>
+                <ListItem sx={{
+                        backgroundColor: index % 2 === 0 ? '#f2f3f5' : 'white',
+                        borderRadius: 2,
+                  }}>
                   <ListItemAvatar>
                     <Avatar
                       src={userScore.avatarImageUrl || defaultProfilePic}
@@ -69,7 +72,6 @@ function SubCompetitionPoints({ subCompetitionData }: SubCompetitionProps) {
                     }
                   />
                 </ListItem>
-                <Divider />
               </div>
             ))}
           </List>

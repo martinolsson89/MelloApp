@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MelloApp.Server.Repositories;
 
-public class UserRepository : IRepository<ApplicationUser>
+public class UserRepository : IUserRepository
 {
     private readonly ApplicationDbContext _context;
 
@@ -17,14 +17,6 @@ public class UserRepository : IRepository<ApplicationUser>
         var users = await _context.Users.OrderBy(u => u.FirstName).ToListAsync();
 
         return users;
-    }
-
-    public async Task<ApplicationUser?> GetUserByIdAsync(string id)
-    {
-        var user = await _context.Users
-            .FirstOrDefaultAsync(u => u.Id == id);
-
-        return user;
     }
 
     public async Task<ApplicationUser?> GetByIdAsync(string id)
@@ -60,5 +52,21 @@ public class UserRepository : IRepository<ApplicationUser>
     public Task<ApplicationUser?> DeleteAsync(string id)
     {
         throw new NotImplementedException();
+    }
+
+    public async Task<ApplicationUser?> GetUserWithPredictions(string id)
+    {
+        var user = await _context.Users
+            .Include(u => u.Predictions)
+            .ThenInclude(p => p.Artist)
+            .Include(u => u.Predictions)
+            .ThenInclude(p => p.SubCompetition)
+            .Include(u => u.FinalPredictions)
+            .ThenInclude(fp => fp.Artist)
+            .Include(u => u.FinalPredictions)
+            .ThenInclude(fp => fp.SubCompetition)
+            .FirstOrDefaultAsync(u => u.Id == id);
+
+        return user;
     }
 }

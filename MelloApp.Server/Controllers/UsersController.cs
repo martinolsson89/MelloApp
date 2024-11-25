@@ -14,11 +14,11 @@ namespace MelloApp.Server.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly IRepository<ApplicationUser> _repository;
+        private readonly IUserRepository _repository;
         private readonly IMapper _mapper;
         private readonly ILogger<ApplicationUser> _logger;
 
-        public UsersController(IRepository<ApplicationUser> repository, ILogger<ApplicationUser> logger, IMapper mapper)
+        public UsersController(IUserRepository repository, ILogger<ApplicationUser> logger, IMapper mapper)
         {
             _repository = repository;
             _logger = logger;
@@ -62,7 +62,7 @@ namespace MelloApp.Server.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             // Get the user from the database
-            var user = await _repository.GetByIdAsync(userId);
+            var user = await _repository.GetUserWithPredictions(userId);
 
             if (user == null)
             {
