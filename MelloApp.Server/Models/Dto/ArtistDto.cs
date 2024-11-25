@@ -34,12 +34,6 @@ public class UpdateArtistDto
     public string? SubCompetitionId { get; set; }
 }
 
-public class DeleteArtistDto
-{
-    [Required]
-    public string Id { get; set; }
-}
-
 public class GetArtistDto
 {
     public string Id { get; set; }

@@ -5,6 +5,7 @@ import { Box, Typography, Button, Stack, Divider } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import AuthorizeAdminView from '../components/AuthorizeAdminView';
 import Navbar from '../components/Navbar';
+import CrudOperations from '../components/CrudOperations';
 
 const AdminCenter: React.FC = () => {
     const navigate = useNavigate();
@@ -75,6 +76,7 @@ const AdminCenter: React.FC = () => {
                     </Button>
                     {/* Add more buttons for other functionalities */}
                 </Stack>
+                <CrudOperations />
             </Box>
         </AuthorizeAdminView>
     );

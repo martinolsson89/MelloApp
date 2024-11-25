@@ -1,4 +1,4 @@
-﻿import { Typography, Box, List, ListItem, ListItemText, Divider, Avatar, ListItemAvatar } from '@mui/material';
+﻿import { Typography, Box, List, ListItem, ListItemText, Avatar, ListItemAvatar } from '@mui/material';
 import defaultProfilePic from '../assets/avatar/anonymous-user.webp';
 
 interface LeaderboardProps {
@@ -33,11 +33,11 @@ function TotalPoints({ leaderboardData }: LeaderboardProps) {
                 // p: 3,
                 boxShadow: 3,
                 borderRadius: 2,
-                bgcolor: 'rgba(221, 196, 234, 0.95)',
+                bgcolor: '#f3e5f5',
                 maxWidth: 800,
             }}
         >
-            <Box sx={{ backgroundColor: '#9739c1', boxShadow: 2, p: 2, textAlign: 'center' }}>
+            <Box sx={{ backgroundColor: '#9e20b0', boxShadow: 2, p: 2, textAlign: 'center', borderTopLeftRadius:6, borderTopRightRadius:6 }}>
                 <Typography variant="h4" sx={{ color: 'white', fontWeight: 'bold' }} gutterBottom>
                     Totalpoäng
                 </Typography>

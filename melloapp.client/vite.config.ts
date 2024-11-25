@@ -159,6 +159,14 @@ export default defineConfig({
                 target: 'https://localhost:7263/',
                 secure: false
             },
+            '^/SubCompetition/{id}': {
+                target: 'https://localhost:7263/',
+                secure: false
+            },
+            '^/Artists/{id}': {
+                target: 'https://localhost:7263/',
+                secure: false
+            },
         },
         port: 5173,
         https: {

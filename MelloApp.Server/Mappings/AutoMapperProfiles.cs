@@ -14,7 +14,6 @@ public class AutoMapperProfiles : Profile
         CreateMap<Artist, GetArtistDto>().ReverseMap();
         CreateMap<Artist, AddArtistDto>().ReverseMap();
         CreateMap<Artist, UpdateArtistDto>().ReverseMap();
-        CreateMap<Artist, DeleteArtistDto>().ReverseMap();
 
         CreateMap<Artist, ArtistWithPredictionsDto>().ReverseMap();
 
@@ -23,7 +22,6 @@ public class AutoMapperProfiles : Profile
         CreateMap<SubCompetition, GetSubCompetitionDto>().ReverseMap();
         CreateMap<SubCompetition, AddSubCompetitionDto>().ReverseMap();
         CreateMap<SubCompetition, UpdateSubCompetitionDto>().ReverseMap();
-        CreateMap<SubCompetition, DeleteSubCompetitionDto>().ReverseMap();
 
         CreateMap<SubCompetition, GetSubCompetitionNameDto>().ReverseMap();
 

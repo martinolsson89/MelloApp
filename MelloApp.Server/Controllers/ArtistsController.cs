@@ -73,8 +73,9 @@ namespace MelloApp.Server.Controllers
 
         // PUT: /Artists/{id}
         [Authorize(Roles = "Admin")]
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateArtist(string id, [FromBody] UpdateArtistDto artistDto)
+        [HttpPut]
+        [Route("{id}")]
+        public async Task<IActionResult> UpdateArtist([FromRoute]string id, [FromBody] UpdateArtistDto artistDto)
         {
             if(ModelState.IsValid)
             {
@@ -99,8 +100,9 @@ namespace MelloApp.Server.Controllers
 
         // DELETE: /Artists/{id}
         [Authorize(Roles = "Admin")]
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteArtist(string id)
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IActionResult> DeleteArtist([FromRoute] string id)
         {
             var artist = await _repository.DeleteAsync(id);
 
