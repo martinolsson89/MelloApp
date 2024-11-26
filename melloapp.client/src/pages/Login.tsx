@@ -10,6 +10,7 @@ function Login() {
     const [rememberme, setRememberme] = useState<boolean>(false);
     // state variable for error message
     const [error, setError] = useState<string>('');
+    const [success, setSuccess] = useState<string>('');
     const navigate = useNavigate();
 
     // handle change events for input fields
@@ -60,7 +61,7 @@ function Login() {
                     // handle success or error from the server
                     console.log(data);
                     if (data.ok) {
-                        setError('Successful Login.');
+                        setSuccess('Successful Login.');
                         window.location.href = '/';
                     } else {
                         setError('Error Logging In.');
@@ -126,6 +127,7 @@ function Login() {
                 </Box>
             </form>
             {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
+            {success && <Alert severity='success' sx={{mt: 2}}>{success}</Alert>}
         </Box>
     );
 }
