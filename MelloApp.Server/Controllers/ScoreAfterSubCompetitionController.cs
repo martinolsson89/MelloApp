@@ -80,8 +80,9 @@ namespace MelloApp.Server.Controllers
 
         // PUT: /ScoreAfterSubCompetition/{id}
         [Authorize(Roles = "Admin")]
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateScoreAfterSubCompetition(string id, [FromBody] AddScoreAfterSubCompetitionDto scoreAfterSubCompetitionDto)
+        [HttpPut]
+        [Route("{id}")]
+        public async Task<IActionResult> UpdateScoreAfterSubCompetition([FromRoute] string id, [FromBody] AddScoreAfterSubCompetitionDto scoreAfterSubCompetitionDto)
         {
             if (ModelState.IsValid)
             {
@@ -105,8 +106,9 @@ namespace MelloApp.Server.Controllers
 
         // DELETE: /ScoreAfterSubCompetition/{id}
         [Authorize(Roles = "Admin")]
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteScoreAfterSubCompetition(string id)
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IActionResult> DeleteScoreAfterSubCompetition([FromRoute] string id)
         {
             var deletedScoreAfterSubCompetition = await _repository.DeleteAsync(id);
 
