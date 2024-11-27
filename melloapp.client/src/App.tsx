@@ -18,6 +18,8 @@ import AddFinalResults from './components/AddFinalResults';
 import AddFinalScore from './components/AddFinalScore';
 import SubCompetitions from './components/SubCompetitions';
 import Artists from './components/Artists';
+import ResultsManagement from './components/ResultsManagement';
+import PointsManagement from './components/PointsManagement';
 
 
 
@@ -43,6 +45,8 @@ function App() {
                 <Route path="/admin-center/add-final-score" element={<AddFinalScore />} />
                 <Route path="/admin-center/sub-competitions" element={<SubCompetitions />} />
                 <Route path="/admin-center/artists" element={<Artists />} />
+                <Route path="/admin-center/results-management" element={<ResultsManagement />} />
+                <Route path='/admin-center/points-management' element={<PointsManagement />} />
             </Routes>
         </BrowserRouter>
     );

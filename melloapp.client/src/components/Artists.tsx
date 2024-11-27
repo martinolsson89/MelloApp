@@ -17,6 +17,7 @@ import {
 import { Delete, Edit } from '@mui/icons-material';
 import AuthorizeAdminView from './AuthorizeAdminView';
 import Navbar from './Navbar';
+import { useNavigate } from 'react-router-dom';
 
 interface Artist {
     id?: string;
@@ -50,6 +51,12 @@ const Artists: React.FC = () => {
         startingNumber: 0,
         subCompetitionId: '',
     });
+
+    const navigate = useNavigate();
+
+    const handleNavigation = (path: string) => {
+        navigate(path);
+    };
 
     // Fetch Sub Competitions with Artists
     const fetchSubCompetitionsWithArtists = async () => {
@@ -215,6 +222,7 @@ const Artists: React.FC = () => {
                                 <TableHead>
                                     <TableRow>
                                         <TableCell>Starting Number</TableCell>
+                                        <TableCell>Artist ID</TableCell>
                                         <TableCell>Name</TableCell>
                                         <TableCell>Song</TableCell>
                                         <TableCell>Sub Competition ID</TableCell>
@@ -240,6 +248,9 @@ const Artists: React.FC = () => {
                                                 ) : (
                                                     artist.startingNumber
                                                 )}
+                                            </TableCell>
+                                            <TableCell>
+                                                {artist.id}
                                             </TableCell>
                                             <TableCell>
                                                 {editArtistId === artist.id ? (
@@ -328,6 +339,9 @@ const Artists: React.FC = () => {
                         </TableContainer>
                     </Box>
                 ))}
+                 <Button variant="contained" color="secondary" sx={{ m: 2 }} onClick={() => handleNavigation('/admin-center')}>
+                            Go Back
+                </Button>
             </Box>
         </AuthorizeAdminView>
     );

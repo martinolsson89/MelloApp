@@ -10,6 +10,7 @@ function Register() {
     const [confirmPassword, setConfirmPassword] = useState('');
     // state variable for error message
     const [error, setError] = useState('');
+    const [success, setSuccess] = useState<string>('');
     const navigate = useNavigate();
 
     const handleLoginClick = () => {
@@ -70,7 +71,7 @@ function Register() {
                     // handle success or error from the server
                     console.log(data);
                     if (data.ok) {
-                        setError('Successful register.');
+                        setSuccess('Successful register.');
                         window.location.href = '/';
                     } else {
                         setError('Error registering.');
@@ -150,6 +151,7 @@ function Register() {
                 </Box>
             </form>
             {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
+            {success && <Alert severity='success' sx={{mt: 2}}>{success}</Alert>}
         </Box>
     );
 }

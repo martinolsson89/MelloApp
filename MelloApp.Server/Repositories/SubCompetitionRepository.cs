@@ -89,14 +89,25 @@ public class SubCompetitionRepository : ISubCompetitionRepository
         return subCompetition;
     }
 
-    public Task<List<SubCompetition>> GetSubCompetitionWithResultAsync()
+    public async Task<List<SubCompetition>> GetSubCompetitionWithResultAsync()
     {
-        var subCompetitions = _context.SubCompetitions
-            .Include(sc => sc.Results)
+        var subCompetitions = await _context.SubCompetitions
+            .OrderBy(sc => sc.Date) // Order SubCompetitions by Date
+            .Include(sc => sc.Results.OrderBy(r => r.Artist.StartingNumber)) // Order Results by Artist's StartingNumber
             .ThenInclude(r => r.Artist)
             .ToListAsync();
 
         return subCompetitions;
+    }
+
+    public async Task<SubCompetition> GetSubCompetitionWithResultAsync(string id)
+    {
+        var subCompetition = await _context.SubCompetitions
+            .Include(sc => sc.Results.OrderBy(r => r.Artist.StartingNumber))
+            .ThenInclude(r => r.Artist)
+            .FirstOrDefaultAsync(sc => sc.Id == id);
+
+        return subCompetition;
     }
 
     public async Task<List<SubCompetition>> GetSubCompetitionsWithArtistsAndPredictionsAsync()
@@ -125,15 +136,6 @@ public class SubCompetitionRepository : ISubCompetitionRepository
         return subCompetitions;
     }
 
-    public async Task<SubCompetition> GetSubCompetitionWithResultAsync(string id)
-    {
-        var subCompetition = await _context.SubCompetitions
-            .Include(sc => sc.Results)
-            .ThenInclude(r => r.Artist)
-            .FirstOrDefaultAsync(sc => sc.Id == id);
-
-        return subCompetition;
-    }
 
 
     public async Task<SubCompetition> GetSubCompetitionWithArtistsAndPredictionsAsync(string id)

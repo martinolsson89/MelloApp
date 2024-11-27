@@ -136,7 +136,7 @@ function Bet() {
                     p: 3,
                     boxShadow: 3,
                     borderRadius: 2,
-                    bgcolor: 'rgba(255, 255, 255, 0.7)',
+                    bgcolor: 'rgba(255, 255, 255, 0.9)',
                 }}
             >
                 {isLoading ? (

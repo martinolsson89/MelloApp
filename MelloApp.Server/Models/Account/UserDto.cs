@@ -52,3 +52,10 @@ public class UserScoreDto
     public int Points { get; set; }
 }
 
+public class UserNamesDto
+{
+    public string Id { get; set; }
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+}
+

@@ -1,7 +1,15 @@
-﻿// AdminCenter.tsx
-
-import React from 'react';
-import { Box, Typography, Button, Stack, Divider } from '@mui/material';
+﻿import React from 'react';
+import {
+    Box,
+    Typography,
+    Button,
+    Stack,
+    Divider,
+    Card,
+    CardContent,
+    CardActions,
+    Grid,
+} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import AuthorizeAdminView from '../components/AuthorizeAdminView';
 import Navbar from '../components/Navbar';
@@ -13,69 +21,101 @@ const AdminCenter: React.FC = () => {
     return (
         <AuthorizeAdminView>
             <Navbar />
-            <Box
-                sx={{
-                    mt: 4,
-                    textAlign: 'center',
-                    mx: 'auto',
-                    p: 3,
-                    boxShadow: 3,
-                    borderRadius: 2,
-                    bgcolor: 'whitesmoke',
-                }}
-            >
-                <Typography variant="h4" gutterBottom>
+            <Box sx={{ mt: 4, mx: 'auto', p: 3, maxWidth: 800, bgcolor: 'rgba(255, 255, 255, 0.9)', borderRadius:2 }}>
+                <Typography variant="h4" gutterBottom textAlign="center">
                     Admin Center
                 </Typography>
-                <Typography variant="body1" gutterBottom>
+                <Typography variant="body1" textAlign="center" gutterBottom>
                     Välj en administrativ funktion nedan.
                 </Typography>
-                <Stack spacing={2} direction="column" alignItems="center" sx={{ mt: 2 }}>
-                    <Button
-                        variant="contained"
-                        onClick={() => navigate('/admin-center/add-results')}
-                    >
-                        Lägg till resultat för deltävling
-                    </Button>
-                    <Button
-                        variant="contained"
-                        sx={{ backgroundColor: 'red' }}
-                        onClick={() => navigate('/admin-center/add-final-results')}
-                    >
-                        Lägg till resultat för final
-                    </Button>
-                    <Divider sx={{ my: 2 }} />
-                    <Button
-                        variant="contained"
-                        sx={{ backgroundColor: 'green' }}
-                        onClick={() => navigate('/admin-center/add-scores')}
-                    >
-                        Lägg till poäng för deltävlingar
-                    </Button>
-                    <Button
-                        variant="contained"
-                        sx={{ backgroundColor: 'blue' }}
-                        onClick={() => navigate('/admin-center/add-final-score')}
-                    >
-                        Lägg till poäng för final
-                    </Button>
-                    <Divider sx={{ my: 2 }} />
-                    <Button
-                        variant="contained"
-                        sx={{ backgroundColor: 'orange' }}
-                        onClick={() => navigate('/admin-center/update-points')}
-                    >
-                        Uppdatera poäng
-                    </Button>
-                    <Button
-                        variant="contained"
-                        sx={{ backgroundColor: 'purple' }}
-                        onClick={() => navigate('/admin-center/update-home-content')}
-                    >
-                        Uppdatera Startsidan
-                    </Button>
-                    {/* Add more buttons for other functionalities */}
-                </Stack>
+                <Divider sx={{ my: 3 }} />
+                <Grid container spacing={3}>
+                    <Grid item xs={12} sm={6}>
+                        <Card>
+                            <CardContent>
+                                <Typography variant="h6" gutterBottom>
+                                    Resultat
+                                </Typography>
+                                <Typography variant="body2" color="textSecondary" gutterBottom>
+                                    Hantera resultat för deltävlingar och final.
+                                </Typography>
+                            </CardContent>
+                            <CardActions>
+                                <Stack spacing={1} width="100%">
+                                    <Button
+                                        variant="contained"
+                                        onClick={() => navigate('/admin-center/add-results')}
+                                    >
+                                        Lägg till resultat för deltävling
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        onClick={() => navigate('/admin-center/add-final-results')}
+                                    >
+                                        Lägg till resultat för final
+                                    </Button>
+                                </Stack>
+                            </CardActions>
+                        </Card>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <Card>
+                            <CardContent>
+                                <Typography variant="h6" gutterBottom>
+                                    Poäng
+                                </Typography>
+                                <Typography variant="body2" color="textSecondary" gutterBottom>
+                                    Hantera poäng för deltävlingar och final.
+                                </Typography>
+                            </CardContent>
+                            <CardActions>
+                                <Stack spacing={1} width="100%">
+                                    <Button
+                                        variant="contained"
+                                        onClick={() => navigate('/admin-center/add-scores')}
+                                    >
+                                        Lägg till poäng för deltävlingar
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        onClick={() => navigate('/admin-center/add-final-score')}
+                                    >
+                                        Lägg till poäng för final
+                                    </Button>
+                                </Stack>
+                            </CardActions>
+                        </Card>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Card>
+                            <CardContent>
+                                <Typography variant="h6" gutterBottom>
+                                    Övrigt
+                                </Typography>
+                                <Typography variant="body2" color="textSecondary" gutterBottom>
+                                    Uppdatera startsidan och andra innehåll.
+                                </Typography>
+                            </CardContent>
+                            <CardActions>
+                                <Stack spacing={1} width="100%">
+                                    <Button
+                                        variant="contained"
+                                        onClick={() => navigate('/admin-center/update-points')}
+                                    >
+                                        Uppdatera poäng
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        onClick={() => navigate('/admin-center/update-home-content')}
+                                    >
+                                        Uppdatera Startsidan
+                                    </Button>
+                                </Stack>
+                            </CardActions>
+                        </Card>
+                    </Grid>
+                </Grid>
+                <Divider sx={{ my: 4 }} />
                 <CrudOperations />
             </Box>
         </AuthorizeAdminView>

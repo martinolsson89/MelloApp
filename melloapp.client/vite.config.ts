@@ -167,6 +167,26 @@ export default defineConfig({
                 target: 'https://localhost:7263/',
                 secure: false
             },
+            '^/SubCompetition/GetSubCompetitionWithResult': {
+                target: 'https://localhost:7263/',
+                secure: false
+            },
+            '^/ResultOfSubCompetition{id}': {
+                target: 'https://localhost:7263/',
+                secure: false
+            },
+            '^/ScoreAfterSubCompetition/GetUserScores': {
+                target: 'https://localhost:7263/',
+                secure: false
+            },
+            '^/ScoreAfterSubCompetition': {
+                target: 'https://localhost:7263/',
+                secure: false
+            },
+            '^/ScoreAfterSubCompetition/{id}': {
+                target: 'https://localhost:7263/',
+                secure: false
+            },
         },
         port: 5173,
         https: {

@@ -16,6 +16,7 @@ import {
 import { Delete, Edit } from '@mui/icons-material';
 import AuthorizeAdminView from './AuthorizeAdminView';
 import Navbar from './Navbar';
+import { useNavigate } from 'react-router-dom';
 
 interface SubCompetition {
     name: string;
@@ -34,6 +35,12 @@ const SubCompetitions: React.FC = () => {
         date: new Date().toISOString().slice(0, 16),
         location: '',
     });
+
+    const navigate = useNavigate();
+
+    const handleNavigation = (path: string) => {
+        navigate(path);
+    };
 
     // Add these helper functions at the top of your file or in a utilities file
     function formatDateTimeLocal(dateString: string): string {
@@ -66,19 +73,6 @@ const SubCompetitions: React.FC = () => {
         }
     };
 
-    // Fetch Sub Competitions with Artists
-    const fetchSubCompetitionsWithArtists = async () => {
-        try {
-            const response = await fetch('/SubCompetition/GetSubCompetitionsWithArtists');
-            if (!response.ok) {
-                throw new Error('Failed to fetch sub-competitions with artists');
-            }
-            const data = await response.json();
-            console.log('Sub Competitions with Artists:', data);
-        } catch (error) {
-            console.error('Error fetching sub-competitions with artists:', error);
-        }
-    };
 
     // Add a Sub Competition
     const addSubCompetition = async () => {
@@ -296,13 +290,8 @@ const SubCompetitions: React.FC = () => {
 
                 </TableContainer>
 
-                {/* Button for fetching sub-competitions with artists */}
-                <Button
-                    variant="outlined"
-                    onClick={fetchSubCompetitionsWithArtists}
-                    sx={{ mt: 3 }}
-                >
-                    Fetch Sub Competitions with Artists
+                <Button variant="contained" color="secondary" sx={{ m: 2 }} onClick={() => handleNavigation('/admin-center')}>
+                            Go Back
                 </Button>
             </Box>
         </AuthorizeAdminView>

@@ -7,5 +7,7 @@ public interface IScoreAfterSubCompetitionRepository : IRepository<ScoreAfterSub
 {
     Task<List<SubCompetition>> GetScoresGroupedBySubCompetitionAsync();
 
+    Task<List<ScoreAfterSubCompetition>> GetUserScoresAsync();
+
 
 }

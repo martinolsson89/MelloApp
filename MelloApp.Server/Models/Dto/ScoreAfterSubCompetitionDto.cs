@@ -48,4 +48,11 @@ public class GetScoreAfterSubCompetitionDto
     public string? SubCompetitionId { get; set; }
     //public GetSubCompetitionNameDto SubCompetitionName { get; set; }
 }
-    
+
+public class GetUserScoreDto
+{
+    public string Id { get; set; }
+    public int Points { get; set; }
+    public UserNamesDto User { get; set; }
+    public GetSubCompetitionNameDto SubCompetitionName { get; set; }
+}

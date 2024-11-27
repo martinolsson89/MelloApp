@@ -36,6 +36,17 @@ namespace MelloApp.Server.Controllers
             return Ok(scoreAfterSubCompetitionsDto);
         }
 
+        [Authorize]
+        [HttpGet("GetUserScores")]
+        public async Task<IActionResult> GetUserScores()
+        {
+            var userScores = await _repository.GetUserScoresAsync();
+
+            var userScoresDto = _mapper.Map<List<GetUserScoreDto>>(userScores);
+
+            return Ok(userScoresDto);
+        }
+
         // GET: /ScoreAfterSubCompetition/{id}
         [Authorize]
         [HttpGet("{id}")]

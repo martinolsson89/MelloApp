@@ -79,5 +79,15 @@ public class ScoreAfterSubCompetitionRepository : IScoreAfterSubCompetitionRepos
         return subCompetitions;
     }
 
+    public async Task<List<ScoreAfterSubCompetition>> GetUserScoresAsync()
+    {
+        //Include user and subcompetition order by subcompetition date
+        var scores = await _context.ScoresAfterSubCompetitions
+            .Include(s => s.User)
+            .Include(s => s.SubCompetition)
+            .OrderBy(s => s.SubCompetition.Date)
+            .ToListAsync();
 
+        return scores;
+    }
 }

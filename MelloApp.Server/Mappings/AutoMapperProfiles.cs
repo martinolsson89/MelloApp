@@ -55,6 +55,7 @@ public class AutoMapperProfiles : Profile
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.Artist, opt => opt.MapFrom(src => src.Artist))
             .ForMember(dest => dest.Placement, opt => opt.MapFrom(src => src.Placement))
+            .ForMember(dest => dest.FinalPlacement, opt => opt.MapFrom(src => src.FinalPlacement))
             .ReverseMap();
 
 
@@ -105,9 +106,15 @@ public class AutoMapperProfiles : Profile
         CreateMap<ScoreAfterSubCompetition, UpdateScoreAfterSubCompetitionDto>().ReverseMap();
         CreateMap<ScoreAfterSubCompetition, DeleteScoreAfterSubCompetitionDto>().ReverseMap();
 
+        CreateMap<ScoreAfterSubCompetition, GetUserScoreDto>()
+            .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.User))
+            .ForMember(dest => dest.SubCompetitionName, opt => opt.MapFrom(src => src.SubCompetition))
+            .ReverseMap();
+
         // ApplicationUser UserDto
         CreateMap<ApplicationUser, GetUserDto>().ReverseMap();
         CreateMap<ApplicationUser, UserDto>().ReverseMap();
+        CreateMap<ApplicationUser, UserNamesDto>().ReverseMap();
 
         // Map ApplicationUser to UserDto
         CreateMap<ApplicationUser, UserDto>()
