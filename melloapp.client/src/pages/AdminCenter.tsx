@@ -86,6 +86,28 @@ const AdminCenter: React.FC = () => {
                             </CardActions>
                         </Card>
                     </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <Card>
+                            <CardContent>
+                                <Typography variant="h6" gutterBottom>
+                                    Användare
+                                </Typography>
+                                <Typography variant="body2" color="textSecondary" gutterBottom>
+                                    Hantera användare
+                                </Typography>
+                            </CardContent>
+                            <CardActions>
+                                <Stack spacing={1} width="100%">
+                                    <Button
+                                        variant="contained"
+                                        onClick={() => navigate('/admin-center/delete-all-predictions-by-user')}
+                                    >
+                                        Ta bort tips för en specifik användare
+                                    </Button>
+                                </Stack>
+                            </CardActions>
+                        </Card>
+                    </Grid>
                     <Grid item xs={12}>
                         <Card>
                             <CardContent>

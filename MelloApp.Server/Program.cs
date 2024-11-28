@@ -21,6 +21,7 @@ namespace MelloApp.Server
             builder.Services.AddDbContext<ApplicationDbContext>(options => 
                 options.UseSqlServer(connectionString));
 
+            //Repositories
             builder.Services.AddScoped<ISubCompetitionRepository, SubCompetitionRepository>();
             builder.Services.AddScoped<IRepository<Artist>, ArtistRepository>();
             builder.Services.AddScoped<IResultOfSubCompetitionRepository, ResultOfSubCompetitionRepository>();
@@ -29,6 +30,10 @@ namespace MelloApp.Server
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IFinalPredictionRepository, FinalPredictionRepository>();
             builder.Services.AddScoped<IScoreAfterSubCompetitionRepository, ScoreAfterSubCompetitionRepository>();
+            builder.Services.AddScoped<AccountRepository>();
+
+
+            //Services
             builder.Services.AddScoped<PointsCalculationService>();
             builder.Services.AddScoped<LeaderboardService>();
 

@@ -42,6 +42,14 @@ interface UserPoint {
 
 }
 
+interface User {
+    id: string;
+    firstName: string;
+    lastName: string;
+    avatarImageUrl: string;
+    hasMadeBet: boolean;
+}
+
 function PointsManagement() {
     const [userPoints, setUserPoints] = useState<UserPoint[]>([]);
     const [newPoints, setNewPoints] = useState({
@@ -49,6 +57,7 @@ function PointsManagement() {
         userId: '',
         subCompetitionId: ''
     });
+    const [users, setUsers] = useState<User[]>([]);
 
     const navigate = useNavigate();
 
@@ -56,6 +65,19 @@ function PointsManagement() {
         navigate(path);
     };
 
+    const fetchUsers = async () => {
+        try {
+            const response = await fetch('/Users');
+            if (!response.ok) {
+                throw new Error('Failed to user points');
+            }
+            const data = await response.json();
+            setUsers(data);
+
+        } catch (error) {
+            console.error('Error fetching users:', error);
+        }
+    };
 
     const fetchUserPoints = async () => {
         try {
@@ -98,7 +120,7 @@ function PointsManagement() {
             console.error('Error adding result:', error);
         }
     };
-
+    // /ScoreAfterSubCompetition/{id}
     // Delete a Result
     const deleteUserPoints = async (id: string) => {
         try {
@@ -117,6 +139,8 @@ function PointsManagement() {
     // Load data on component mount
     useEffect(() => {
         fetchUserPoints();
+        fetchUsers();
+
     }, []);
     return (
         <AuthorizeAdminView>
@@ -156,9 +180,9 @@ function PointsManagement() {
                                         }))
                                     }
                                 >
-                                    {[...new Map(userPoints
-                                        .filter((entry) => entry.user) // Ensure user exists
-                                        .map((entry) => [entry.user.id, entry.user]) // Map user IDs to user objects
+                                    {[...new Map(users
+                                        .filter((user) => user) // Ensure user exists
+                                        .map((user) => [user.id, user]) // Map user IDs to user objects
                                     ).values()].map((uniqueUser) => (
                                         <MenuItem key={uniqueUser.id} value={uniqueUser.id}>
                                             {uniqueUser.firstName} {uniqueUser.lastName}

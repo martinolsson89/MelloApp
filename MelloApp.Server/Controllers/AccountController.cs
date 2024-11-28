@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using AutoMapper;
 using MelloApp.Server.Models.Account;
+using MelloApp.Server.Repositories;
 
 namespace MelloApp.Server.Controllers
 {
@@ -17,15 +18,19 @@ namespace MelloApp.Server.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
+        private readonly AccountRepository _repository;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            IMapper mapper)
+            IMapper mapper,
+            AccountRepository repository)
+            
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _mapper = mapper;
+            _repository = repository;
         }
 
         // POST: /Account/register
@@ -222,6 +227,34 @@ namespace MelloApp.Server.Controllers
                 return BadRequest(result.Errors);
             }
         }
+
+        // DELETE: /Account/AllByUserId/{id}
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("AllByUserId/{id}")]
+        public async Task<IActionResult> DeleteAllPredictionsByUser(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound($"User with ID {id} not found.");
+            }
+
+            // Delete all predictions
+            await _repository.DeleteAllPredictionsByUserIdAsync(id);
+            await _repository.DeleteAllFinalPredictionsByUserIdAsync(id);
+
+            // Update the user's HasMadeBet property
+            user.HasMadeBet = false;
+            var result = await _userManager.UpdateAsync(user);
+
+            if (!result.Succeeded)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Failed to update user.");
+            }
+
+            return Ok();
+        }
+
     }
 }
 

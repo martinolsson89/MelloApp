@@ -20,6 +20,7 @@ import SubCompetitions from './components/SubCompetitions';
 import Artists from './components/Artists';
 import ResultsManagement from './components/ResultsManagement';
 import PointsManagement from './components/PointsManagement';
+import DeleteAllPredictionsByUser from './components/DeleteAllPredictionsByUser';
 
 
 
@@ -47,6 +48,7 @@ function App() {
                 <Route path="/admin-center/artists" element={<Artists />} />
                 <Route path="/admin-center/results-management" element={<ResultsManagement />} />
                 <Route path='/admin-center/points-management' element={<PointsManagement />} />
+                <Route path='/admin-center/delete-all-predictions-by-user' element={<DeleteAllPredictionsByUser />} />
             </Routes>
         </BrowserRouter>
     );
