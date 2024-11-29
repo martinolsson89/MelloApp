@@ -23,6 +23,7 @@ namespace MelloApp.Server.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
         private readonly AccountRepository _repository;
+        private readonly IWebHostEnvironment _environment;
 
         private readonly IConfiguration _configuration;
 
@@ -31,7 +32,8 @@ namespace MelloApp.Server.Controllers
             SignInManager<ApplicationUser> signInManager,
             IMapper mapper,
             AccountRepository repository,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            IWebHostEnvironment environment)
             
         {
             _userManager = userManager;
@@ -39,6 +41,7 @@ namespace MelloApp.Server.Controllers
             _mapper = mapper;
             _repository = repository;
             _configuration = configuration;
+            _environment = environment;
         }
 
         // POST: /Account/register
@@ -330,6 +333,66 @@ namespace MelloApp.Server.Controllers
 
             return Ok();
         }
+
+        /// <summary>
+        /// Uploads the avatar image.
+        /// </summary>
+        /// <param name="avatar">The avatar image file.</param>
+        /// <returns>The URL of the uploaded avatar.</returns>
+        [HttpPost("uploadAvatar")]
+        public async Task<IActionResult> UploadAvatar([FromForm] IFormFile avatar)
+        {
+            if (avatar == null || avatar.Length == 0)
+                return BadRequest(new { message = "No file uploaded." });
+
+            // Validate file type
+            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+            var extension = Path.GetExtension(avatar.FileName).ToLowerInvariant();
+            if (string.IsNullOrEmpty(extension) || Array.IndexOf(allowedExtensions, extension) < 0)
+            {
+                return BadRequest(new { message = "Invalid file type. Only JPG, PNG, and GIF are allowed." });
+            }
+
+            // Validate file size (e.g., max 5MB)
+            const long maxFileSize = 5 * 1024 * 1024; // 5 MB
+            if (avatar.Length > maxFileSize)
+            {
+                return BadRequest(new { message = "File size exceeds the 5MB limit." });
+            }
+
+            // Generate a unique filename
+            var uniqueFileName = $"{Guid.NewGuid()}{extension}";
+
+            // Define the path to save the image
+            var uploadsFolder = Path.Combine(_environment.ContentRootPath, "uploads", "avatars");
+            if (!Directory.Exists(uploadsFolder))
+            {
+                Directory.CreateDirectory(uploadsFolder);
+            }
+
+            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+            try
+            {
+                // Save the file to the server
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await avatar.CopyToAsync(stream);
+                }
+
+                // Construct the URL to access the uploaded image
+                var avatarUrl = $"{Request.Scheme}://{Request.Host}/uploads/avatars/{uniqueFileName}";
+
+                return Ok(new { avatarImageUrl = avatarUrl });
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                Console.WriteLine($"Error uploading avatar: {ex.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Error uploading the file." });
+            }
+        }
+
 
     }
 }

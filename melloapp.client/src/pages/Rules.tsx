@@ -25,7 +25,7 @@ function Rules() {
                     maxWidth: { xs: '90%', md: '60%' },
                     boxShadow: 3,
                     borderRadius: 2,
-                    bgcolor: 'rgba(255, 255, 255, 0.7)',
+                    bgcolor: 'rgba(255, 255, 255, 0.9)',
                     textAlign: 'center'
                 }}>
                     <Typography variant="h4" gutterBottom>

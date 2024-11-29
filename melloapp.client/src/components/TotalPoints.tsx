@@ -1,5 +1,6 @@
-﻿import { Typography, Box, List, ListItem, ListItemText, Avatar, ListItemAvatar } from '@mui/material';
+﻿import { Typography, Box, List, ListItem, ListItemText, Avatar, ListItemAvatar, Badge } from '@mui/material';
 import defaultProfilePic from '../assets/avatar/anonymous-user.webp';
+import kingCrown from '../assets/king.png';
 
 interface LeaderboardProps {
     leaderboardData: LeaderboardDto[];
@@ -37,7 +38,7 @@ function TotalPoints({ leaderboardData }: LeaderboardProps) {
                 maxWidth: 800,
             }}
         >
-            <Box sx={{ backgroundColor: '#9e20b0', boxShadow: 2, p: 2, textAlign: 'center', borderTopLeftRadius:6, borderTopRightRadius:6 }}>
+            <Box sx={{ backgroundColor: '#9e20b0', boxShadow: 2, p: 2, textAlign: 'center', borderTopLeftRadius: 6, borderTopRightRadius: 6 }}>
                 <Typography variant="h4" sx={{ color: 'white', fontWeight: 'bold' }} gutterBottom>
                     Totalpoäng
                 </Typography>
@@ -69,13 +70,42 @@ function TotalPoints({ leaderboardData }: LeaderboardProps) {
                                     {`${index + 1}`}
                                 </Typography>
 
-                                {/* Avatar */}
                                 <ListItemAvatar>
-                                    <Avatar
-                                        src={entry.user.avatarImageUrl || defaultProfilePic}
-                                        alt={entry.user.firstName}
-                                        sx={{ width: 56, height: 56 }}
-                                    />
+                                    <Badge
+                                        overlap="circular"
+                                        anchorOrigin={{
+                                            vertical: 'top',
+                                            horizontal: 'right',
+                                        }}
+                                        badgeContent={
+                                            index === 0 ? (
+                                                <Box
+                                                    component="img"
+                                                    src={kingCrown}// Path to your crown image
+                                                    alt="Crown"
+                                                    sx={{
+                                                    position: 'absolute',
+                                                    top: -43, // Adjust as needed
+                                                    right: 22, // Adjust as needed
+                                                    width: 40, // Adjust size as needed
+                                                    height: 40,
+                                                    zIndex: 1, // Ensure it appears above the avatar
+                                                }}
+                                                />
+                                            ) : null
+                                        }
+                                    >
+                                        <Avatar
+                                            src={entry.user.avatarImageUrl || defaultProfilePic}
+                                            alt={entry.user.firstName}
+                                            sx={{
+                                                width: 86,
+                                                height: 86,
+                                                border: index === 0 ? '3px solid gold' : '1px solid black',
+                                                boxSizing: 'border-box',
+                                            }}
+                                        />
+                                    </Badge>
                                 </ListItemAvatar>
 
                                 {/* Name */}

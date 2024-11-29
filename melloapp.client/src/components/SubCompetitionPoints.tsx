@@ -65,7 +65,7 @@ function SubCompetitionPoints({ subCompetitionData }: SubCompetitionProps) {
                     <Avatar
                       src={userScore.avatarImageUrl || defaultProfilePic}
                       alt={userScore.firstName}
-                      sx={{ width: 45, height: 45, m: 1 }}
+                      sx={{ width: 55, height: 55, m: 1 }}
                     />
                   </ListItemAvatar>
                   <ListItemText

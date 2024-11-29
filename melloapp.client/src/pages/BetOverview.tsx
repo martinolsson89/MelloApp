@@ -1,18 +1,22 @@
 ﻿import { useState, useEffect } from 'react';
 import {
+  Box,
+  Typography,
+  Divider,
   Accordion,
   AccordionSummary,
   AccordionDetails,
-  Typography,
-  Box,
+  Grid,
   List,
   ListItem,
-  ListItemText,
-  Divider,
-  Avatar,
   ListItemAvatar,
-  Grid,
+  Avatar,
+  ListItemText,
+  Chip,
+  Card,
+  CardContent,
 } from '@mui/material';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import Navbar from '../components/Navbar';
 import defaultProfilePic from '../assets/avatar/anonymous-user.webp';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -233,7 +237,7 @@ function BetOverview() {
         <Navbar />
         {isLoading ? (
           <Box sx={{ mt: 4, textAlign: 'center' }}>
-            <Typography variant="h6">Laddar...</Typography>
+            <Typography variant="h6" sx={{color:'white'}}>Laddar...</Typography>
           </Box>
         ) : error ? (
           <Box sx={{ mt: 4, textAlign: 'center' }}>
@@ -247,22 +251,24 @@ function BetOverview() {
               mt: 4,
               textAlign: 'left',
               mx: 'auto',
-              p: 3,
+              p: { xs: 2, md: 3 },
               boxShadow: 3,
               borderRadius: 2,
-              bgcolor: '#f3e5f5',
+              bgcolor: '#f9f9f9',
               maxWidth: 1200,
             }}
           >
-            <Typography variant="h4" gutterBottom>
+            <Typography variant="h4" gutterBottom align="center">
               Tipshörnan
             </Typography>
-            <Typography variant="body1">Här kan du se hur släkten har tippat i Mello.</Typography>
-            <Divider sx={{ my: 2 }} />
+            <Typography variant="body1" align="center">
+              Här kan du se hur släkten har tippat i Mello.
+            </Typography>
+            <Divider sx={{ my: 3 }} />
 
             {/* Display each subcompetition in its own collapsible Accordion */}
             {filteredBetOverviewData.map((subComp) => (
-              <Accordion key={subComp.id} sx={{ mb: 2 }} defaultExpanded>
+              <Accordion key={subComp.id} sx={{ mb: 3 }} defaultExpanded>
                 {/* Accordion Summary */}
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
@@ -270,96 +276,95 @@ function BetOverview() {
                   id={`panel-${subComp.id}-header`}
                 >
                   <Typography variant="h5">
-                    {subComp.name}: {new Date(subComp.date)
-                      .toISOString()
-                      .replace('T', ' ')
-                      .slice(0, 11)} - {subComp.location}
+                    {subComp.name}: {new Date(subComp.date).toLocaleDateString()} - {subComp.location}
                   </Typography>
                 </AccordionSummary>
 
                 {/* Accordion Details */}
                 <AccordionDetails>
-                  <Divider sx={{ my: 1 }} />
+                  <Divider sx={{ my: 2 }} />
                   {/* Artists displayed horizontally using Grid */}
-                  <Grid container spacing={2}>
+                  <Grid container spacing={3}>
                     {subComp.artists?.map((artist) => (
                       <Grid item xs={12} sm={6} md={4} lg={3} key={artist.id}>
-                        <Box
-                          sx={{
-                            p: 2,
-                            border: '1px solid #ccc',
-                            borderRadius: 2,
-                            height: '90%',
-                          }}
-                        >
-                          <Box sx={{ backgroundColor: 'lightblue', borderRadius: 2, p: 2 }}>
-                            <Typography variant="h6" gutterBottom>
-                              {artist.startingNumber}. {artist.song}
-                            </Typography>
-                            <Typography variant="subtitle1" gutterBottom>
-                              "{artist.name}"
-                            </Typography>
-
-                            {/* Display placement if available */}
-                            {artist.placement !== undefined && (
-                              <Typography variant="body1" gutterBottom>
-                                Resultat:{" "}
-                                <Typography
-                                  component="span"
-                                  sx={{ fontWeight: "bold" }}
-                                >
-                                  {placementDisplayName(artist.placement)}
-                                </Typography>
+                        <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                          <CardContent sx={{ flexGrow: 1 }}>
+                            <Box sx={{ mb: 2 }}>
+                              <Typography variant="h6" gutterBottom>
+                                {artist.startingNumber}. {artist.song}
                               </Typography>
-                            )}
+                              <Typography variant="subtitle1" gutterBottom>
+                                "{artist.name}"
+                              </Typography>
 
-                          </Box>
-                          <Divider sx={{ my: 1 }} />
-                          <List dense>
-                            {artist.predictions?.map((prediction, index) => (
-                              <ListItem key={index} alignItems="flex-start"
-                                sx={{
-                                  backgroundColor: index % 2 === 0 ? '#f2f3f5' : 'white',
-                                  borderRadius: 2,
-                                }}>
-                                <ListItemAvatar>
-                                  <Avatar
-                                    src={prediction.user.avatarImageUrl || defaultProfilePic}
-                                    alt={`${prediction.user.firstName} ${prediction.user.lastName}`}
-
-                                  />
-                                </ListItemAvatar>
-                                {/* Display placement if available */}
-                                {artist.placement !== undefined && artist.placement == prediction.predictedPlacement ? (
-                                  <ListItemText
-                                    primary={`${prediction.user.firstName} ${prediction.user.lastName}`}
-                                    secondary={
-                                      <Typography>
-                                        Tippat:{" "}
+                              {/* Display placement if available */}
+                              {artist.placement !== undefined && (
+                                <Chip
+                                  label={`Resultat: ${placementDisplayName(artist.placement)}`}
+                                  color="primary"
+                                  variant="outlined"
+                                  sx={{ mt: 1 }}
+                                />
+                              )}
+                            </Box>
+                            <Divider sx={{ my: 2 }} />
+                            <Typography variant="subtitle2" gutterBottom>
+                              Användarprediktioner:
+                            </Typography>
+                            <List dense>
+                              {artist.predictions?.map((prediction, index) => {
+                                const isCorrect =
+                                  artist.placement !== undefined &&
+                                  artist.placement === prediction.predictedPlacement;
+                                return (
+                                  <ListItem
+                                    key={index}
+                                    alignItems="flex-start"
+                                    sx={{
+                                      backgroundColor: isCorrect ? '#e8f5e9' : index % 2 === 0 ? '#f2f3f5' : 'white',
+                                      borderRadius: 2,
+                                      mb: 1,
+                                      transition: 'background-color 0.3s',
+                                      '&:hover': {
+                                        backgroundColor: isCorrect ? '#c8e6c9' : '#e0e0e0',
+                                      },
+                                    }}
+                                  >
+                                    <ListItemAvatar>
+                                      <Avatar
+                                        src={prediction.user.avatarImageUrl || defaultProfilePic}
+                                        alt={`${prediction.user.firstName} ${prediction.user.lastName}`}
+                                      />
+                                    </ListItemAvatar>
+                                    <ListItemText
+                                      primary={
+                                        <Box display="flex" alignItems="center">
+                                          <Typography
+                                            variant="body1"
+                                            sx={{ fontWeight: isCorrect ? 'bold' : 'normal' }}
+                                          >
+                                            {`${prediction.user.firstName} ${prediction.user.lastName}`}
+                                          </Typography>
+                                          {isCorrect && (
+                                            <CheckCircleIcon color="success" sx={{ ml: 1 }} />
+                                          )}
+                                        </Box>
+                                      }
+                                      secondary={
                                         <Typography
-                                          component="span"
-                                          sx={{ fontWeight: "bold" }}
+                                          variant="body2"
+                                          sx={{ fontWeight: isCorrect ? 'bold' : 'normal' }}
                                         >
-                                          {placementDisplayName(prediction.predictedPlacement)}
+                                          Tippat: {prediction.predictedPlacement}
                                         </Typography>
-                                      </Typography>
-                                    }
-                                  />
-
-
-                                ) : (
-                                  <ListItemText
-                                    primary={`${prediction.user.firstName} ${prediction.user.lastName}`}
-                                    secondary={`Tippat: ${placementDisplayName(
-                                      prediction.predictedPlacement
-                                    )}`}
-                                  />
-                                )}
-
-                              </ListItem>
-                            ))}
-                          </List>
-                        </Box>
+                                      }
+                                    />
+                                  </ListItem>
+                                );
+                              })}
+                            </List>
+                          </CardContent>
+                        </Card>
                       </Grid>
                     ))}
                   </Grid>
@@ -368,18 +373,18 @@ function BetOverview() {
             ))}
 
             {/* Display Final Predictions */}
-            <Accordion sx={{ mb: 2 }} defaultExpanded>
+            <Accordion sx={{ mb: 3 }} defaultExpanded>
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls={`panel-final-content`}
                 id={`panel-final-header`}
               >
-                <Typography variant="h5">Final: 2025-03-08 - Stockholm</Typography>
+                <Typography variant="h5">Final: {new Date('2025-03-08').toLocaleDateString()} - Stockholm</Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <Divider sx={{ my: 1 }} />
+                <Divider sx={{ my: 2 }} />
                 {finalPredictionsArray.length > 0 ? (
-                  <Grid container spacing={2}>
+                  <Grid container spacing={3}>
                     {finalPredictionsArray.map((group) => {
                       const { artist, predictions } = group;
 
@@ -390,55 +395,60 @@ function BetOverview() {
 
                       return (
                         <Grid item xs={12} sm={6} md={4} lg={3} key={artist.id}>
-                          <Box
-                            sx={{
-                              p: 2,
-                              border: '1px solid #ccc',
-                              borderRadius: 2,
-                              height: '90%',
-                            }}
-                          >
-                            <Box sx={{ backgroundColor: 'lightblue', borderRadius: 2, p: 2 }}>
-                              <Typography variant="h6" gutterBottom>
-                                {artist.name}
-                              </Typography>
-                              <Typography variant="subtitle1" gutterBottom>
-                                "{artist.song}"
-                              </Typography>
-                              {/* Display final placement if available */}
-                              {artist.finalPlacement && (
-                                <Typography variant="body1" gutterBottom>
-                                  Resultat i finalen:{" "}
-                                  <Typography component="span" sx={{ fontWeight: "bold" }}>
-                                    {finalPlacementDisplayName(artist.finalPlacement)}
-                                  </Typography>
+                          <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                            <CardContent sx={{ flexGrow: 1 }}>
+                              <Box sx={{ mb: 2 }}>
+                                <Typography variant="h6" gutterBottom>
+                                  {artist.name}
                                 </Typography>
-                              )}
-                            </Box>
-                            <Divider sx={{ my: 1 }} />
-                            <List dense>
-                              {predictions.map((prediction, index) => (
-                                <ListItem key={index} alignItems="flex-start"
-                                  sx={{
-                                    backgroundColor: index % 2 === 0 ? '#f2f3f5' : 'white',
-                                    borderRadius: 2,
-                                  }}
-                                >
-                                  <ListItemAvatar>
-                                    <Avatar
-                                      src={prediction.user.avatarImageUrl || defaultProfilePic}
-                                      alt={`${prediction.user.firstName} ${prediction.user.lastName}`}
-
-                                    />
-                                  </ListItemAvatar>
-                                  <ListItemText
-                                    primary={`${prediction.user.firstName} ${prediction.user.lastName}`}
-                                    secondary={`Tippat: ${prediction.finalPredictedPlacement}`}
+                                <Typography variant="subtitle1" gutterBottom>
+                                  "{artist.song}"
+                                </Typography>
+                                {/* Display final placement if available */}
+                                {artist.finalPlacement && (
+                                  <Chip
+                                    label={`Resultat i finalen: ${finalPlacementDisplayName(artist.finalPlacement)}`}
+                                    color="secondary"
+                                    variant="outlined"
+                                    sx={{ mt: 1 }}
                                   />
-                                </ListItem>
-                              ))}
-                            </List>
-                          </Box>
+                                )}
+                              </Box>
+                              <Divider sx={{ my: 2 }} />
+                              <Typography variant="subtitle2" gutterBottom>
+                                Användarprediktioner:
+                              </Typography>
+                              <List dense>
+                                {predictions.map((prediction, index) => (
+                                  <ListItem
+                                    key={index}
+                                    alignItems="flex-start"
+                                    sx={{
+                                      backgroundColor: index % 2 === 0 ? '#f2f3f5' : 'white',
+                                      borderRadius: 2,
+                                      mb: 1,
+                                      transition: 'background-color 0.3s',
+                                      '&:hover': {
+                                        backgroundColor: '#e0e0e0',
+                                      },
+                                    }}
+                                  >
+                                    <ListItemAvatar>
+                                      <Avatar
+                                        src={prediction.user.avatarImageUrl || defaultProfilePic}
+                                        alt={`${prediction.user.firstName} ${prediction.user.lastName}`}
+                                      />
+                                    </ListItemAvatar>
+                                    <ListItemText
+                                      primary={`${prediction.user.firstName} ${prediction.user.lastName}`}
+                                      secondary={`Tippat: ${
+                                        prediction.finalPredictedPlacement}`}
+                                    />
+                                  </ListItem>
+                                ))}
+                              </List>
+                            </CardContent>
+                          </Card>
                         </Grid>
                       );
                     })}
@@ -453,6 +463,6 @@ function BetOverview() {
       </>
     )
   );
-}
+};
 
 export default BetOverview;

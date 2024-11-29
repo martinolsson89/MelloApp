@@ -90,7 +90,7 @@ function Leaderboard() {
                 <Navbar />
                 {isLoading ? (
                     <Box sx={{ mt: 4, textAlign: 'center' }}>
-                        <Typography variant="h6">Laddar...</Typography>
+                        <Typography variant="h6" sx={{color:'white'}}>Laddar...</Typography>
                     </Box>
                 ) : error ? (
                     <Box sx={{ mt: 4, textAlign: 'center' }}>
