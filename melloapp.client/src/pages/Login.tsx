@@ -2,6 +2,7 @@
 import { useNavigate } from 'react-router-dom';
 import { TextField, Checkbox, FormControlLabel, Typography, Button, Box, Alert } from '@mui/material';
 import imageUrl from '../assets/sweden-melodifestivalen-2025-logo.jpg';
+import { userService } from '../services/UserService';
 
 function Login() {
     // state variables for email and password
@@ -59,8 +60,10 @@ function Login() {
 
                 .then((data) => {
                     // handle success or error from the server
-                    console.log(data);
                     if (data.ok) {
+                        // Set storage type based on "remember me"
+                        userService.setStorage(rememberme);
+
                         setSuccess('Successful Login.');
                         window.location.href = '/';
                     } else {
@@ -81,7 +84,7 @@ function Login() {
                 maxWidth: 400,
                 mx: 'auto',
                 p: 3,
-                mt: 6, 
+                mt: 6,
                 boxShadow: 3,
                 borderRadius: 2,
                 bgcolor: 'rgba(255, 255, 255, 0.7)',
@@ -127,7 +130,7 @@ function Login() {
                 </Box>
             </form>
             {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
-            {success && <Alert severity='success' sx={{mt: 2}}>{success}</Alert>}
+            {success && <Alert severity='success' sx={{ mt: 2 }}>{success}</Alert>}
         </Box>
     );
 }

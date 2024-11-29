@@ -12,4 +12,7 @@
     <None Remove="src\shared-theme\**" />
     <TypeScriptConfiguration Remove="src\shared-theme\**" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="src\service\" />
+  </ItemGroup>
 </Project>

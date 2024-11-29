@@ -1,8 +1,8 @@
 ﻿import { useEffect, useState } from 'react';
 import { Typography, Box, Divider, Avatar, TextField, Button } from '@mui/material';
-import AuthorizeView from "../components/AuthorizeView";
 import Navbar from "../components/Navbar";
 import defaultProfilePic from '../assets/avatar/anonymous-user.webp';
+import { userService } from '../services/UserService';
 
 interface UserDto {
     id: string;
@@ -18,6 +18,8 @@ function MyAccount() {
     const [hasBet, setHasBet] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [avatarUrl, setAvatarUrl] = useState('');
+
+    const isLoggedIn = userService.isLoggedIn();
 
     useEffect(() => {
         // Fetch data from the backend
@@ -80,17 +82,20 @@ function MyAccount() {
 
     if (isLoading) {
         return (
-            <AuthorizeView>
+            isLoggedIn && (
+            <>
                 <Navbar />
                 <Box sx={{ mt: 4, textAlign: 'center' }}>
                     <Typography variant="h6">Laddar...</Typography>
                 </Box>
-            </AuthorizeView>
+            </>
+            )
         );
     }
 
     return (
-        <AuthorizeView>
+        isLoggedIn && (
+        <>
             <Navbar />
             <Box
                 sx={{
@@ -156,7 +161,8 @@ function MyAccount() {
                     Uppdatera
                 </Button>
             </Box>
-        </AuthorizeView>
+        </>
+        )
     );
 }
 

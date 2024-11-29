@@ -1,12 +1,16 @@
-﻿using MelloApp.Server.Data;
+﻿using System.IdentityModel.Tokens.Jwt;
+using MelloApp.Server.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 using AutoMapper;
 using MelloApp.Server.Models.Account;
 using MelloApp.Server.Repositories;
+using Microsoft.IdentityModel.Tokens;
 
 namespace MelloApp.Server.Controllers
 {
@@ -20,17 +24,21 @@ namespace MelloApp.Server.Controllers
         private readonly IMapper _mapper;
         private readonly AccountRepository _repository;
 
+        private readonly IConfiguration _configuration;
+
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IMapper mapper,
-            AccountRepository repository)
+            AccountRepository repository,
+            IConfiguration configuration)
             
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _mapper = mapper;
             _repository = repository;
+            _configuration = configuration;
         }
 
         // POST: /Account/register
@@ -68,6 +76,71 @@ namespace MelloApp.Server.Controllers
             await _signInManager.SignOutAsync();
             return Ok();
         }
+        
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginModel model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null || !await _userManager.CheckPasswordAsync(user, model.Password))
+                return Unauthorized();
+
+            // Sign in the user and issue a session cookie
+            await _signInManager.SignInAsync(user, isPersistent: model.RememberMe);
+
+            // Return success with user info
+            var roles = await _userManager.GetRolesAsync(user);
+
+            return Ok(new
+            {
+                email = user.Email,
+                role = roles.FirstOrDefault()
+            });
+        }
+
+
+        // Helper method to generate JWT
+        private string GenerateJwtToken(ApplicationUser user, IList<string> roles)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim(ClaimTypes.Name, user.UserName),
+            };
+
+            // Add roles as claims
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                issuer: _configuration["Jwt:Issuer"],
+                audience: _configuration["Jwt:Audience"],
+                claims: claims,
+                expires: DateTime.Now.AddHours(1),
+                signingCredentials: creds);
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        private string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[32];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(randomNumber);
+            }
+            return Convert.ToBase64String(randomNumber);
+        }
+
+
 
         // GET: /Account/pingauth
         [HttpGet("pingauth")]
@@ -75,11 +148,14 @@ namespace MelloApp.Server.Controllers
         public IActionResult PingAuth()
         {
             var email = User.FindFirstValue(ClaimTypes.Email);
+            var role = User.FindFirstValue(ClaimTypes.Role);
 
             return Ok(new
             {
 
-                Email = email
+                Email = email,
+                Role = role
+
             });
         }
 

@@ -30,7 +30,7 @@ function AuthorizeAdminView(props: { children: React.ReactNode }) {
 
                 // check the status code
                 if (response.status == 200) {
-                    console.log("Authorized");
+                    console.log("AuthorizedAdmin");
                     let j: any = await response.json();
                     console.log('User data:', j)
                     setUser({ role: j.role });

@@ -11,15 +11,17 @@ import {
     Grid,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import AuthorizeAdminView from '../components/AuthorizeAdminView';
 import Navbar from '../components/Navbar';
 import CrudOperations from '../components/CrudOperations';
+import { userService } from '../services/UserService';
 
 const AdminCenter: React.FC = () => {
     const navigate = useNavigate();
+    const isAdmin = userService.isAdmin();
 
     return (
-        <AuthorizeAdminView>
+        isAdmin && (
+        <>
             <Navbar />
             <Box sx={{ mt: 4, mx: 'auto', p: 3, maxWidth: 800, bgcolor: 'rgba(255, 255, 255, 0.9)', borderRadius:2 }}>
                 <Typography variant="h4" gutterBottom textAlign="center">
@@ -140,7 +142,8 @@ const AdminCenter: React.FC = () => {
                 <Divider sx={{ my: 4 }} />
                 <CrudOperations />
             </Box>
-        </AuthorizeAdminView>
+        </>
+        )
     );
 };
 

@@ -1,9 +1,9 @@
 ﻿import { useState, useEffect } from 'react';
 import { Typography, Box } from '@mui/material';
 import Navbar from "../components/Navbar";
-import AuthorizeView from "../components/AuthorizeView";
 import TotalPoints from "../components/TotalPoints";
 import SubCompetitionPoints from '../components/SubCompetitionPoints';
+import { userService } from '../services/UserService';
 
 interface LeaderboardDto {
     id: string;
@@ -42,6 +42,7 @@ function Leaderboard() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
+    const isLoggedIn = userService.isLoggedIn();
 
 
     useEffect(() => {
@@ -84,25 +85,27 @@ function Leaderboard() {
     }, []);
 
     return (
-        <AuthorizeView>
-            <Navbar />
-            {isLoading ? (
-                <Box sx={{ mt: 4, textAlign: 'center' }}>
-                    <Typography variant="h6">Laddar...</Typography>
-                </Box>
-            ) : error ? (
-                <Box sx={{ mt: 4, textAlign: 'center' }}>
-                    <Typography variant="h6" color="error">
-                        {error}
-                    </Typography>
-                </Box>
-            ) : (
-                <Box>
-                            <TotalPoints leaderboardData={leaderboardData} />
-                            <SubCompetitionPoints subCompetitionData={subCompetitionData} />
-                </Box>
-            )}
-        </AuthorizeView>
+        isLoggedIn && (
+            <>
+                <Navbar />
+                {isLoading ? (
+                    <Box sx={{ mt: 4, textAlign: 'center' }}>
+                        <Typography variant="h6">Laddar...</Typography>
+                    </Box>
+                ) : error ? (
+                    <Box sx={{ mt: 4, textAlign: 'center' }}>
+                        <Typography variant="h6" color="error">
+                            {error}
+                        </Typography>
+                    </Box>
+                ) : (
+                    <Box>
+                        <TotalPoints leaderboardData={leaderboardData} />
+                        <SubCompetitionPoints subCompetitionData={subCompetitionData} />
+                    </Box>
+                )}
+            </>
+        )
     );
 }
 

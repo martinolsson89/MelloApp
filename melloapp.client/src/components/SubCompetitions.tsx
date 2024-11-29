@@ -14,9 +14,9 @@ import {
     IconButton,
 } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
-import AuthorizeAdminView from './AuthorizeAdminView';
 import Navbar from './Navbar';
 import { useNavigate } from 'react-router-dom';
+import { userService } from '../services/UserService';
 
 interface SubCompetition {
     name: string;
@@ -35,6 +35,7 @@ const SubCompetitions: React.FC = () => {
         date: new Date().toISOString().slice(0, 16),
         location: '',
     });
+    const IsAdmin = userService.isAdmin();
 
     const navigate = useNavigate();
 
@@ -157,144 +158,146 @@ const SubCompetitions: React.FC = () => {
     }, []);
 
     return (
-        <AuthorizeAdminView>
-            <Navbar />
+        IsAdmin && (
+            <>
+                <Navbar />
 
-            <Box sx={{
-                p: 4,
-                borderRadius: 2,
-                bgcolor: 'rgba(255, 255, 255, 0.9)',
-                my: 4,
-                boxShadow: 3,
-            }}>
-                <Typography variant="h4" gutterBottom>
-                    Sub Competitions
-                </Typography>
+                <Box sx={{
+                    p: 4,
+                    borderRadius: 2,
+                    bgcolor: 'rgba(255, 255, 255, 0.9)',
+                    my: 4,
+                    boxShadow: 3,
+                }}>
+                    <Typography variant="h4" gutterBottom>
+                        Sub Competitions
+                    </Typography>
 
-                {/* Add Sub Competition */}
-                <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
-                    <TextField
-                        label="Name"
-                        value={newSubCompetition.name}
-                        onChange={(e) =>
-                            setNewSubCompetition({ ...newSubCompetition, name: e.target.value })
-                        }
-                        fullWidth
-                    />
-                    <TextField
-                        label="Date"
-                        type="datetime-local"
-                        value={newSubCompetition.date}
-                        onChange={(e) =>
-                            setNewSubCompetition({ ...newSubCompetition, date: e.target.value })
-                        }
-                        fullWidth
-                    />
-                    <TextField
-                        label="Location"
-                        value={newSubCompetition.location}
-                        onChange={(e) =>
-                            setNewSubCompetition({ ...newSubCompetition, location: e.target.value })
-                        }
-                        fullWidth
-                    />
+                    {/* Add Sub Competition */}
+                    <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
+                        <TextField
+                            label="Name"
+                            value={newSubCompetition.name}
+                            onChange={(e) =>
+                                setNewSubCompetition({ ...newSubCompetition, name: e.target.value })
+                            }
+                            fullWidth
+                        />
+                        <TextField
+                            label="Date"
+                            type="datetime-local"
+                            value={newSubCompetition.date}
+                            onChange={(e) =>
+                                setNewSubCompetition({ ...newSubCompetition, date: e.target.value })
+                            }
+                            fullWidth
+                        />
+                        <TextField
+                            label="Location"
+                            value={newSubCompetition.location}
+                            onChange={(e) =>
+                                setNewSubCompetition({ ...newSubCompetition, location: e.target.value })
+                            }
+                            fullWidth
+                        />
 
-                    <Button variant="contained" onClick={addSubCompetition}>
-                        Add
+                        <Button variant="contained" onClick={addSubCompetition}>
+                            Add
+                        </Button>
+                    </Box>
+
+                    {/* Sub Competitions Table */}
+                    <TableContainer component={Paper}>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Id</TableCell>
+                                    <TableCell>Name</TableCell>
+                                    <TableCell>Date</TableCell>
+                                    <TableCell>Location</TableCell>
+                                    <TableCell>Actions</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {subCompetitions.map((subCompetition: any) => (
+                                    <TableRow key={subCompetition.id}>
+                                        <TableCell>{subCompetition.id}</TableCell>
+                                        <TableCell>
+                                            {editId === subCompetition.id ? (
+                                                <TextField
+                                                    value={editName}
+                                                    onChange={(e) => setEditName(e.target.value)}
+                                                    fullWidth
+                                                />
+                                            ) : (
+                                                subCompetition.name
+                                            )}
+                                        </TableCell>
+                                        <TableCell>
+                                            {editId === subCompetition.id ? (
+                                                <TextField
+                                                    type="datetime-local"
+                                                    value={editDate}
+                                                    onChange={(e) => setEditDate(e.target.value)}
+                                                    fullWidth
+                                                />
+                                            ) : (
+                                                formatDateTimeDisplay(subCompetition.date)
+                                            )}
+                                        </TableCell>
+                                        <TableCell>
+                                            {editId === subCompetition.id ? (
+                                                <TextField
+                                                    value={editLocation}
+                                                    onChange={(e) => setEditLocation(e.target.value)}
+                                                    fullWidth
+                                                />
+                                            ) : (
+                                                subCompetition.location
+                                            )}
+                                        </TableCell>
+                                        <TableCell>
+                                            {editId === subCompetition.id ? (
+                                                <Button
+                                                    variant="contained"
+                                                    onClick={() => updateSubCompetition(subCompetition.id)}
+                                                >
+                                                    Save
+                                                </Button>
+                                            ) : (
+                                                <IconButton
+                                                    color="primary"
+                                                    onClick={() => {
+                                                        setEditId(subCompetition.id);
+                                                        setEditName(subCompetition.name);
+                                                        setEditDate(formatDateTimeLocal(subCompetition.date));
+                                                        setEditLocation(subCompetition.location);
+                                                    }}
+                                                >
+                                                    <Edit />
+                                                </IconButton>
+                                            )}
+                                            <IconButton
+                                                color="secondary"
+                                                onClick={() => deleteSubCompetition(subCompetition.id)}
+                                            >
+                                                <Delete />
+                                            </IconButton>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+
+
+                    </TableContainer>
+
+                    <Button variant="contained" color="secondary" sx={{ m: 2 }} onClick={() => handleNavigation('/admin-center')}>
+                        Go Back
                     </Button>
                 </Box>
-
-                {/* Sub Competitions Table */}
-                <TableContainer component={Paper}>
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>Id</TableCell>
-                                <TableCell>Name</TableCell>
-                                <TableCell>Date</TableCell>
-                                <TableCell>Location</TableCell>
-                                <TableCell>Actions</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {subCompetitions.map((subCompetition: any) => (
-                                <TableRow key={subCompetition.id}>
-                                    <TableCell>{subCompetition.id}</TableCell>
-                                    <TableCell>
-                                        {editId === subCompetition.id ? (
-                                            <TextField
-                                                value={editName}
-                                                onChange={(e) => setEditName(e.target.value)}
-                                                fullWidth
-                                            />
-                                        ) : (
-                                            subCompetition.name
-                                        )}
-                                    </TableCell>
-                                    <TableCell>
-                                        {editId === subCompetition.id ? (
-                                            <TextField
-                                                type="datetime-local"
-                                                value={editDate}
-                                                onChange={(e) => setEditDate(e.target.value)}
-                                                fullWidth
-                                            />
-                                        ) : (
-                                            formatDateTimeDisplay(subCompetition.date)
-                                        )}
-                                    </TableCell>
-                                    <TableCell>
-                                        {editId === subCompetition.id ? (
-                                            <TextField
-                                                value={editLocation}
-                                                onChange={(e) => setEditLocation(e.target.value)}
-                                                fullWidth
-                                            />
-                                        ) : (
-                                            subCompetition.location
-                                        )}
-                                    </TableCell>
-                                    <TableCell>
-                                        {editId === subCompetition.id ? (
-                                            <Button
-                                                variant="contained"
-                                                onClick={() => updateSubCompetition(subCompetition.id)}
-                                            >
-                                                Save
-                                            </Button>
-                                        ) : (
-                                            <IconButton
-                                                color="primary"
-                                                onClick={() => {
-                                                    setEditId(subCompetition.id);
-                                                    setEditName(subCompetition.name);
-                                                    setEditDate(formatDateTimeLocal(subCompetition.date));
-                                                    setEditLocation(subCompetition.location);
-                                                }}
-                                            >
-                                                <Edit />
-                                            </IconButton>
-                                        )}
-                                        <IconButton
-                                            color="secondary"
-                                            onClick={() => deleteSubCompetition(subCompetition.id)}
-                                        >
-                                            <Delete />
-                                        </IconButton>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-
-
-                </TableContainer>
-
-                <Button variant="contained" color="secondary" sx={{ m: 2 }} onClick={() => handleNavigation('/admin-center')}>
-                            Go Back
-                </Button>
-            </Box>
-        </AuthorizeAdminView>
+            </>
+        )
     );
 };
 

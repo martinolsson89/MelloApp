@@ -19,9 +19,9 @@ import {
     InputLabel,
 } from '@mui/material';
 import { Delete } from '@mui/icons-material';
-import AuthorizeAdminView from './AuthorizeAdminView';
 import Navbar from './Navbar';
 import { useNavigate } from 'react-router-dom';
+import { userService } from '../services/UserService';
 
 interface SubCompetitionName {
     id: string;
@@ -58,6 +58,8 @@ function PointsManagement() {
         subCompetitionId: ''
     });
     const [users, setUsers] = useState<User[]>([]);
+    const IsAdmin = userService.isAdmin();
+
 
     const navigate = useNavigate();
 
@@ -143,148 +145,148 @@ function PointsManagement() {
 
     }, []);
     return (
-        <AuthorizeAdminView>
-            <Navbar />
-            <Box sx={{ mt: 4, mx: 'auto', p: 3, maxWidth: 900, borderRadius: 2, bgcolor: 'rgba(255, 255, 255, 0.9)' }}>
-                <Typography variant="h4" gutterBottom textAlign="center">
-                    Points Management
-                </Typography>
-                <Box sx={{ mb: 4 }}>
-                    <Typography variant="h6" gutterBottom>
-                        Add New Points Entry
+        IsAdmin && (
+            <>
+                <Navbar />
+                <Box sx={{ mt: 4, mx: 'auto', p: 3, maxWidth: 900, borderRadius: 2, bgcolor: 'rgba(255, 255, 255, 0.9)' }}>
+                    <Typography variant="h4" gutterBottom textAlign="center">
+                        Points Management
                     </Typography>
-                    <Grid container spacing={2}>
-                        <Grid item xs={12} sm={4}>
-                            <TextField
-                                fullWidth
-                                label="Points"
-                                type="number"
-                                value={newPoints.points}
-                                onChange={(e) =>
-                                    setNewPoints((prev) => ({
-                                        ...prev,
-                                        points: Number(e.target.value),
-                                    }))
-                                }
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={4}>
-                            <FormControl fullWidth>
-                                <InputLabel>User</InputLabel>
-                                <Select
-                                    value={newPoints.userId}
+                    <Box sx={{ mb: 4 }}>
+                        <Typography variant="h6" gutterBottom>
+                            Add New Points Entry
+                        </Typography>
+                        <Grid container spacing={2}>
+                            <Grid item xs={12} sm={4}>
+                                <TextField
+                                    fullWidth
+                                    label="Points"
+                                    type="number"
+                                    value={newPoints.points}
                                     onChange={(e) =>
                                         setNewPoints((prev) => ({
                                             ...prev,
-                                            userId: e.target.value,
+                                            points: Number(e.target.value),
                                         }))
                                     }
-                                >
-                                    {[...new Map(users
-                                        .filter((user) => user) // Ensure user exists
-                                        .map((user) => [user.id, user]) // Map user IDs to user objects
-                                    ).values()].map((uniqueUser) => (
-                                        <MenuItem key={uniqueUser.id} value={uniqueUser.id}>
-                                            {uniqueUser.firstName} {uniqueUser.lastName}
-                                        </MenuItem>
-                                    ))}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={4}>
+                                <FormControl fullWidth>
+                                    <InputLabel>User</InputLabel>
+                                    <Select
+                                        value={newPoints.userId}
+                                        onChange={(e) =>
+                                            setNewPoints((prev) => ({
+                                                ...prev,
+                                                userId: e.target.value,
+                                            }))
+                                        }
+                                    >
+                                        {[...new Map(users
+                                            .filter((user) => user) // Ensure user exists
+                                            .map((user) => [user.id, user]) // Map user IDs to user objects
+                                        ).values()].map((uniqueUser) => (
+                                            <MenuItem key={uniqueUser.id} value={uniqueUser.id}>
+                                                {uniqueUser.firstName} {uniqueUser.lastName}
+                                            </MenuItem>
+                                        ))}
 
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12} sm={4}>
-                            <FormControl fullWidth>
-                                <InputLabel>Sub-Competition</InputLabel>
-                                <Select
-                                    value={newPoints.subCompetitionId}
-                                    onChange={(e) =>
-                                        setNewPoints((prev) => ({
-                                            ...prev,
-                                            subCompetitionId: e.target.value,
-                                        }))
-                                    }
-                                >
-                                    {[...new Map(userPoints
-                                        .filter((entry) => entry.subCompetitionName) // Ensure user exists
-                                        .map((entry) => [entry.subCompetitionName.id, entry.subCompetitionName]) // Map user IDs to user objects
-                                    ).values()].map((uniqueSubComp) => (
-                                        <MenuItem key={uniqueSubComp.id} value={uniqueSubComp.id}>
-                                            {uniqueSubComp.name}
-                                        </MenuItem>
-                                    ))}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={12} sm={4}>
+                                <FormControl fullWidth>
+                                    <InputLabel>Sub-Competition</InputLabel>
+                                    <Select
+                                        value={newPoints.subCompetitionId}
+                                        onChange={(e) =>
+                                            setNewPoints((prev) => ({
+                                                ...prev,
+                                                subCompetitionId: e.target.value,
+                                            }))
+                                        }
+                                    >
+                                        {[...new Map(userPoints
+                                            .filter((entry) => entry.subCompetitionName) // Ensure user exists
+                                            .map((entry) => [entry.subCompetitionName.id, entry.subCompetitionName]) // Map user IDs to user objects
+                                        ).values()].map((uniqueSubComp) => (
+                                            <MenuItem key={uniqueSubComp.id} value={uniqueSubComp.id}>
+                                                {uniqueSubComp.name}
+                                            </MenuItem>
+                                        ))}
 
-                                </Select>
-                            </FormControl>
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Button
+                                    variant="contained"
+                                    onClick={addPoints}
+                                    fullWidth
+                                    sx={{ mt: 2 }}
+                                >
+                                    Add Points
+                                </Button>
+                            </Grid>
                         </Grid>
-                        <Grid item xs={12}>
-                            <Button
-                                variant="contained"
-                                onClick={addPoints}
-                                fullWidth
-                                sx={{ mt: 2 }}
-                            >
-                                Add Points
-                            </Button>
-                        </Grid>
-                    </Grid>
-                </Box>
-                <Box>
-                    <Typography variant="h6" gutterBottom>
-                        Existing Points Entries
-                    </Typography>
-                    <TableContainer component={Paper}>
-                        <Table>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>ID</TableCell>
-                                    <TableCell>User</TableCell>
-                                    <TableCell>Sub-Competition</TableCell>
-                                    <TableCell>Points</TableCell>
-                                    <TableCell>Actions</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {userPoints.length > 0 ? (
-                                    userPoints.map((entry) => (
-                                        <TableRow key={entry.id}>
-                                            <TableCell>{entry.id}</TableCell>
-                                            <TableCell>
-                                                {entry.user
-                                                    ? `${entry.user.firstName} ${entry.user.lastName}`
-                                                    : 'Unknown User'}
-                                            </TableCell>
-                                            <TableCell>
-                                                {entry.subCompetitionName ? entry.subCompetitionName.name : 'Unknown Sub-Competition'}
-                                            </TableCell>
-                                            <TableCell>{entry.points}</TableCell>
-                                            <TableCell>
-                                                <IconButton
-                                                    color="error"
-                                                    onClick={() => deleteUserPoints(entry.id)}
-                                                >
-                                                    <Delete />
-                                                </IconButton>
+                    </Box>
+                    <Box>
+                        <Typography variant="h6" gutterBottom>
+                            Existing Points Entries
+                        </Typography>
+                        <TableContainer component={Paper}>
+                            <Table>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>ID</TableCell>
+                                        <TableCell>User</TableCell>
+                                        <TableCell>Sub-Competition</TableCell>
+                                        <TableCell>Points</TableCell>
+                                        <TableCell>Actions</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {userPoints.length > 0 ? (
+                                        userPoints.map((entry) => (
+                                            <TableRow key={entry.id}>
+                                                <TableCell>{entry.id}</TableCell>
+                                                <TableCell>
+                                                    {entry.user
+                                                        ? `${entry.user.firstName} ${entry.user.lastName}`
+                                                        : 'Unknown User'}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {entry.subCompetitionName ? entry.subCompetitionName.name : 'Unknown Sub-Competition'}
+                                                </TableCell>
+                                                <TableCell>{entry.points}</TableCell>
+                                                <TableCell>
+                                                    <IconButton
+                                                        color="error"
+                                                        onClick={() => deleteUserPoints(entry.id)}
+                                                    >
+                                                        <Delete />
+                                                    </IconButton>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))
+                                    ) : (
+                                        <TableRow>
+                                            <TableCell colSpan={5} align="center">
+                                                No points entries found.
                                             </TableCell>
                                         </TableRow>
-                                    ))
-                                ) : (
-                                    <TableRow>
-                                        <TableCell colSpan={5} align="center">
-                                            No points entries found.
-                                        </TableCell>
-                                    </TableRow>
-                                )}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+                                    )}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </Box>
+                    <Button variant="contained" color="secondary" sx={{ m: 2 }} onClick={() => handleNavigation('/admin-center')}>
+                        Go Back
+                    </Button>
                 </Box>
-                <Button variant="contained" color="secondary" sx={{ m: 2 }} onClick={() => handleNavigation('/admin-center')}>
-                    Go Back
-                </Button>
-            </Box>
-        </AuthorizeAdminView>
-
-
+            </>
+        )
     )
 }
 

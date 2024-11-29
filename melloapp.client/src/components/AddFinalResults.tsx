@@ -11,8 +11,8 @@ import {
     Alert,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import AuthorizeAdminView from '../components/AuthorizeAdminView';
 import Navbar from '../components/Navbar';
+import {userService} from '../services/UserService';
 
 interface Artist {
     id: string;
@@ -27,6 +27,8 @@ function AddFinalResults() {
     const [selectedSecondId, setSelectedSecondId] = useState<string>('');
     const [artistLoading, setArtistLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
+
+    const IsAdmin = userService.isAdmin();
 
     const navigate = useNavigate();
 
@@ -98,7 +100,8 @@ function AddFinalResults() {
 
 
     return (
-        <AuthorizeAdminView>
+        IsAdmin && (
+        <>
             <Navbar />
             <Box
                 sx={{
@@ -169,7 +172,8 @@ function AddFinalResults() {
                     </>
                 )}
             </Box>
-        </AuthorizeAdminView>
+        </>
+        )
     )
 }
 

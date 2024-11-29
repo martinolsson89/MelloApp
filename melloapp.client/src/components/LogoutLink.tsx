@@ -1,4 +1,6 @@
 ﻿import { useNavigate } from "react-router-dom";
+import { userService } from '../services/UserService';
+
 
 function LogoutLink(props: { children: React.ReactNode }) {
 
@@ -19,6 +21,7 @@ function LogoutLink(props: { children: React.ReactNode }) {
                 // handle success or error from the server
                 console.log(data);
                 if (data.ok) {
+                    userService.clearUserData();
                     navigate('/login');
                 } else { }
             })

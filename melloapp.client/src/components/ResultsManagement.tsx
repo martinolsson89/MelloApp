@@ -18,10 +18,10 @@ import {
   FormControl,
   InputLabel,
 } from '@mui/material';
-import { Delete, Edit } from '@mui/icons-material';
-import AuthorizeAdminView from './AuthorizeAdminView';
+import { Delete, Edit } from '@mui/icons-material';;
 import Navbar from './Navbar';
 import { useNavigate } from 'react-router-dom';
+import { userService } from '../services/UserService';
 
 // Define enums and types
 enum ePlacement {
@@ -67,12 +67,13 @@ const ResultsManagement: React.FC = () => {
     artistId: '',
     subCompetitionId: '',
   });
+  const IsAdmin = userService.isAdmin();
 
   const navigate = useNavigate();
 
-    const handleNavigation = (path: string) => {
-        navigate(path);
-    };
+  const handleNavigation = (path: string) => {
+    navigate(path);
+  };
 
   // Prepare options from enums
   const placementOptions = Object.values(ePlacement);
@@ -216,234 +217,236 @@ const ResultsManagement: React.FC = () => {
   }, []);
 
   return (
-    <AuthorizeAdminView>
-      <Navbar />
-      <Box
-        sx={{
-          p: 4,
-          borderRadius: 2,
-          bgcolor: 'rgba(255, 255, 255, 0.9)',
-          my: 4,
-          boxShadow: 3,
-        }}
-      >
-        <Typography variant="h4" gutterBottom>
-          Results Management
-        </Typography>
-
-        {/* Add Result Form */}
-        <Box sx={{ mb: 3 }}>
-          <Typography variant="h6" gutterBottom>
-            Add Result
+    IsAdmin && (
+      <>
+        <Navbar />
+        <Box
+          sx={{
+            p: 4,
+            borderRadius: 2,
+            bgcolor: 'rgba(255, 255, 255, 0.9)',
+            my: 4,
+            boxShadow: 3,
+          }}
+        >
+          <Typography variant="h4" gutterBottom>
+            Results Management
           </Typography>
-          <Grid container spacing={2}>
-            <Grid item xs={12} md={3}>
-              <FormControl fullWidth>
-                <InputLabel>Placement</InputLabel>
-                <Select
-                  label="Placement"
-                  value={newResult.placement}
-                  onChange={(e) =>
-                    setNewResult({ ...newResult, placement: e.target.value })
-                  }
-                >
-                  {placementOptions.map((option) => (
-                    <MenuItem key={option} value={option}>
-                      {option}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} md={3}>
-              <FormControl fullWidth>
-                <InputLabel>Final Placement</InputLabel>
-                <Select
-                  label="Final Placement"
-                  value={newResult.finalPlacement || ''}
-                  onChange={(e) =>
-                    setNewResult({ ...newResult, finalPlacement: e.target.value })
-                  }
-                >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  {finalPlacementOptions.map((option) => (
-                    <MenuItem key={option} value={option}>
-                      {option}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} md={3}>
-              <TextField
-                label="Artist ID"
-                value={newResult.artistId}
-                onChange={(e) =>
-                  setNewResult({ ...newResult, artistId: e.target.value })
-                }
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={12} md={3}>
-              <TextField
-                label="Sub Competition ID"
-                value={newResult.subCompetitionId}
-                onChange={(e) =>
-                  setNewResult({ ...newResult, subCompetitionId: e.target.value })
-                }
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Button variant="contained" onClick={addResult}>
-                Add Result
-              </Button>
-            </Grid>
-          </Grid>
-        </Box>
 
-        {/* Sub-Competitions with Results Table */}
-        {subCompetitions.map((subCompetition) => (
-          <Box key={subCompetition.id} sx={{ mb: 4 }}>
-            {/* ... (subCompetition details) */}
+          {/* Add Result Form */}
+          <Box sx={{ mb: 3 }}>
             <Typography variant="h6" gutterBottom>
-              {subCompetition.name} ({new Date(subCompetition.date).toLocaleString()})
+              Add Result
             </Typography>
-            <Typography variant="body1" gutterBottom>
-              Location: {subCompetition.location}
-            </Typography>
-            <Typography sx={{ mb: 2 }}>
-              SubCompetition ID: {subCompetition.id}
-            </Typography>
-            <TableContainer component={Paper}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Placement</TableCell>
-                    <TableCell>Final Placement</TableCell>
-                    <TableCell>Artist ID</TableCell>
-                    <TableCell>Artist Name</TableCell>
-                    <TableCell>Actions</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {subCompetition.results.map((result) => (
-                    <TableRow key={result.id}>
-                      {editResultId === result.id ? (
-                        <>
-                          {/* Placement */}
-                          <TableCell>
-                            <FormControl fullWidth>
-                              <InputLabel>Placement</InputLabel>
-                              <Select
-                                label="Placement"
-                                value={result.placement}
-                                onChange={(e) =>
-                                  handleResultChange('placement', e.target.value)
-                                }
-                              >
-                                {placementOptions.map((option) => (
-                                  <MenuItem key={option} value={option}>
-                                    {option}
-                                  </MenuItem>
-                                ))}
-                              </Select>
-                            </FormControl>
-                          </TableCell>
-                          {/* Final Placement */}
-                          <TableCell>
-                            <FormControl fullWidth>
-                              <InputLabel>Final Placement</InputLabel>
-                              <Select
-                                label="Final Placement"
-                                value={result.finalPlacement || ''}
-                                onChange={(e) =>
-                                  handleResultChange('finalPlacement', e.target.value)
-                                }
-                              >
-                                <MenuItem value="">
-                                  <em>None</em>
-                                </MenuItem>
-                                {finalPlacementOptions.map((option) => (
-                                  <MenuItem key={option} value={option}>
-                                    {option}
-                                  </MenuItem>
-                                ))}
-                              </Select>
-                            </FormControl>
-                          </TableCell>
-                          {/* Artist ID */}
-                          <TableCell>
-                            <TextField
-                              label="Artist ID"
-                              value={result.artist.id}
-                              onChange={(e) =>
-                                handleResultChange('artist.id', e.target.value)
-                              }
-                              fullWidth
-                            />
-                          </TableCell>
-                          {/* Artist Name */}
-                          <TableCell>
-                            {result.artist.name || ''}
-                          </TableCell>
-                          {/* Actions */}
-                          <TableCell>
-                            <Button
-                              variant="contained"
-                              color="primary"
-                              onClick={updateResult}
-                              sx={{ mr: 1 }}
-                            >
-                              Save
-                            </Button>
-                            <Button
-                              variant="outlined"
-                              onClick={() => setEditResultId('')}
-                            >
-                              Cancel
-                            </Button>
-                          </TableCell>
-                        </>
-                      ) : (
-                        <>
-                          {/* Display fields when not editing */}
-                          <TableCell>{result.placement}</TableCell>
-                          <TableCell>{result.finalPlacement}</TableCell>
-                          <TableCell>{result.artist.id}</TableCell>
-                          <TableCell>{result.artist.name}</TableCell>
-                          <TableCell>
-                            <IconButton
-                              color="primary"
-                              onClick={() => {
-                                setEditResultId(result.id);
-                              }}
-                            >
-                              <Edit />
-                            </IconButton>
-                            <IconButton
-                              color="secondary"
-                              onClick={() => deleteResult(result.id)}
-                            >
-                              <Delete />
-                            </IconButton>
-                          </TableCell>
-                        </>
-                      )}
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
+            <Grid container spacing={2}>
+              <Grid item xs={12} md={3}>
+                <FormControl fullWidth>
+                  <InputLabel>Placement</InputLabel>
+                  <Select
+                    label="Placement"
+                    value={newResult.placement}
+                    onChange={(e) =>
+                      setNewResult({ ...newResult, placement: e.target.value })
+                    }
+                  >
+                    {placementOptions.map((option) => (
+                      <MenuItem key={option} value={option}>
+                        {option}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} md={3}>
+                <FormControl fullWidth>
+                  <InputLabel>Final Placement</InputLabel>
+                  <Select
+                    label="Final Placement"
+                    value={newResult.finalPlacement || ''}
+                    onChange={(e) =>
+                      setNewResult({ ...newResult, finalPlacement: e.target.value })
+                    }
+                  >
+                    <MenuItem value="">
+                      <em>None</em>
+                    </MenuItem>
+                    {finalPlacementOptions.map((option) => (
+                      <MenuItem key={option} value={option}>
+                        {option}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} md={3}>
+                <TextField
+                  label="Artist ID"
+                  value={newResult.artistId}
+                  onChange={(e) =>
+                    setNewResult({ ...newResult, artistId: e.target.value })
+                  }
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12} md={3}>
+                <TextField
+                  label="Sub Competition ID"
+                  value={newResult.subCompetitionId}
+                  onChange={(e) =>
+                    setNewResult({ ...newResult, subCompetitionId: e.target.value })
+                  }
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Button variant="contained" onClick={addResult}>
+                  Add Result
+                </Button>
+              </Grid>
+            </Grid>
           </Box>
-        ))}
-         <Button variant="contained" color="secondary" sx={{ m: 2 }} onClick={() => handleNavigation('/admin-center')}>
-                            Go Back
-                        </Button>
-      </Box>
-    </AuthorizeAdminView>
+
+          {/* Sub-Competitions with Results Table */}
+          {subCompetitions.map((subCompetition) => (
+            <Box key={subCompetition.id} sx={{ mb: 4 }}>
+              {/* ... (subCompetition details) */}
+              <Typography variant="h6" gutterBottom>
+                {subCompetition.name} ({new Date(subCompetition.date).toLocaleString()})
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                Location: {subCompetition.location}
+              </Typography>
+              <Typography sx={{ mb: 2 }}>
+                SubCompetition ID: {subCompetition.id}
+              </Typography>
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Placement</TableCell>
+                      <TableCell>Final Placement</TableCell>
+                      <TableCell>Artist ID</TableCell>
+                      <TableCell>Artist Name</TableCell>
+                      <TableCell>Actions</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {subCompetition.results.map((result) => (
+                      <TableRow key={result.id}>
+                        {editResultId === result.id ? (
+                          <>
+                            {/* Placement */}
+                            <TableCell>
+                              <FormControl fullWidth>
+                                <InputLabel>Placement</InputLabel>
+                                <Select
+                                  label="Placement"
+                                  value={result.placement}
+                                  onChange={(e) =>
+                                    handleResultChange('placement', e.target.value)
+                                  }
+                                >
+                                  {placementOptions.map((option) => (
+                                    <MenuItem key={option} value={option}>
+                                      {option}
+                                    </MenuItem>
+                                  ))}
+                                </Select>
+                              </FormControl>
+                            </TableCell>
+                            {/* Final Placement */}
+                            <TableCell>
+                              <FormControl fullWidth>
+                                <InputLabel>Final Placement</InputLabel>
+                                <Select
+                                  label="Final Placement"
+                                  value={result.finalPlacement || ''}
+                                  onChange={(e) =>
+                                    handleResultChange('finalPlacement', e.target.value)
+                                  }
+                                >
+                                  <MenuItem value="">
+                                    <em>None</em>
+                                  </MenuItem>
+                                  {finalPlacementOptions.map((option) => (
+                                    <MenuItem key={option} value={option}>
+                                      {option}
+                                    </MenuItem>
+                                  ))}
+                                </Select>
+                              </FormControl>
+                            </TableCell>
+                            {/* Artist ID */}
+                            <TableCell>
+                              <TextField
+                                label="Artist ID"
+                                value={result.artist.id}
+                                onChange={(e) =>
+                                  handleResultChange('artist.id', e.target.value)
+                                }
+                                fullWidth
+                              />
+                            </TableCell>
+                            {/* Artist Name */}
+                            <TableCell>
+                              {result.artist.name || ''}
+                            </TableCell>
+                            {/* Actions */}
+                            <TableCell>
+                              <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={updateResult}
+                                sx={{ mr: 1 }}
+                              >
+                                Save
+                              </Button>
+                              <Button
+                                variant="outlined"
+                                onClick={() => setEditResultId('')}
+                              >
+                                Cancel
+                              </Button>
+                            </TableCell>
+                          </>
+                        ) : (
+                          <>
+                            {/* Display fields when not editing */}
+                            <TableCell>{result.placement}</TableCell>
+                            <TableCell>{result.finalPlacement}</TableCell>
+                            <TableCell>{result.artist.id}</TableCell>
+                            <TableCell>{result.artist.name}</TableCell>
+                            <TableCell>
+                              <IconButton
+                                color="primary"
+                                onClick={() => {
+                                  setEditResultId(result.id);
+                                }}
+                              >
+                                <Edit />
+                              </IconButton>
+                              <IconButton
+                                color="secondary"
+                                onClick={() => deleteResult(result.id)}
+                              >
+                                <Delete />
+                              </IconButton>
+                            </TableCell>
+                          </>
+                        )}
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Box>
+          ))}
+          <Button variant="contained" color="secondary" sx={{ m: 2 }} onClick={() => handleNavigation('/admin-center')}>
+            Go Back
+          </Button>
+        </Box>
+      </>
+    )
   );
 };
 

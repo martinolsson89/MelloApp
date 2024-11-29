@@ -24,6 +24,7 @@ import DeleteAllPredictionsByUser from './components/DeleteAllPredictionsByUser'
 
 
 
+
 function App() {
     return (
         <BrowserRouter>
