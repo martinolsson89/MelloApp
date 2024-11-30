@@ -43,6 +43,12 @@ public class UpdateAvatarDto
     public string? AvatarImageUrl { get; set; }
 }
 
+public class UpdateUserAvatarDto
+{
+    public string Id { get; set; }
+    public string? AvatarImageUrl { get; set; }
+}
+
 public class UserScoreDto
 {
     public string UserId { get; set; }

@@ -21,6 +21,7 @@ import Artists from './components/Artists';
 import ResultsManagement from './components/ResultsManagement';
 import PointsManagement from './components/PointsManagement';
 import DeleteAllPredictionsByUser from './components/DeleteAllPredictionsByUser';
+import UserAvatar from './components/UserAvatar';
 
 
 
@@ -50,6 +51,7 @@ function App() {
                 <Route path="/admin-center/results-management" element={<ResultsManagement />} />
                 <Route path='/admin-center/points-management' element={<PointsManagement />} />
                 <Route path='/admin-center/delete-all-predictions-by-user' element={<DeleteAllPredictionsByUser />} />
+                <Route path='/admin-center/user-avatar' element={<UserAvatar />} />
             </Routes>
         </BrowserRouter>
     );

@@ -32,6 +32,7 @@ function MyAccount() {
                 if (userResponse.status === 200) {
                     let data = await userResponse.json();
                     setUserData(data);
+                    console.log(data);
                     setHasBet(data.hasMadeBet);
                     setAvatarUrl(data.avatarImageUrl || '');
                 } else {
@@ -73,7 +74,7 @@ function MyAccount() {
 
             try {
                 setIsUploading(true);
-                const response = await fetch('/api/Account/uploadAvatar', {
+                const response = await fetch('/Account/uploadAvatar', {
                     method: 'POST',
                     body: formData,
                     // Note: Fetch automatically sets the 'Content-Type' header to 'multipart/form-data' with the correct boundary
@@ -113,7 +114,7 @@ function MyAccount() {
         } else if (avatarUrl) {
             // If user provided a URL instead of uploading a file
             try {
-                const response = await fetch('/api/Account/updateAvatar', {
+                const response = await fetch('/Account/updateAvatar', {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',

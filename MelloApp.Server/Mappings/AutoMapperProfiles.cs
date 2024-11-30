@@ -116,6 +116,9 @@ public class AutoMapperProfiles : Profile
         CreateMap<ApplicationUser, UserDto>().ReverseMap();
         CreateMap<ApplicationUser, UserNamesDto>().ReverseMap();
 
+        // UpdateUserAvatarDto
+        CreateMap<ApplicationUser, UpdateUserAvatarDto>().ReverseMap();
+
         // Map ApplicationUser to UserDto
         CreateMap<ApplicationUser, UserDto>()
             .ForMember(dest => dest.Predictions, opt => opt.MapFrom(src => src.Predictions))

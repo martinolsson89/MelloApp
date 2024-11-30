@@ -179,8 +179,8 @@ namespace MelloApp.Server.Controllers
         }
 
         // GET: /Account/pingauthme
-        [HttpGet("pingauthme")]
         [Authorize]
+        [HttpGet("pingauthme")]
         public async Task<IActionResult> PingAuthMe()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -289,22 +289,42 @@ namespace MelloApp.Server.Controllers
                 return NotFound();
             }
 
+            // Delete existing avatar file if it exists and is not the default
+            if (!string.IsNullOrEmpty(user.AvatarImageUrl) && user.AvatarImageUrl != "/uploads/avatars/default-avatar.png")
+            {
+                try
+                {
+                    var existingFileName = Path.GetFileName(user.AvatarImageUrl);
+                    var existingFilePath = Path.Combine(_environment.ContentRootPath, "uploads", "avatars", existingFileName);
+
+                    if (System.IO.File.Exists(existingFilePath))
+                    {
+                        System.IO.File.Delete(existingFilePath);
+                        Console.WriteLine($"Deleted old avatar: {existingFilePath}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Log the exception
+                    Console.WriteLine($"Error deleting old avatar: {ex.Message}");
+                    // Optionally, return an error response or continue
+                    return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Error deleting the old avatar." });
+                }
+            }
+
             // Map only the allowed properties from the model to the user entity
             user.AvatarImageUrl = model.AvatarImageUrl;
             // Add other properties as needed, ensuring they are safe to update
 
-            // Save the changes
-            var result = await _userManager.UpdateAsync(user);
 
-            if (result.Succeeded)
+            // Save changes to the database
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded)
             {
-                return Ok();
+                return BadRequest(new { message = "Failed to update user profile." });
             }
-            else
-            {
-                // Return validation errors to the client
-                return BadRequest(result.Errors);
-            }
+
+            return Ok();
         }
 
         // DELETE: /Account/AllByUserId/{id}
@@ -339,6 +359,7 @@ namespace MelloApp.Server.Controllers
         /// </summary>
         /// <param name="avatar">The avatar image file.</param>
         /// <returns>The URL of the uploaded avatar.</returns>
+        [Authorize]
         [HttpPost("uploadAvatar")]
         public async Task<IActionResult> UploadAvatar([FromForm] IFormFile avatar)
         {
@@ -392,6 +413,153 @@ namespace MelloApp.Server.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Error uploading the file." });
             }
         }
+        
+        // POST: /Account/UploadUserAvatar
+    [Authorize(Roles = "Admin")]
+    [HttpPost("UploadUserAvatar")]
+    public async Task<IActionResult> UploadAvatar([FromForm] IFormFile avatar, [FromForm] string userId)
+    {
+        if (avatar == null || avatar.Length == 0)
+            return BadRequest(new { message = "No file uploaded." });
+
+        if (string.IsNullOrEmpty(userId))
+            return BadRequest(new { message = "User ID is required." });
+
+        // Get the user from the database
+        var user = await _userManager.FindByIdAsync(userId);
+
+        if (user == null)
+            return NotFound(new { message = "User not found." });
+
+        // Validate file type
+        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+        var extension = Path.GetExtension(avatar.FileName).ToLowerInvariant();
+        if (string.IsNullOrEmpty(extension) || !allowedExtensions.Contains(extension))
+        {
+            return BadRequest(new { message = "Invalid file type. Only JPG, PNG, and GIF are allowed." });
+        }
+
+        // Validate file size (e.g., max 5MB)
+        const long maxFileSize = 5 * 1024 * 1024; // 5 MB
+        if (avatar.Length > maxFileSize)
+        {
+            return BadRequest(new { message = "File size exceeds the 5MB limit." });
+        }
+
+        // Generate a unique filename
+        var uniqueFileName = $"{Guid.NewGuid()}{extension}";
+
+        // Define the path to save the image
+        var uploadsFolder = Path.Combine(_environment.ContentRootPath, "uploads", "avatars");
+        if (!Directory.Exists(uploadsFolder))
+        {
+            Directory.CreateDirectory(uploadsFolder);
+        }
+
+        var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+        try
+        {
+            // Save the file to the server
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await avatar.CopyToAsync(stream);
+            }
+
+            // Delete existing avatar file if it exists and is not the default
+            if (!string.IsNullOrEmpty(user.AvatarImageUrl) && !user.AvatarImageUrl.Contains("default-avatar.png"))
+            {
+                try
+                {
+                    var existingFileName = Path.GetFileName(user.AvatarImageUrl);
+                    var existingFilePath = Path.Combine(uploadsFolder, existingFileName);
+
+                    if (System.IO.File.Exists(existingFilePath))
+                    {
+                        System.IO.File.Delete(existingFilePath);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Log the exception
+                    Console.WriteLine($"Error deleting old avatar: {ex.Message}");
+                }
+            }
+
+            // Construct the URL to access the uploaded image
+            var avatarUrl = $"{Request.Scheme}://{Request.Host}/uploads/avatars/{uniqueFileName}";
+
+            // Update the user's AvatarImageUrl
+            user.AvatarImageUrl = avatarUrl;
+
+            // Save changes to the database
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded)
+            {
+                return BadRequest(new { message = "Failed to update user's avatar." });
+            }
+
+            return Ok(new { avatarImageUrl = avatarUrl });
+        }
+        catch (Exception ex)
+        {
+            // Log the exception
+            Console.WriteLine($"Error uploading avatar: {ex.Message}");
+            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Error uploading the file." });
+        }
+    }
+
+    // PUT: /Account/UpdateUserAvatarUrl
+    [Authorize(Roles = "Admin")]
+    [HttpPut("UpdateUserAvatarUrl")]
+    public async Task<IActionResult> UpdateAvatarUrl([FromBody] UpdateUserAvatarDto model)
+    {
+        if (string.IsNullOrEmpty(model.Id))
+            return BadRequest(new { message = "User ID is required." });
+
+        if (string.IsNullOrEmpty(model.AvatarImageUrl))
+            return BadRequest(new { message = "Avatar image URL is required." });
+
+        // Get the user from the database
+        var user = await _userManager.FindByIdAsync(model.Id);
+
+        if (user == null)
+            return NotFound(new { message = "User not found." });
+
+        // Delete existing avatar file if it exists and is not the default
+        if (!string.IsNullOrEmpty(user.AvatarImageUrl) && !user.AvatarImageUrl.Contains("default-avatar.png"))
+        {
+            try
+            {
+                var existingFileName = Path.GetFileName(user.AvatarImageUrl);
+                var existingFilePath = Path.Combine(_environment.ContentRootPath, "uploads", "avatars", existingFileName);
+
+                if (System.IO.File.Exists(existingFilePath))
+                {
+                    System.IO.File.Delete(existingFilePath);
+                    Console.WriteLine($"Deleted old avatar: {existingFilePath}");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                Console.WriteLine($"Error deleting old avatar: {ex.Message}");
+            }
+        }
+
+        // Update the user's AvatarImageUrl
+        user.AvatarImageUrl = model.AvatarImageUrl;
+
+        // Save changes to the database
+        var result = await _userManager.UpdateAsync(user);
+        if (!result.Succeeded)
+        {
+            return BadRequest(new { message = "Failed to update user's avatar." });
+        }
+
+        return Ok();
+    }
+
 
 
     }

@@ -195,6 +195,19 @@ export default defineConfig({
                 target: 'https://localhost:7263/',
                 secure: false
             },
+            '^/uploads/avatars': {
+                target: 'https://localhost:7263/',
+                secure: false
+            },
+            '^/Account/UploadUserAvatar': {
+                target: 'https://localhost:7263/',
+                secure: false
+            },
+            '^/Account/UpdateUserAvatarUrl': {
+                target: 'https://localhost:7263/',
+                secure: false
+            },
+
 
         },
         port: 5173,

@@ -105,7 +105,13 @@ const AdminCenter: React.FC = () => {
                                         onClick={() => navigate('/admin-center/delete-all-predictions-by-user')}
                                     >
                                         Ta bort tips för en specifik användare
-                                    </Button>
+                                        </Button>
+                                        <Button
+                                            variant="contained"
+                                            onClick={() => navigate('/admin-center/user-avatar')}
+                                        >
+                                            Lägg till avatarbild för användare
+                                        </Button>
                                 </Stack>
                             </CardActions>
                         </Card>

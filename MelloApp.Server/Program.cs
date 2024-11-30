@@ -8,6 +8,7 @@ using MelloApp.Server.Repositories;
 using MelloApp.Server.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 
 namespace MelloApp.Server
 {
@@ -91,6 +92,14 @@ namespace MelloApp.Server
                 {
                     ctx.Context.Response.Headers.Append("Content-Type", "text/html; charset=utf-8");
                 }
+            });
+
+            // Enable serving files from the 'uploads' folder
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                    Path.Combine(builder.Environment.ContentRootPath, "uploads", "avatars")),
+                RequestPath = "/uploads/avatars"
             });
 
             app.MapIdentityApi<ApplicationUser>();
