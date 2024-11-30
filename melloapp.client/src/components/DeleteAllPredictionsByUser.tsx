@@ -17,7 +17,6 @@ import {
 import { Delete } from '@mui/icons-material';
 import Navbar from './Navbar';
 import { useNavigate } from 'react-router-dom';
-import defaultProfilePic from '../assets/avatar/anonymous-user.webp';
 import { userService } from '../services/UserService';
 
 interface User {
@@ -104,7 +103,7 @@ function DeleteAllPredictionsByUser() {
                                                 <TableCell>
                                                     <ListItemAvatar>
                                                         <Avatar
-                                                            src={user.avatarImageUrl || defaultProfilePic}
+                                                            src={user.avatarImageUrl}
                                                             alt={user.firstName}
                                                             sx={{ width: 56, height: 56 }}
                                                         />

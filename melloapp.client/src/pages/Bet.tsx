@@ -142,7 +142,7 @@ function Bet() {
                     }}
                 >
                     {isLoading ? (
-                        <Typography variant="h6" sx={{color:'white'}}>Laddar...</Typography>
+                        <Typography variant="h6">Laddar...</Typography>
                     ) : hasBet ? (
                         <>
                             <BetReceipt userData={userData} />

@@ -1,5 +1,4 @@
 ﻿import { Typography, Box, List, ListItem, ListItemText, Avatar, ListItemAvatar, Badge } from '@mui/material';
-import defaultProfilePic from '../assets/avatar/anonymous-user.webp';
 import kingCrown from '../assets/king.png';
 
 interface LeaderboardProps {
@@ -17,7 +16,7 @@ interface GetUserDto {
     id: string;
     firstName: string;
     lastName: string;
-    avatarImageUrl: string | null;
+    avatarImageUrl: string;
     hasMadeBet: boolean;
 }
 
@@ -96,7 +95,7 @@ function TotalPoints({ leaderboardData }: LeaderboardProps) {
                                         }
                                     >
                                         <Avatar
-                                            src={entry.user.avatarImageUrl || defaultProfilePic}
+                                            src={entry.user.avatarImageUrl}
                                             alt={entry.user.firstName}
                                             sx={{
                                                 width: 86,

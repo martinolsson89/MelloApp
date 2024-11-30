@@ -18,7 +18,6 @@ import {
 } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import Navbar from '../components/Navbar';
-import defaultProfilePic from '../assets/avatar/anonymous-user.webp';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { userService } from '../services/UserService';
 
@@ -237,7 +236,7 @@ function BetOverview() {
         <Navbar />
         {isLoading ? (
           <Box sx={{ mt: 4, textAlign: 'center' }}>
-            <Typography variant="h6" sx={{color:'white'}}>Laddar...</Typography>
+            <Typography variant="h6" sx={{ color: 'white' }}>Laddar...</Typography>
           </Box>
         ) : error ? (
           <Box sx={{ mt: 4, textAlign: 'center' }}>
@@ -332,7 +331,7 @@ function BetOverview() {
                                   >
                                     <ListItemAvatar>
                                       <Avatar
-                                        src={prediction.user.avatarImageUrl || defaultProfilePic}
+                                        src={prediction.user.avatarImageUrl}
                                         alt={`${prediction.user.firstName} ${prediction.user.lastName}`}
                                       />
                                     </ListItemAvatar>
@@ -419,33 +418,56 @@ function BetOverview() {
                                 Användarprediktioner:
                               </Typography>
                               <List dense>
-                                {predictions.map((prediction, index) => (
-                                  <ListItem
-                                    key={index}
-                                    alignItems="flex-start"
-                                    sx={{
-                                      backgroundColor: index % 2 === 0 ? '#f2f3f5' : 'white',
-                                      borderRadius: 2,
-                                      mb: 1,
-                                      transition: 'background-color 0.3s',
-                                      '&:hover': {
-                                        backgroundColor: '#e0e0e0',
-                                      },
-                                    }}
-                                  >
-                                    <ListItemAvatar>
-                                      <Avatar
-                                        src={prediction.user.avatarImageUrl || defaultProfilePic}
-                                        alt={`${prediction.user.firstName} ${prediction.user.lastName}`}
+                                {predictions.map((prediction, index) => {
+                                  const isCorrect =
+                                    artist.finalPlacement !== undefined &&
+                                    artist.finalPlacement === prediction.finalPredictedPlacement;
+                                  return (
+                                    <ListItem
+                                      key={index}
+                                      alignItems="flex-start"
+                                      sx={{
+                                        backgroundColor: isCorrect ? '#e8f5e9' : index % 2 === 0 ? '#f2f3f5' : 'white',
+                                        borderRadius: 2,
+                                        mb: 1,
+                                        transition: 'background-color 0.3s',
+                                        '&:hover': {
+                                          backgroundColor: isCorrect ? '#c8e6c9' : '#e0e0e0',
+                                        },
+                                      }}
+                                    >
+                                      <ListItemAvatar>
+                                        <Avatar
+                                          src={prediction.user.avatarImageUrl}
+                                          alt={`${prediction.user.firstName} ${prediction.user.lastName}`}
+                                        />
+                                      </ListItemAvatar>
+                                      <ListItemText
+                                        primary={
+                                          <Box display="flex" alignItems="center">
+                                            <Typography
+                                              variant="body1"
+                                              sx={{ fontWeight: isCorrect ? 'bold' : 'normal' }}
+                                            >
+                                              {`${prediction.user.firstName} ${prediction.user.lastName}`}
+                                            </Typography>
+                                            {isCorrect && (
+                                              <CheckCircleIcon color="success" sx={{ ml: 1 }} />
+                                            )}
+                                          </Box>
+                                        }
+                                        secondary={
+                                          <Typography
+                                            variant="body2"
+                                            sx={{ fontWeight: isCorrect ? 'bold' : 'normal' }}
+                                          >
+                                            Tippat: {prediction.finalPredictedPlacement}
+                                          </Typography>
+                                        }
                                       />
-                                    </ListItemAvatar>
-                                    <ListItemText
-                                      primary={`${prediction.user.firstName} ${prediction.user.lastName}`}
-                                      secondary={`Tippat: ${
-                                        prediction.finalPredictedPlacement}`}
-                                    />
-                                  </ListItem>
-                                ))}
+                                    </ListItem>
+                                  );
+                                })}
                               </List>
                             </CardContent>
                           </Card>

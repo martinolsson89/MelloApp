@@ -53,7 +53,9 @@ namespace MelloApp.Server.Controllers
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 UserName = model.Email,
-                Email = model.Email
+                Email = model.Email,
+                AvatarImageUrl = $"{Request.Scheme}://{Request.Host}/uploads/avatars/default-avatar.png"
+
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);

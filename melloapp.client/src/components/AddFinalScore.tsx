@@ -8,7 +8,6 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
-import defaultProfilePic from '../assets/avatar/anonymous-user.webp';
 import { userService } from '../services/UserService';
 
 
@@ -100,7 +99,7 @@ function AddFinalScore() {
                                         textAlign: 'center',
                                     }}>
                                         <Avatar
-                                            src={user.avatarImageUrl || defaultProfilePic}
+                                            src={user.avatarImageUrl}
                                             alt={`${user.firstName} ${user.lastName}`}
                                             sx={{ width: 56, height: 56, mb: 1 }}
 

@@ -1,5 +1,4 @@
-﻿import { Typography, Box, List, ListItem, ListItemText, Divider, Avatar, ListItemAvatar } from '@mui/material';
-import defaultProfilePic from '../assets/avatar/anonymous-user.webp';
+﻿import { Typography, Box, List, ListItem, ListItemText, Avatar, ListItemAvatar } from '@mui/material';
 
 interface SubCompetitionProps {
   subCompetitionData: SubCompetitionWithScoresDto[];
@@ -63,7 +62,7 @@ function SubCompetitionPoints({ subCompetitionData }: SubCompetitionProps) {
                 }}>
                   <ListItemAvatar>
                     <Avatar
-                      src={userScore.avatarImageUrl || defaultProfilePic}
+                      src={userScore.avatarImageUrl}
                       alt={userScore.firstName}
                       sx={{ width: 55, height: 55, m: 1 }}
                     />

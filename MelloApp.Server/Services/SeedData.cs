@@ -1,4 +1,5 @@
-﻿using MelloApp.Server.Data;
+﻿using Azure.Core;
+using MelloApp.Server.Data;
 using MelloApp.Server.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -82,7 +83,8 @@ public class SeedData
                     FirstName = firstName,
                     LastName = lastName,
                     Email = email,
-                    UserName = email
+                    UserName = email,
+                    AvatarImageUrl = "/uploads/avatars/default-avatar.png"
                 };
 
                 await _userManager.CreateAsync(user, password);
