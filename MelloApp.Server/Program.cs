@@ -7,6 +7,7 @@ using MelloApp.Server.Models;
 using MelloApp.Server.Repositories;
 using MelloApp.Server.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 
@@ -37,6 +38,8 @@ namespace MelloApp.Server
             //Services
             builder.Services.AddScoped<PointsCalculationService>();
             builder.Services.AddScoped<LeaderboardService>();
+            builder.Services.AddTransient<IEmailSender, SendGridEmailSender>();
+
 
 
 
@@ -128,7 +131,6 @@ namespace MelloApp.Server
                 var seedData = scope.ServiceProvider.GetRequiredService<SeedData>();
                 await seedData.InitializeData();
             }
-
 
             app.Run();
         }

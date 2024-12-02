@@ -10,7 +10,9 @@ import {
     ListItem,
     ListItemText,
     Divider,
+    Button,
 } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 interface BetReceiptProps {
     userData: UserDto;
@@ -95,9 +97,14 @@ const groupPredictionsBySubCompetition = (predictions: PredictionDto[]) => {
 };
 
 function BetReceipt({ userData }: BetReceiptProps) {
+    const navigate = useNavigate();
     if (!userData) {
         return <Typography variant="h6">Kunde inte ladda ditt tips för Melodifestivalen.</Typography>;
     }
+
+    const handleNavigation = (path: string) => {
+        navigate(path);
+    };
 
     // Group predictions by sub-competition
     const groupedPredictions = groupPredictionsBySubCompetition(userData.predictions);
@@ -181,6 +188,9 @@ function BetReceipt({ userData }: BetReceiptProps) {
                     </CardContent>
                 </Card>
             )}
+            <Button variant="contained" color="secondary" sx={{ m: 2 }} onClick={() => handleNavigation('/bet-overview')}>
+                Se hur de andra har tippat här!              
+            </Button>
         </Box>
     );
 }

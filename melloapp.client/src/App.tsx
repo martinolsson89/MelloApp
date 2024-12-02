@@ -22,6 +22,8 @@ import ResultsManagement from './components/ResultsManagement';
 import PointsManagement from './components/PointsManagement';
 import DeleteAllPredictionsByUser from './components/DeleteAllPredictionsByUser';
 import UserAvatar from './components/UserAvatar';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from "./pages/ResetPassword";
 
 
 
@@ -33,6 +35,8 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/schedule" element={<Schedule />} />
                 <Route path="/bet" element={<Bet />} />
                 <Route path="/rules" element={<Rules />} />

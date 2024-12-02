@@ -11,6 +11,7 @@ using AutoMapper;
 using MelloApp.Server.Models.Account;
 using MelloApp.Server.Repositories;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace MelloApp.Server.Controllers
 {
@@ -24,8 +25,8 @@ namespace MelloApp.Server.Controllers
         private readonly IMapper _mapper;
         private readonly AccountRepository _repository;
         private readonly IWebHostEnvironment _environment;
-
         private readonly IConfiguration _configuration;
+        private readonly IEmailSender _emailSender;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
@@ -33,7 +34,8 @@ namespace MelloApp.Server.Controllers
             IMapper mapper,
             AccountRepository repository,
             IConfiguration configuration,
-            IWebHostEnvironment environment)
+            IWebHostEnvironment environment,
+            IEmailSender emailSender)
             
         {
             _userManager = userManager;
@@ -42,6 +44,7 @@ namespace MelloApp.Server.Controllers
             _repository = repository;
             _configuration = configuration;
             _environment = environment;
+            _emailSender = emailSender;
         }
 
         // POST: /Account/register
@@ -561,6 +564,74 @@ namespace MelloApp.Server.Controllers
 
         return Ok();
     }
+
+    [HttpPost]
+    [Route("forgot-password")]
+    public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordModel model)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var user = await _userManager.FindByEmailAsync(model.Email);
+        if (user == null)
+        {
+            // To prevent account enumeration, return the same response.
+            return Ok(new { Message = "Om email-adressen är registrerad, skickas en länk ut." });
+        }
+
+        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+        var callbackUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}/reset-password?token={Uri.EscapeDataString(token)}&email={Uri.EscapeDataString(user.Email)}";
+        
+
+        await _emailSender.SendEmailAsync(
+            user.Email,
+            "Reset Password",
+            $"Återställ ditt lösenord genom att <a href='{callbackUrl}'>klicka här</a>.");
+
+        return Ok(new { Message = "Om email-adressen är registrerad, skickas en länk ut." });
+    }
+
+    [HttpGet]
+    [Route("reset-password")]
+    public IActionResult ResetPassword(string token, string email)
+    {
+        if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(email))
+        {
+            return BadRequest(new { Message = "Invalid password reset token or email." });
+        }
+
+        // Token and email are valid
+        return Ok(new { Token = token, Email = email });
+    }
+
+    [HttpPost]
+    [Route("reset-password")]
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(new { Message = "Invalid input data." });
+        }
+
+        var user = await _userManager.FindByEmailAsync(model.Email);
+        if (user == null)
+        {
+            return BadRequest(new { Message = "Användre ej funnen." });
+        }
+
+        var result = await _userManager.ResetPasswordAsync(user, model.Token, model.NewPassword);
+        if (result.Succeeded)
+        {
+            return Ok(new { Message = "Lösenordet är nu ändrat" });
+        }
+
+        // Collect and return errors
+        var errors = result.Errors.Select(e => e.Description).ToList();
+        return BadRequest(new { Message = "Något gick fel.", Errors = errors });
+    }
+
+
+
 
 
 

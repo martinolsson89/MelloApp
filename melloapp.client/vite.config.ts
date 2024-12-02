@@ -207,6 +207,10 @@ export default defineConfig({
                 target: 'https://localhost:7263/',
                 secure: false
             },
+            '^/Account': {
+                target: 'https://localhost:7263/',
+                secure: false
+            },
 
 
         },

@@ -14,6 +14,10 @@ function Login() {
     const [success, setSuccess] = useState<string>('');
     const navigate = useNavigate();
 
+    const handleNavigation = (path: string) => {
+        navigate(path);
+    };
+
     // handle change events for input fields
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -25,9 +29,7 @@ function Login() {
             setRememberme(e.target.checked);
         }
     };
-    const handleRegisterClick = () => {
-        navigate('/register');
-    }
+    
 
     // handle submit event for the form
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -124,7 +126,10 @@ function Login() {
                     <Button variant="contained" color="primary" type="submit" fullWidth>
                         Logga in
                     </Button>
-                    <Button variant="outlined" color="secondary" onClick={handleRegisterClick} fullWidth>
+                    <Button variant='outlined' color="info" onClick={() => handleNavigation('/forgot-password')} fullWidth>
+                        Glömt lösenord?
+                    </Button>
+                    <Button variant="outlined" color="secondary" onClick={() => handleNavigation('/register')} fullWidth>
                         Registrera dig
                     </Button>
                 </Box>
