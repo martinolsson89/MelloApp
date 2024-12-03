@@ -214,6 +214,7 @@ export default defineConfig({
 
 
         },
+        /*host: '192.168.86.103',*/
         port: 5173,
         https: {
             key: fs.readFileSync(keyFilePath),

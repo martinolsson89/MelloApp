@@ -20,6 +20,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import Navbar from '../components/Navbar';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { userService } from '../services/UserService';
+import SubCompetitions from '../components/SubCompetitions';
 
 interface GetSubCompetitionWithArtistsAndPredictionsDto {
   id: string;
@@ -78,6 +79,8 @@ function BetOverview() {
   const [error, setError] = useState<string | null>(null);
 
   const isLoggedIn = userService.isLoggedIn();
+
+  const colors = ["#6ea1d9", "#764598", "#c63a8d", "#d46444", "#e0a544"];
 
   useEffect(() => {
     async function fetchData() {
@@ -257,25 +260,30 @@ function BetOverview() {
               maxWidth: 1200,
             }}
           >
-            <Typography variant="h4" gutterBottom align="center">
+            <Typography variant="h4" fontWeight='bold' gutterBottom align="center">
               Tipshörnan
             </Typography>
             <Typography variant="body1" align="center">
-              Här kan du se hur släkten har tippat i Mello.
+              Här kan du se hur släkten har tippat i Mello. Tryck på deltävlingen för att se mer detaljer.
             </Typography>
             <Divider sx={{ my: 3 }} />
 
             {/* Display each subcompetition in its own collapsible Accordion */}
-            {filteredBetOverviewData.map((subComp) => (
-              <Accordion key={subComp.id} sx={{ mb: 3 }} defaultExpanded>
+            {filteredBetOverviewData.map((subComp, index) => (
+              <Accordion key={subComp.id} sx={{ mb: 3, backgroundColor:'lightgray' }}>
                 {/* Accordion Summary */}
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls={`panel-${subComp.id}-content`}
                   id={`panel-${subComp.id}-header`}
+                  sx={{backgroundColor: colors[index], boxShadow: 2, p: 2, textAlign: 'center', borderTopLeftRadius: 6, borderTopRightRadius: 6 }}
                 >
-                  <Typography variant="h5">
-                    {subComp.name}: {new Date(subComp.date).toLocaleDateString()} - {subComp.location}
+                  <Typography variant="h5" color='white' fontWeight='bold' sx={{ textShadow: "1px 1px 2px rgba(0, 0, 0, 0.5)" }}>
+                    {subComp.name}: {`${new Date(subComp.date)
+                                    .toISOString()
+                                    .replace('T', ' ')
+                                    .slice(0, 11)} 20:00 - ${subComp.location}`}
+                                    
                   </Typography>
                 </AccordionSummary>
 
@@ -354,7 +362,7 @@ function BetOverview() {
                                           variant="body2"
                                           sx={{ fontWeight: isCorrect ? 'bold' : 'normal' }}
                                         >
-                                          Tippat: {prediction.predictedPlacement}
+                                          Tippat: {placementDisplayName(prediction.predictedPlacement)}
                                         </Typography>
                                       }
                                     />
@@ -372,16 +380,18 @@ function BetOverview() {
             ))}
 
             {/* Display Final Predictions */}
-            <Accordion sx={{ mb: 3 }} defaultExpanded>
+            <Accordion sx={{ mb: 3, backgroundColor: 'lightgray' }}>
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls={`panel-final-content`}
                 id={`panel-final-header`}
+                sx={{backgroundColor: 'green', boxShadow: 2, p: 2, textAlign: 'center'}}
+
               >
-                <Typography variant="h5">Final: {new Date('2025-03-08').toLocaleDateString()} - Stockholm</Typography>
+              <Typography variant="h5" fontWeight='bold' color='white' >Final: 2025-03-08 20:00 - Stockholm</Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <Divider sx={{ my: 2 }} />
+                <Divider sx={{ my: 2}} />
                 {finalPredictionsArray.length > 0 ? (
                   <Grid container spacing={3}>
                     {finalPredictionsArray.map((group) => {
@@ -413,9 +423,9 @@ function BetOverview() {
                                   />
                                 )}
                               </Box>
-                              <Divider sx={{ my: 2 }} />
+                              <Divider sx={{ my: 2}} />
                               <Typography variant="subtitle2" gutterBottom>
-                                Användarprediktioner:
+                                Användartips:
                               </Typography>
                               <List dense>
                                 {predictions.map((prediction, index) => {

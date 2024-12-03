@@ -132,16 +132,16 @@ function BetReceipt({ userData }: BetReceiptProps) {
                 p: 3,
                 boxShadow: 3,
                 borderRadius: 2,
-                bgcolor: 'rgba(255, 255, 255, 0.7)',
+                bgcolor: 'lightgrey',
             }}
         >
-            <Typography variant="h4" gutterBottom>
+            <Typography variant="h4" fontWeight='bold' gutterBottom>
                 Ditt tips
             </Typography>
 
             {/* Render predictions grouped by sub-competition */}
             {groupedPredictions.map((group) => (
-                <Card key={group.subCompetition.name} sx={{ mb: 4 }}>
+                <Card key={group.subCompetition.name} sx={{ mb: 4}}>
                     <CardHeader
                         title={group.subCompetition.name}
                         subheader={`${new Date(group.subCompetition.date)

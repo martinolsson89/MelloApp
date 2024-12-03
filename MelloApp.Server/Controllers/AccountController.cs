@@ -36,7 +36,7 @@ namespace MelloApp.Server.Controllers
             IConfiguration configuration,
             IWebHostEnvironment environment,
             IEmailSender emailSender)
-            
+
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -84,7 +84,7 @@ namespace MelloApp.Server.Controllers
             await _signInManager.SignOutAsync();
             return Ok();
         }
-        
+
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
@@ -145,6 +145,7 @@ namespace MelloApp.Server.Controllers
             {
                 rng.GetBytes(randomNumber);
             }
+
             return Convert.ToBase64String(randomNumber);
         }
 
@@ -180,7 +181,7 @@ namespace MelloApp.Server.Controllers
                 return Unauthorized();
             }
 
-            return Ok(new { Role = role});
+            return Ok(new { Role = role });
         }
 
         // GET: /Account/pingauthme
@@ -295,12 +296,14 @@ namespace MelloApp.Server.Controllers
             }
 
             // Delete existing avatar file if it exists and is not the default
-            if (!string.IsNullOrEmpty(user.AvatarImageUrl) && user.AvatarImageUrl != "/uploads/avatars/default-avatar.png")
+            if (!string.IsNullOrEmpty(user.AvatarImageUrl) &&
+                user.AvatarImageUrl != "/uploads/avatars/default-avatar.png")
             {
                 try
                 {
                     var existingFileName = Path.GetFileName(user.AvatarImageUrl);
-                    var existingFilePath = Path.Combine(_environment.ContentRootPath, "uploads", "avatars", existingFileName);
+                    var existingFilePath = Path.Combine(_environment.ContentRootPath, "uploads", "avatars",
+                        existingFileName);
 
                     if (System.IO.File.Exists(existingFilePath))
                     {
@@ -313,7 +316,8 @@ namespace MelloApp.Server.Controllers
                     // Log the exception
                     Console.WriteLine($"Error deleting old avatar: {ex.Message}");
                     // Optionally, return an error response or continue
-                    return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Error deleting the old avatar." });
+                    return StatusCode(StatusCodes.Status500InternalServerError,
+                        new { message = "Error deleting the old avatar." });
                 }
             }
 
@@ -415,61 +419,123 @@ namespace MelloApp.Server.Controllers
             {
                 // Log the exception
                 Console.WriteLine($"Error uploading avatar: {ex.Message}");
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Error uploading the file." });
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { message = "Error uploading the file." });
             }
         }
-        
+
         // POST: /Account/UploadUserAvatar
-    [Authorize(Roles = "Admin")]
-    [HttpPost("UploadUserAvatar")]
-    public async Task<IActionResult> UploadAvatar([FromForm] IFormFile avatar, [FromForm] string userId)
-    {
-        if (avatar == null || avatar.Length == 0)
-            return BadRequest(new { message = "No file uploaded." });
-
-        if (string.IsNullOrEmpty(userId))
-            return BadRequest(new { message = "User ID is required." });
-
-        // Get the user from the database
-        var user = await _userManager.FindByIdAsync(userId);
-
-        if (user == null)
-            return NotFound(new { message = "User not found." });
-
-        // Validate file type
-        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
-        var extension = Path.GetExtension(avatar.FileName).ToLowerInvariant();
-        if (string.IsNullOrEmpty(extension) || !allowedExtensions.Contains(extension))
+        [Authorize(Roles = "Admin")]
+        [HttpPost("UploadUserAvatar")]
+        public async Task<IActionResult> UploadAvatar([FromForm] IFormFile avatar, [FromForm] string userId)
         {
-            return BadRequest(new { message = "Invalid file type. Only JPG, PNG, and GIF are allowed." });
-        }
+            if (avatar == null || avatar.Length == 0)
+                return BadRequest(new { message = "No file uploaded." });
 
-        // Validate file size (e.g., max 5MB)
-        const long maxFileSize = 5 * 1024 * 1024; // 5 MB
-        if (avatar.Length > maxFileSize)
-        {
-            return BadRequest(new { message = "File size exceeds the 5MB limit." });
-        }
+            if (string.IsNullOrEmpty(userId))
+                return BadRequest(new { message = "User ID is required." });
 
-        // Generate a unique filename
-        var uniqueFileName = $"{Guid.NewGuid()}{extension}";
+            // Get the user from the database
+            var user = await _userManager.FindByIdAsync(userId);
 
-        // Define the path to save the image
-        var uploadsFolder = Path.Combine(_environment.ContentRootPath, "uploads", "avatars");
-        if (!Directory.Exists(uploadsFolder))
-        {
-            Directory.CreateDirectory(uploadsFolder);
-        }
+            if (user == null)
+                return NotFound(new { message = "User not found." });
 
-        var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-        try
-        {
-            // Save the file to the server
-            using (var stream = new FileStream(filePath, FileMode.Create))
+            // Validate file type
+            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+            var extension = Path.GetExtension(avatar.FileName).ToLowerInvariant();
+            if (string.IsNullOrEmpty(extension) || !allowedExtensions.Contains(extension))
             {
-                await avatar.CopyToAsync(stream);
+                return BadRequest(new { message = "Invalid file type. Only JPG, PNG, and GIF are allowed." });
             }
+
+            // Validate file size (e.g., max 5MB)
+            const long maxFileSize = 5 * 1024 * 1024; // 5 MB
+            if (avatar.Length > maxFileSize)
+            {
+                return BadRequest(new { message = "File size exceeds the 5MB limit." });
+            }
+
+            // Generate a unique filename
+            var uniqueFileName = $"{Guid.NewGuid()}{extension}";
+
+            // Define the path to save the image
+            var uploadsFolder = Path.Combine(_environment.ContentRootPath, "uploads", "avatars");
+            if (!Directory.Exists(uploadsFolder))
+            {
+                Directory.CreateDirectory(uploadsFolder);
+            }
+
+            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+            try
+            {
+                // Save the file to the server
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await avatar.CopyToAsync(stream);
+                }
+
+                // Delete existing avatar file if it exists and is not the default
+                if (!string.IsNullOrEmpty(user.AvatarImageUrl) && !user.AvatarImageUrl.Contains("default-avatar.png"))
+                {
+                    try
+                    {
+                        var existingFileName = Path.GetFileName(user.AvatarImageUrl);
+                        var existingFilePath = Path.Combine(uploadsFolder, existingFileName);
+
+                        if (System.IO.File.Exists(existingFilePath))
+                        {
+                            System.IO.File.Delete(existingFilePath);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // Log the exception
+                        Console.WriteLine($"Error deleting old avatar: {ex.Message}");
+                    }
+                }
+
+                // Construct the URL to access the uploaded image
+                var avatarUrl = $"{Request.Scheme}://{Request.Host}/uploads/avatars/{uniqueFileName}";
+
+                // Update the user's AvatarImageUrl
+                user.AvatarImageUrl = avatarUrl;
+
+                // Save changes to the database
+                var result = await _userManager.UpdateAsync(user);
+                if (!result.Succeeded)
+                {
+                    return BadRequest(new { message = "Failed to update user's avatar." });
+                }
+
+                return Ok(new { avatarImageUrl = avatarUrl });
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                Console.WriteLine($"Error uploading avatar: {ex.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { message = "Error uploading the file." });
+            }
+        }
+
+        // PUT: /Account/UpdateUserAvatarUrl
+        [Authorize(Roles = "Admin")]
+        [HttpPut("UpdateUserAvatarUrl")]
+        public async Task<IActionResult> UpdateAvatarUrl([FromBody] UpdateUserAvatarDto model)
+        {
+            if (string.IsNullOrEmpty(model.Id))
+                return BadRequest(new { message = "User ID is required." });
+
+            if (string.IsNullOrEmpty(model.AvatarImageUrl))
+                return BadRequest(new { message = "Avatar image URL is required." });
+
+            // Get the user from the database
+            var user = await _userManager.FindByIdAsync(model.Id);
+
+            if (user == null)
+                return NotFound(new { message = "User not found." });
 
             // Delete existing avatar file if it exists and is not the default
             if (!string.IsNullOrEmpty(user.AvatarImageUrl) && !user.AvatarImageUrl.Contains("default-avatar.png"))
@@ -477,11 +543,13 @@ namespace MelloApp.Server.Controllers
                 try
                 {
                     var existingFileName = Path.GetFileName(user.AvatarImageUrl);
-                    var existingFilePath = Path.Combine(uploadsFolder, existingFileName);
+                    var existingFilePath = Path.Combine(_environment.ContentRootPath, "uploads", "avatars",
+                        existingFileName);
 
                     if (System.IO.File.Exists(existingFilePath))
                     {
                         System.IO.File.Delete(existingFilePath);
+                        Console.WriteLine($"Deleted old avatar: {existingFilePath}");
                     }
                 }
                 catch (Exception ex)
@@ -491,11 +559,8 @@ namespace MelloApp.Server.Controllers
                 }
             }
 
-            // Construct the URL to access the uploaded image
-            var avatarUrl = $"{Request.Scheme}://{Request.Host}/uploads/avatars/{uniqueFileName}";
-
             // Update the user's AvatarImageUrl
-            user.AvatarImageUrl = avatarUrl;
+            user.AvatarImageUrl = model.AvatarImageUrl;
 
             // Save changes to the database
             var result = await _userManager.UpdateAsync(user);
@@ -504,137 +569,96 @@ namespace MelloApp.Server.Controllers
                 return BadRequest(new { message = "Failed to update user's avatar." });
             }
 
-            return Ok(new { avatarImageUrl = avatarUrl });
+            return Ok();
         }
-        catch (Exception ex)
+
+        [HttpPost]
+        [Route("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordModel model)
         {
-            // Log the exception
-            Console.WriteLine($"Error uploading avatar: {ex.Message}");
-            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Error uploading the file." });
-        }
-    }
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-    // PUT: /Account/UpdateUserAvatarUrl
-    [Authorize(Roles = "Admin")]
-    [HttpPut("UpdateUserAvatarUrl")]
-    public async Task<IActionResult> UpdateAvatarUrl([FromBody] UpdateUserAvatarDto model)
-    {
-        if (string.IsNullOrEmpty(model.Id))
-            return BadRequest(new { message = "User ID is required." });
-
-        if (string.IsNullOrEmpty(model.AvatarImageUrl))
-            return BadRequest(new { message = "Avatar image URL is required." });
-
-        // Get the user from the database
-        var user = await _userManager.FindByIdAsync(model.Id);
-
-        if (user == null)
-            return NotFound(new { message = "User not found." });
-
-        // Delete existing avatar file if it exists and is not the default
-        if (!string.IsNullOrEmpty(user.AvatarImageUrl) && !user.AvatarImageUrl.Contains("default-avatar.png"))
-        {
-            try
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
             {
-                var existingFileName = Path.GetFileName(user.AvatarImageUrl);
-                var existingFilePath = Path.Combine(_environment.ContentRootPath, "uploads", "avatars", existingFileName);
-
-                if (System.IO.File.Exists(existingFilePath))
-                {
-                    System.IO.File.Delete(existingFilePath);
-                    Console.WriteLine($"Deleted old avatar: {existingFilePath}");
-                }
+                // To prevent account enumeration, return the same response.
+                return Ok(new { Message = "Om email-adressen är registrerad, skickas en länk ut." });
             }
-            catch (Exception ex)
-            {
-                // Log the exception
-                Console.WriteLine($"Error deleting old avatar: {ex.Message}");
-            }
-        }
 
-        // Update the user's AvatarImageUrl
-        user.AvatarImageUrl = model.AvatarImageUrl;
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var callbackUrl =
+                $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}/reset-password?token={Uri.EscapeDataString(token)}&email={Uri.EscapeDataString(user.Email)}";
 
-        // Save changes to the database
-        var result = await _userManager.UpdateAsync(user);
-        if (!result.Succeeded)
-        {
-            return BadRequest(new { message = "Failed to update user's avatar." });
-        }
 
-        return Ok();
-    }
+            await _emailSender.SendEmailAsync(
+                user.Email,
+                "Reset Password",
+                $"Återställ ditt lösenord genom att <a href='{callbackUrl}'>klicka här</a>.");
 
-    [HttpPost]
-    [Route("forgot-password")]
-    public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordModel model)
-    {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-
-        var user = await _userManager.FindByEmailAsync(model.Email);
-        if (user == null)
-        {
-            // To prevent account enumeration, return the same response.
             return Ok(new { Message = "Om email-adressen är registrerad, skickas en länk ut." });
         }
 
-        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-        var callbackUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}/reset-password?token={Uri.EscapeDataString(token)}&email={Uri.EscapeDataString(user.Email)}";
-        
-
-        await _emailSender.SendEmailAsync(
-            user.Email,
-            "Reset Password",
-            $"Återställ ditt lösenord genom att <a href='{callbackUrl}'>klicka här</a>.");
-
-        return Ok(new { Message = "Om email-adressen är registrerad, skickas en länk ut." });
-    }
-
-    [HttpGet]
-    [Route("reset-password")]
-    public IActionResult ResetPassword(string token, string email)
-    {
-        if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(email))
+        [HttpGet]
+        [Route("reset-password")]
+        public IActionResult ResetPassword(string token, string email)
         {
-            return BadRequest(new { Message = "Invalid password reset token or email." });
+            if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(email))
+            {
+                return BadRequest(new { Message = "Invalid password reset token or email." });
+            }
+
+            // Token and email are valid
+            return Ok(new { Token = token, Email = email });
         }
 
-        // Token and email are valid
-        return Ok(new { Token = token, Email = email });
-    }
-
-    [HttpPost]
-    [Route("reset-password")]
-    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordModel model)
-    {
-        if (!ModelState.IsValid)
+        [HttpPost]
+        [Route("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordModel model)
         {
-            return BadRequest(new { Message = "Invalid input data." });
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new { Message = "Invalid input data." });
+            }
+
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+            {
+                return BadRequest(new { Message = "Användre ej funnen." });
+            }
+
+            var result = await _userManager.ResetPasswordAsync(user, model.Token, model.NewPassword);
+            if (result.Succeeded)
+            {
+                return Ok(new { Message = "Lösenordet är nu ändrat" });
+            }
+
+            // Collect and return errors
+            var errors = result.Errors.Select(e => e.Description).ToList();
+            return BadRequest(new { Message = "Något gick fel.", Errors = errors });
         }
 
-        var user = await _userManager.FindByEmailAsync(model.Email);
-        if (user == null)
+        [Authorize(Roles = "Admin")]
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IActionResult> Delete(string id)
         {
-            return BadRequest(new { Message = "Användre ej funnen." });
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var result = await _userManager.DeleteAsync(user);
+            if (result.Succeeded)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest(result.Errors);
+            }
         }
-
-        var result = await _userManager.ResetPasswordAsync(user, model.Token, model.NewPassword);
-        if (result.Succeeded)
-        {
-            return Ok(new { Message = "Lösenordet är nu ändrat" });
-        }
-
-        // Collect and return errors
-        var errors = result.Errors.Select(e => e.Description).ToList();
-        return BadRequest(new { Message = "Något gick fel.", Errors = errors });
-    }
-
-
-
-
-
-
     }
 }
 
