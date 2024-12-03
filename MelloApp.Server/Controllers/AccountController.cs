@@ -638,9 +638,41 @@ namespace MelloApp.Server.Controllers
             return BadRequest(new { Message = "Något gick fel.", Errors = errors });
         }
 
+        // PUT: /Account/user/{id}
+        [Authorize(Roles = "Admin")]
+        [HttpPut]
+        [Route("user/{id}")]
+        public async Task<IActionResult> UpdateUser(string id, [FromBody] UpdateUserInfoDto model)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            user.FirstName = model.FirstName;
+            user.LastName = model.LastName;
+            user.Email = model.Email;
+            user.UserName = model.Email;
+            user.HasMadeBet = model.HasMadeBet;
+
+            var result = await _userManager.UpdateAsync(user);
+            if (result.Succeeded)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest(result.Errors);
+            }
+        }
+
+
+        // DELETE: /Account/user/{id}
+
         [Authorize(Roles = "Admin")]
         [HttpDelete]
-        [Route("{id}")]
+        [Route("user/{id}")]
         public async Task<IActionResult> Delete(string id)
         {
             var user = await _userManager.FindByIdAsync(id);

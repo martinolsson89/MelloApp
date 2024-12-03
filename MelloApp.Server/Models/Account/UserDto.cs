@@ -21,6 +21,7 @@ public class GetUserDto
     public string Id { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }
+    public string Email { get; set; }
     public string? AvatarImageUrl { get; set; }
     public bool HasMadeBet { get; set; } = false;
     
@@ -36,6 +37,14 @@ public class UpdateUserDto
     public string? AvatarImageUrl { get; set; }
     public bool HasMadeBet { get; set; } = false;
 
+}
+
+public class UpdateUserInfoDto
+{
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public string Email { get; set; }
+    public bool HasMadeBet { get; set; } = false;
 }
 
 public class UpdateAvatarDto

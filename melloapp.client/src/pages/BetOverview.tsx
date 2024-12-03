@@ -20,7 +20,6 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import Navbar from '../components/Navbar';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { userService } from '../services/UserService';
-import SubCompetitions from '../components/SubCompetitions';
 
 interface GetSubCompetitionWithArtistsAndPredictionsDto {
   id: string;

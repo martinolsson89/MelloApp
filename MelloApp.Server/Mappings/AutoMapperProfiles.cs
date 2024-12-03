@@ -115,6 +115,7 @@ public class AutoMapperProfiles : Profile
         CreateMap<ApplicationUser, GetUserDto>().ReverseMap();
         CreateMap<ApplicationUser, UserDto>().ReverseMap();
         CreateMap<ApplicationUser, UserNamesDto>().ReverseMap();
+        CreateMap<ApplicationUser, UpdateUserInfoDto>().ReverseMap();
 
         // UpdateUserAvatarDto
         CreateMap<ApplicationUser, UpdateUserAvatarDto>().ReverseMap();

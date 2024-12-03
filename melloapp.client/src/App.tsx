@@ -24,6 +24,7 @@ import DeleteAllPredictionsByUser from './components/DeleteAllPredictionsByUser'
 import UserAvatar from './components/UserAvatar';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from "./pages/ResetPassword";
+import DeleteUser from './components/DeleteUser';
 
 
 
@@ -56,6 +57,7 @@ function App() {
                 <Route path='/admin-center/points-management' element={<PointsManagement />} />
                 <Route path='/admin-center/delete-all-predictions-by-user' element={<DeleteAllPredictionsByUser />} />
                 <Route path='/admin-center/user-avatar' element={<UserAvatar />} />
+                <Route path='/admin-center/delete-user' element={<DeleteUser />} />
             </Routes>
         </BrowserRouter>
     );

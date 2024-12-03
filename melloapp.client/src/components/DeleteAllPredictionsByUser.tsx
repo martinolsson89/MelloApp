@@ -2,7 +2,6 @@
 import {
     Box,
     Typography,
-    Button,
     Table,
     TableBody,
     TableCell,
@@ -16,8 +15,8 @@ import {
 } from '@mui/material';
 import { Delete } from '@mui/icons-material';
 import Navbar from './Navbar';
-import { useNavigate } from 'react-router-dom';
 import { userService } from '../services/UserService';
+import BackButton from './BackButton';
 
 interface User {
     id: string;
@@ -30,12 +29,6 @@ interface User {
 function DeleteAllPredictionsByUser() {
     const [users, setUsers] = useState<User[]>([]);
     const IsAdmin = userService.isAdmin();
-
-    const navigate = useNavigate();
-
-    const handleNavigation = (path: string) => {
-        navigate(path);
-    };
 
     const fetchUsers = async () => {
         try {
@@ -144,9 +137,7 @@ function DeleteAllPredictionsByUser() {
                             </Table>
                         </TableContainer>
                     </Box>
-                    <Button variant="contained" color="secondary" sx={{ m: 2 }} onClick={() => handleNavigation('/admin-center')}>
-                        Go Back
-                    </Button>
+                    <BackButton />
                 </Box>
             </>
         )
