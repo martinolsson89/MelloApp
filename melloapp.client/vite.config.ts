@@ -191,8 +191,30 @@ export default defineConfig({
                 target: 'https://localhost:7263/',
                 secure: false
             },
+            '^/Account/uploadAvatar': {
+                target: 'https://localhost:7263/',
+                secure: false
+            },
+            '^/uploads/avatars': {
+                target: 'https://localhost:7263/',
+                secure: false
+            },
+            '^/Account/UploadUserAvatar': {
+                target: 'https://localhost:7263/',
+                secure: false
+            },
+            '^/Account/UpdateUserAvatarUrl': {
+                target: 'https://localhost:7263/',
+                secure: false
+            },
+            '^/Account': {
+                target: 'https://localhost:7263/',
+                secure: false
+            },
+
 
         },
+        /*host: '192.168.86.103',*/
         port: 5173,
         https: {
             key: fs.readFileSync(keyFilePath),

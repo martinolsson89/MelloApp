@@ -21,6 +21,11 @@ import Artists from './components/Artists';
 import ResultsManagement from './components/ResultsManagement';
 import PointsManagement from './components/PointsManagement';
 import DeleteAllPredictionsByUser from './components/DeleteAllPredictionsByUser';
+import UserAvatar from './components/UserAvatar';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from "./pages/ResetPassword";
+import DeleteUser from './components/DeleteUser';
+
 
 
 
@@ -31,6 +36,8 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/schedule" element={<Schedule />} />
                 <Route path="/bet" element={<Bet />} />
                 <Route path="/rules" element={<Rules />} />
@@ -49,6 +56,8 @@ function App() {
                 <Route path="/admin-center/results-management" element={<ResultsManagement />} />
                 <Route path='/admin-center/points-management' element={<PointsManagement />} />
                 <Route path='/admin-center/delete-all-predictions-by-user' element={<DeleteAllPredictionsByUser />} />
+                <Route path='/admin-center/user-avatar' element={<UserAvatar />} />
+                <Route path='/admin-center/delete-user' element={<DeleteUser />} />
             </Routes>
         </BrowserRouter>
     );

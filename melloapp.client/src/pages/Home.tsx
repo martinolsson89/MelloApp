@@ -1,7 +1,10 @@
 ﻿import React, { useEffect, useState } from 'react';
 import { Typography, Box, Divider, Button, Container, Grid } from '@mui/material';
-import AuthorizeView, { AuthorizedUser } from "../components/AuthorizeView.tsx";
+import AuthorizeView from "../components/AuthorizeView.tsx";
 import Navbar from "../components/Navbar.tsx";
+import { userService } from '../services/UserService';
+import { AuthorizedUser } from '../components/AuthorizedUser';
+
 
 function Home() {
     const [homeContent, setHomeContent] = useState({
@@ -38,7 +41,7 @@ function Home() {
                         p: 4,
                         boxShadow: 3,
                         borderRadius: 2,
-                        bgcolor: 'rgba(255, 255, 255, 0.7)',
+                        bgcolor: 'rgba(255, 255, 255, 0.9)',
                     }}
                 >
                     <Typography variant="h4" gutterBottom>

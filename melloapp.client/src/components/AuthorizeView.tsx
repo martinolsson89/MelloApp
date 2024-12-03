@@ -1,119 +1,66 @@
-﻿import React, { useState, useEffect, createContext } from 'react';
+﻿// src/components/AuthorizeView.tsx
+import React, { useState, useEffect, createContext, ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
-
-
-const UserContext = createContext({});
+import { userService } from '../services/UserService';
 
 interface User {
     email: string;
+    role: string;
 }
 
+interface AuthorizeViewProps {
+    children: ReactNode;
+}
 
-function AuthorizeView(props: { children: React.ReactNode }) {
+export const UserContext = createContext<User | null>(null);
 
+function AuthorizeView({ children }: AuthorizeViewProps) {
     const [authorized, setAuthorized] = useState<boolean>(false);
-    const [loading, setLoading] = useState<boolean>(true); // add a loading state
-    let emptyuser: User = { email: "" };
-
-    const [user, setUser] = useState(emptyuser);
-
+    const [loading, setLoading] = useState<boolean>(true);
+    const [user, setUser] = useState<User | null>(null);
 
     useEffect(() => {
-        // Get the cookie value
-        let retryCount = 0; // initialize the retry count
-        let maxRetries = 10; // set the maximum number of retries
-        let delay: number = 1000; // set the delay in milliseconds
-
-        // define a delay function that returns a promise
-        function wait(delay: number) {
-            return new Promise((resolve) => setTimeout(resolve, delay));
-        }
-
-        // define a fetch function that retries until status 200 or 401
-        async function fetchWithRetry(url: string, options: any) {
+        const initializeAuth = async () => {
             try {
-                // make the fetch request
-                let response = await fetch(url, options);
+                // Attempt to fetch user data from the server to verify authentication
+                const response = await fetch('/Account/pingauth', {
+                    method: 'GET',
+                    credentials: 'include', // Include cookies if needed
+                });
 
-                // check the status code
-                if (response.status == 200) {
+                if (response.status === 200) {
                     console.log("Authorized");
-                    let j: any = await response.json();
-                    setUser({ email: j.email });
+                    const data: User = await response.json();
+                    setUser(data);
+                    userService.saveUserData(data); // Ensure data is saved
                     setAuthorized(true);
-                    return response; // return the response
-                } else if (response.status == 401) {
+                    console.log(data);
+                } else if (response.status === 401) {
                     console.log("Unauthorized");
-                    return response; // return the response
+                    setAuthorized(false);
                 } else {
-                    // throw an error to trigger the catch block
-                    throw new Error("" + response.status);
+                    throw new Error(`Unexpected status code: ${response.status}`);
                 }
             } catch (error) {
-                // increment the retry count
-                retryCount++;
-                // check if the retry limit is reached
-                if (retryCount > maxRetries) {
-                    // stop retrying and rethrow the error
-                    throw error;
-                } else {
-                    // wait for some time and retry
-                    await wait(delay);
-                    return fetchWithRetry(url, options);
-                }
+                console.error('Authorization error:', error);
+                setAuthorized(false);
+            } finally {
+                setLoading(false);
             }
-        }
+        };
 
-        // call the fetch function with retry logic
-        fetchWithRetry("/Account/pingauth", {
-            method: "GET",
-        })
-            .catch((error) => {
-                // handle the final error
-                console.log(error.message);
-            })
-            .finally(() => {
-                setLoading(false);  // set loading to false when the fetch is done
-            });
+        initializeAuth();
     }, []);
 
-
     if (loading) {
-        return (
-            <>
-                <p>Loading...</p>
-            </>
-        );
-    }
-    else {
-        if (authorized && !loading) {
-            return (
-                <>
-                    <UserContext.Provider value={user}>{props.children}</UserContext.Provider>
-                </>
-            );
-        } else {
-            return (
-                <>
-                    <Navigate to="/login" />
-                </>
-            )
-        }
+        return <p>Loading...</p>;
     }
 
+    return authorized && user ? (
+        <UserContext.Provider value={user}>{children}</UserContext.Provider>
+    ) : (
+        <Navigate to="/login" />
+    );
 }
-
-export function AuthorizedUser(props: { value: string }) {
-    // Consume the username from the UserContext
-    const user: any = React.useContext(UserContext);
-
-    // Display the username in a h1 tag
-    if (props.value == "email")
-        return <>{user.email}</>;
-    else
-        return <></>
-}
-
-
 
 export default AuthorizeView;

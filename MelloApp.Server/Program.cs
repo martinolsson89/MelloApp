@@ -7,7 +7,9 @@ using MelloApp.Server.Models;
 using MelloApp.Server.Repositories;
 using MelloApp.Server.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 
 namespace MelloApp.Server
 {
@@ -36,6 +38,8 @@ namespace MelloApp.Server
             //Services
             builder.Services.AddScoped<PointsCalculationService>();
             builder.Services.AddScoped<LeaderboardService>();
+            builder.Services.AddTransient<IEmailSender, SendGridEmailSender>();
+
 
 
 
@@ -93,6 +97,14 @@ namespace MelloApp.Server
                 }
             });
 
+            // Enable serving files from the 'uploads' folder
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                    Path.Combine(builder.Environment.ContentRootPath, "uploads", "avatars")),
+                RequestPath = "/uploads/avatars"
+            });
+
             app.MapIdentityApi<ApplicationUser>();
 
             // Configure the HTTP request pipeline.
@@ -119,7 +131,6 @@ namespace MelloApp.Server
                 var seedData = scope.ServiceProvider.GetRequiredService<SeedData>();
                 await seedData.InitializeData();
             }
-
 
             app.Run();
         }

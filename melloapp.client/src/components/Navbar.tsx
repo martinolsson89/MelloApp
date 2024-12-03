@@ -3,12 +3,17 @@ import { AppBar, Toolbar, Typography, Button, Box, IconButton, Menu, MenuItem } 
 import MenuIcon from '@mui/icons-material/Menu';
 import { useNavigate } from 'react-router-dom';
 import LogoutLink from './LogoutLink';
-import AuthorizeAdminView from './AuthorizeAdminView';
+// import AuthorizeAdminView from './AuthorizeAdminView';
+import { userService } from '../services/UserService';
+
 
 
 function Navbar() {
     const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null); // Updated type here
     const navigate = useNavigate();
+
+    const isAdmin = userService.isAdmin();
+    const isLoggedIn = userService.isLoggedIn();
 
     const handleNavigation = (path: string) => {
         navigate(path);
@@ -32,6 +37,7 @@ function Navbar() {
         { label: 'Ledartavla', path: '/leaderboard' },
         { label: 'Mitt konto', path: '/my-account' }
     ];
+    
 
   return (
       <AppBar position="static" sx={{ backgroundColor: 'rgba(246, 66, 173, 0.7)' }}>
@@ -40,22 +46,25 @@ function Navbar() {
                   Släktkampen 2025
               </Typography>
               {/* Desktop Navigation */}
+              {isLoggedIn && (
               <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
                   {navItems.map((item) => (
                       <Button key={item.label} color="inherit" onClick={() => handleNavigation(item.path)}>
                           {item.label}
                       </Button>
                   ))}
-                  <AuthorizeAdminView>
+                  
+                   {isAdmin && (
                         <Button color="inherit" onClick={() => handleNavigation('/admin-center')}>
                             Admin
                       </Button>
-                   </AuthorizeAdminView>
+                   )}
                   <LogoutLink>
                       <Button color="inherit">Logga ut</Button>
                   </LogoutLink>
               </Box>
-
+              )}
+            
               {/* Mobile Navigation Menu Icon */}
               <IconButton
                   color="inherit"
@@ -65,8 +74,9 @@ function Navbar() {
               >
                   <MenuIcon />
               </IconButton>
-
+              
               {/* Mobile Menu */}
+              {isLoggedIn && (
               <Menu
                   anchorEl={menuAnchor}
                   open={Boolean(menuAnchor)}
@@ -79,17 +89,18 @@ function Navbar() {
                           {item.label}
                       </MenuItem>
                   ))}
-                  <AuthorizeAdminView>
+                  {isAdmin && (
                       <MenuItem onClick={() => handleNavigation('/admin-center')}>
                             Admin
                       </MenuItem>
-                  </AuthorizeAdminView>
+                    )}
                   <MenuItem onClick={handleMenuClose}>
                       <LogoutLink>
                           <Button color="inherit">Logga ut</Button>
                       </LogoutLink>
                   </MenuItem>
               </Menu>
+              )}
           </Toolbar>
       </AppBar>
   );

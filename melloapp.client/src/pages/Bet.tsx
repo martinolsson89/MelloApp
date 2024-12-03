@@ -1,11 +1,10 @@
 ﻿// Bet.tsx
-
 import { useState, useEffect } from 'react';
 import { Typography, Box } from '@mui/material';
 import Navbar from '../components/Navbar';
-import AuthorizeView from '../components/AuthorizeView';
 import BetForm from '../components/BetForm';
 import BetReceipt from '../components/BetReceipt';
+import { userService } from '../services/UserService';
 
 // Define types for SubCompetition, Artist, and UserDto
 interface Artist {
@@ -57,6 +56,8 @@ function Bet() {
     const [hasBet, setHasBet] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [randomSentence, setRandomSentence] = useState('');
+
+    const isLoggedIn = userService.isLoggedIn();
 
     // Move data fetching functions outside of useEffect
     async function fetchUserData() {
@@ -125,47 +126,49 @@ function Bet() {
     };
 
     return (
-        <AuthorizeView>
-            <Navbar />
-            <Box
-                sx={{
-                    mt: 4,
-                    textAlign: 'center',
-                    maxWidth: 600,
-                    mx: 'auto',
-                    p: 3,
-                    boxShadow: 3,
-                    borderRadius: 2,
-                    bgcolor: 'rgba(255, 255, 255, 0.9)',
-                }}
-            >
-                {isLoading ? (
-                    <Typography variant="h6">Laddar...</Typography>
-                ) : hasBet ? (
-                    <>
-                        <BetReceipt userData={userData} />
-                    </>
-                ) : (
-                    <>
-                        <Typography variant="h4" gutterBottom>
-                            Här fyller du i ditt tips!
-                        </Typography>
-                        <Typography variant="subtitle1" sx={{ mb: 3 }}>
-                            {randomSentence}
-                            {userData?.firstName}?
-                        </Typography>
+        isLoggedIn && (
+            <>
+                <Navbar />
+                <Box
+                    sx={{
+                        mt: 4,
+                        textAlign: 'center',
+                        maxWidth: 600,
+                        mx: 'auto',
+                        p: 3,
+                        boxShadow: 3,
+                        borderRadius: 2,
+                        bgcolor: 'rgba(255, 255, 255, 0.9)',
+                    }}
+                >
+                    {isLoading ? (
+                        <Typography variant="h6">Laddar...</Typography>
+                    ) : hasBet ? (
+                        <>
+                            <BetReceipt userData={userData} />
+                        </>
+                    ) : (
+                        <>
+                            <Typography variant="h4" gutterBottom>
+                                Här fyller du i ditt tips!
+                            </Typography>
+                            <Typography variant="subtitle1" sx={{ mb: 3 }}>
+                                {randomSentence}
+                                {userData?.firstName}?
+                            </Typography>
 
-                        {/* Pass the necessary props to BetForm */}
-                        <BetForm
-                            subCompetitions={subCompetitions}
-                            allArtists={allArtists}
-                            user={userData}
-                            onBetSubmitted={handleBetSubmitted}
-                        />
-                    </>
-                )}
-            </Box>
-        </AuthorizeView>
+                            {/* Pass the necessary props to BetForm */}
+                            <BetForm
+                                subCompetitions={subCompetitions}
+                                allArtists={allArtists}
+                                user={userData}
+                                onBetSubmitted={handleBetSubmitted}
+                            />
+                        </>
+                    )}
+                </Box>
+            </>
+        )
     );
 }
 

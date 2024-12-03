@@ -2,6 +2,7 @@
 import { useNavigate } from 'react-router-dom';
 import { TextField, Checkbox, FormControlLabel, Typography, Button, Box, Alert } from '@mui/material';
 import imageUrl from '../assets/sweden-melodifestivalen-2025-logo.jpg';
+import { userService } from '../services/UserService';
 
 function Login() {
     // state variables for email and password
@@ -12,6 +13,10 @@ function Login() {
     const [error, setError] = useState<string>('');
     const [success, setSuccess] = useState<string>('');
     const navigate = useNavigate();
+
+    const handleNavigation = (path: string) => {
+        navigate(path);
+    };
 
     // handle change events for input fields
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,9 +29,7 @@ function Login() {
             setRememberme(e.target.checked);
         }
     };
-    const handleRegisterClick = () => {
-        navigate('/register');
-    }
+    
 
     // handle submit event for the form
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -59,8 +62,10 @@ function Login() {
 
                 .then((data) => {
                     // handle success or error from the server
-                    console.log(data);
                     if (data.ok) {
+                        // Set storage type based on "remember me"
+                        userService.setStorage(rememberme);
+
                         setSuccess('Successful Login.');
                         window.location.href = '/';
                     } else {
@@ -81,7 +86,7 @@ function Login() {
                 maxWidth: 400,
                 mx: 'auto',
                 p: 3,
-                mt: 6, 
+                mt: 6,
                 boxShadow: 3,
                 borderRadius: 2,
                 bgcolor: 'rgba(255, 255, 255, 0.7)',
@@ -121,13 +126,16 @@ function Login() {
                     <Button variant="contained" color="primary" type="submit" fullWidth>
                         Logga in
                     </Button>
-                    <Button variant="outlined" color="secondary" onClick={handleRegisterClick} fullWidth>
+                    <Button variant='outlined' color="info" onClick={() => handleNavigation('/forgot-password')} fullWidth>
+                        Glömt lösenord?
+                    </Button>
+                    <Button variant="outlined" color="secondary" onClick={() => handleNavigation('/register')} fullWidth>
                         Registrera dig
                     </Button>
                 </Box>
             </form>
             {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
-            {success && <Alert severity='success' sx={{mt: 2}}>{success}</Alert>}
+            {success && <Alert severity='success' sx={{ mt: 2 }}>{success}</Alert>}
         </Box>
     );
 }

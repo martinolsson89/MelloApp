@@ -1,5 +1,4 @@
-﻿import { Typography, Box, List, ListItem, ListItemText, Divider, Avatar, ListItemAvatar } from '@mui/material';
-import defaultProfilePic from '../assets/avatar/anonymous-user.webp';
+﻿import { Typography, Box, List, ListItem, ListItemText, Avatar, ListItemAvatar } from '@mui/material';
 
 interface SubCompetitionProps {
   subCompetitionData: SubCompetitionWithScoresDto[];
@@ -63,12 +62,22 @@ function SubCompetitionPoints({ subCompetitionData }: SubCompetitionProps) {
                 }}>
                   <ListItemAvatar>
                     <Avatar
-                      src={userScore.avatarImageUrl || defaultProfilePic}
+                      src={userScore.avatarImageUrl}
                       alt={userScore.firstName}
-                      sx={{ width: 45, height: 45, m: 1 }}
+                      sx={{ width: 55, height: 55, m: 1 }}
                     />
                   </ListItemAvatar>
-                  <ListItemText
+                  {userScore.firstName.toLowerCase() === "frida" ? (
+                    <ListItemText
+                    primary={`${index + 1}. ${userScore.firstName} ${userScore.lastName.charAt(0).toUpperCase()}`}
+                    secondary={
+                      <Typography variant="body2" fontWeight="bold">
+                        Poäng: {userScore.points}
+                      </Typography>
+                    }
+                  />
+                  ) : (
+                    <ListItemText
                     primary={`${index + 1}. ${userScore.firstName}`}
                     secondary={
                       <Typography variant="body2" fontWeight="bold">
@@ -76,6 +85,7 @@ function SubCompetitionPoints({ subCompetitionData }: SubCompetitionProps) {
                       </Typography>
                     }
                   />
+                  )}
                 </ListItem>
               </div>
             ))}

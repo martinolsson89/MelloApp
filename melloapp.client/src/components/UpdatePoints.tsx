@@ -10,14 +10,16 @@ import {
     Button,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import AuthorizeAdminView from './AuthorizeAdminView';
 import Navbar from './Navbar';
+import { userService } from '../services/UserService';
 
 const UpdatePointsForm = () => {
     const [deltavling, setDeltavling] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [points, setPoints] = useState('');
+
+    const IsAdmin = userService.isAdmin();
 
 
     const navigate = useNavigate();
@@ -62,8 +64,8 @@ const UpdatePointsForm = () => {
     };
 
     return (
-        <>
-            <AuthorizeAdminView>
+        IsAdmin && (
+            <>
                 <Navbar />
                 <form onSubmit={handleSubmit}>
                     <Card>
@@ -93,7 +95,7 @@ const UpdatePointsForm = () => {
                                 fullWidth
                                 value={firstName}
                                 onChange={(e) => setFirstName(e.target.value)}
-                                sx={{mb:2}}
+                                sx={{ mb: 2 }}
                             />
                             <TextField
                                 label="Skriv efternamn"
@@ -112,15 +114,15 @@ const UpdatePointsForm = () => {
                             />
                         </CardContent>
                     </Card>
-                    <Button type="submit" variant="contained" color="primary" sx={{mt:2}}>
+                    <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
                         Skicka uppdatering
                     </Button>
                 </form>
-                <Button variant="contained" color="secondary" sx={{mt:4}} onClick={() => handleNavigation('/admin-center')}>
+                <Button variant="contained" color="secondary" sx={{ mt: 4 }} onClick={() => handleNavigation('/admin-center')}>
                     Go Back
                 </Button>
-            </AuthorizeAdminView>
-        </>
+            </>
+        )
     );
 };
 
