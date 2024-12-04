@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
@@ -25,11 +26,13 @@ import UserAvatar from './components/UserAvatar';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from "./pages/ResetPassword";
 import DeleteUser from './components/DeleteUser';
+import ChangeRegisterStatus from './components/ChangeRegisterStatus';
 
 
 
 
 function App() {
+
     return (
         <BrowserRouter>
             <Routes>
@@ -58,6 +61,7 @@ function App() {
                 <Route path='/admin-center/delete-all-predictions-by-user' element={<DeleteAllPredictionsByUser />} />
                 <Route path='/admin-center/user-avatar' element={<UserAvatar />} />
                 <Route path='/admin-center/delete-user' element={<DeleteUser />} />
+                <Route path='/admin-center/change-register-status' element={<ChangeRegisterStatus />} />
             </Routes>
         </BrowserRouter>
     );

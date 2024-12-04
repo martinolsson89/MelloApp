@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TextField, Typography, Button, Box, Alert } from '@mui/material';
 function Register() {
@@ -17,6 +17,21 @@ function Register() {
         navigate('/login');
     }
 
+
+    const [isRegistrationEnabled, setIsRegistrationEnabled] = useState(true);
+
+    useEffect(() => {
+        // Fetch the registration status
+        fetch('/HomeContent/register')
+            .then((response) => response.json())
+            .then((data) => {
+                setIsRegistrationEnabled(data.isRegistrationEnabled);
+
+            })
+            .catch((error) => {
+                console.error('Error fetching registration status:', error);
+            });
+    }, []);
 
     // handle change events for input fields
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -141,14 +156,18 @@ function Register() {
                     margin="normal"
                     required
                 />
-                <Box display="flex" flexDirection="column" alignItems="center" gap={2} mt={2}>
+                
+                    <Box display="flex" flexDirection="column" alignItems="center" gap={2} mt={2}>
+                    {isRegistrationEnabled && (
                     <Button variant="contained" color="primary" type="submit" fullWidth>
                         Registrera dig
                     </Button>
+                    )}
                     <Button variant="outlined" color="secondary" onClick={handleLoginClick} fullWidth>
                         Gå till logga in
                     </Button>
                 </Box>
+                
             </form>
             {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
             {success && <Alert severity='success' sx={{mt: 2}}>{success}</Alert>}
