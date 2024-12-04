@@ -315,7 +315,7 @@ function BetOverview() {
                             </Box>
                             <Divider sx={{ my: 2 }} />
                             <Typography variant="subtitle2" gutterBottom>
-                              Användarprediktioner:
+                              Användartips:
                             </Typography>
                             <List dense>
                               {artist.predictions?.map((prediction, index) => {

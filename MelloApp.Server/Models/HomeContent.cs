@@ -13,3 +13,10 @@ public class HomeContent
     [JsonPropertyName("imageUrl")]
     public string ImageUrl { get; set; }
 }
+
+public class RegisterDto
+{
+    [JsonPropertyName("isRegistrationEnabled")]
+    public bool IsRegistrationEnabled { get; set; } = true;
+
+}

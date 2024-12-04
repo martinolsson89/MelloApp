@@ -1,4 +1,4 @@
-﻿import { useEffect, useState,  ChangeEvent } from 'react';
+﻿import { useEffect, useState, ChangeEvent } from 'react';
 import { Typography, Box, Divider, Avatar, TextField, Button, CircularProgress } from '@mui/material';
 import Navbar from "../components/Navbar";
 import defaultProfilePic from '../assets/avatar/anonymous-user.webp';
@@ -55,16 +55,29 @@ function MyAccount() {
     const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
             const file = event.target.files[0];
-            // Optional: Validate file type and size here
+            const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/heic', 'image/heif']; // Common image formats
+            const maxSize = 5 * 1024 * 1024; // 5 MB in bytes
+
+            if (!validTypes.includes(file.type)) {
+                alert('Ogiltig filtyp. Vänligen välj en bild i JPEG, PNG, GIF, WEBP, eller HEIC-format.');
+                return;
+            }
+
+            if (file.size > maxSize) {
+                alert('Filen är för stor. Maximal storlek är 5 MB.');
+                return;
+            }
+
+            // File is valid; preview it
             setSelectedFile(file);
-            // Preview the selected image
             const reader = new FileReader();
             reader.onloadend = () => {
-                setAvatarUrl(reader.result as string);
+                setAvatarUrl(reader.result as string); // Set preview image URL
             };
             reader.readAsDataURL(file);
         }
     };
+
 
     const handleAvatarUpdate = async () => {
         if (selectedFile) {
@@ -207,7 +220,10 @@ function MyAccount() {
                     <Divider sx={{ my: 2 }} />
 
                     <Typography variant="h6" gutterBottom>
-                        Uppdatera profilbild
+                        Ladda upp profilbild
+                    </Typography>
+                    <Typography variant="subtitle1" sx={{ mb: 1 }}>
+                        Klistra in bildadress:
                     </Typography>
 
                     <Box sx={{ width: '100%', mb: 2 }}>
@@ -228,7 +244,7 @@ function MyAccount() {
                             fullWidth
                             sx={{ mb: 2 }}
                         >
-                            Välj fil
+                            Välj bild
                             <input
                                 type="file"
                                 accept="image/*"
@@ -237,19 +253,28 @@ function MyAccount() {
                             />
                         </Button>
                         {selectedFile && (
-                            <Typography variant="body2" sx={{ mb: 2 }}>
-                                Vald fil: {selectedFile.name}
-                            </Typography>
+                            <>
+                                <Typography variant="body2" sx={{ mb: 2 }}>
+                                    Vald bild: {selectedFile.name}
+                                </Typography>
+                                <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
+                                    <img
+                                        src={avatarUrl} // Use avatarUrl for the preview
+                                        alt="Förhandsvisning"
+                                        style={{ maxWidth: '100%', maxHeight: '150px', borderRadius: '8px' }}
+                                    />
+                                </Box>
+                            </>
                         )}
                     </Box>
 
                     <Button
                         variant="contained"
-                        color="primary"
+                        color="success"
                         onClick={handleAvatarUpdate}
                         disabled={isUploading}
                     >
-                        {isUploading ? <CircularProgress size={24} /> : 'Uppdatera'}
+                        {isUploading ? <CircularProgress size={24} /> : 'Spara bild'}
                     </Button>
                 </Box>
             </>

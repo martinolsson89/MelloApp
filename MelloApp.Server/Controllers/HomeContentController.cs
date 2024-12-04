@@ -11,6 +11,7 @@ namespace MelloApp.Server.Controllers
     public class HomeContentController : ControllerBase
     {
         private readonly string _filePath = Path.Combine(Directory.GetCurrentDirectory(), "Data", "homeContent.json");
+        private readonly string _registerFilePath = Path.Combine(Directory.GetCurrentDirectory(), "Data", "settings.json");
 
         [Authorize]
         [HttpGet]
@@ -36,6 +37,33 @@ namespace MelloApp.Server.Controllers
             await System.IO.File.WriteAllTextAsync(_filePath, json);
 
             return Ok(updatedContent);
+        }
+
+        
+        [HttpGet ("register")]
+        public async Task<IActionResult> GetRegister()
+        {
+            if (!System.IO.File.Exists(_registerFilePath))
+            {
+                return NotFound("Register file not found.");
+            }
+
+            var json = await System.IO.File.ReadAllTextAsync(_registerFilePath);
+            var registerDto = JsonSerializer.Deserialize<RegisterDto>(json);
+            return Ok(registerDto);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost ("register")]
+        public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var json = JsonSerializer.Serialize(registerDto, new JsonSerializerOptions { WriteIndented = true });
+            await System.IO.File.WriteAllTextAsync(_registerFilePath, json);
+
+            return Ok(registerDto);
         }
 
     }

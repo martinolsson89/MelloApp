@@ -108,18 +108,36 @@ function TotalPoints({ leaderboardData }: LeaderboardProps) {
                                 </ListItemAvatar>
 
                                 {/* Name */}
-                                <ListItemText
+                                {entry.user.firstName.toLowerCase() === "frida" ? (
+                                    <ListItemText
                                     primary={
                                         <Typography
                                             variant="body1"
                                             fontWeight="bold"
                                             sx={{ ml: 2 }} // Add margin to separate from the avatar
                                         >
-                                            {entry.user.firstName} {entry.user.lastName}
+                                            {entry.user.firstName} {entry.user.lastName.charAt(0).toUpperCase()}
                                         </Typography>
                                     }
                                     sx={{ flex: 1 }} // Take up available space for proper alignment
                                 />
+
+                                ) : (
+                                    <ListItemText
+                                    primary={
+                                        <Typography
+                                            variant="body1"
+                                            fontWeight="bold"
+                                            sx={{ ml: 2 }} // Add margin to separate from the avatar
+                                        >
+                                            {entry.user.firstName}
+                                        </Typography>
+                                    }
+                                    sx={{ flex: 1 }} // Take up available space for proper alignment
+                                />
+                                    
+                                )}
+                                
 
                                 {/* Points */}
                                 <Typography

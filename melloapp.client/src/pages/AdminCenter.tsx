@@ -125,6 +125,13 @@ const AdminCenter: React.FC = () => {
                                         >
                                             Uppdatera eller Ta bort användare
                                         </Button>
+                                        <Button
+                                        variant="contained"
+                                        color="warning"
+                                        onClick={() => navigate('/admin-center/update-points')}
+                                    >
+                                        Uppdatera poäng
+                                    </Button>
                                 </Stack>
                             </CardActions>
                         </Card>
@@ -144,16 +151,16 @@ const AdminCenter: React.FC = () => {
                                     <Button
                                         variant="contained"
                                         color="warning"
-                                        onClick={() => navigate('/admin-center/update-points')}
+                                        onClick={() => navigate('/admin-center/update-home-content')}
                                     >
-                                        Uppdatera poäng
+                                        Uppdatera Startsidan
                                     </Button>
                                     <Button
                                         variant="contained"
                                         color="warning"
-                                        onClick={() => navigate('/admin-center/update-home-content')}
+                                        onClick={() => navigate('/admin-center/change-register-status')}
                                     >
-                                        Uppdatera Startsidan
+                                        Slå av/på Registrering
                                     </Button>
                                 </Stack>
                             </CardActions>
