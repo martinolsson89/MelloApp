@@ -15,6 +15,7 @@ import {
   Button,
   Alert,
 } from '@mui/material';
+import Artists from './Artists';
 
 // Define enums and types
 enum ePlacement {
@@ -149,24 +150,35 @@ function BetForm({ subCompetitions, allArtists, user, onBetSubmitted }: BetFormP
 
         const winnerId = finalPredictions[eFinalPlacement.Vinnare];
         const secondplaceId = finalPredictions[eFinalPlacement.Tvåa];
+        
 
-        if (winnerId && artistGoingOut.includes(winnerId)) {
-            setErrorMessage(
-                <>
-                    Vill du verkligen tippa att artisten <strong>åker ut</strong> i sin deltävling men ändå vinner <strong>finalen</strong>?
-                </>
-            );
-            return;
+              // Find the winner artist's details
+      if (winnerId && artistGoingOut.includes(winnerId)) {
+        const winnerArtist = subCompetition.artists.find((artist) => artist.id === winnerId);
+        const winnerName = winnerArtist ? winnerArtist.name : 'Den valda artisten';
 
-        }
-        if (secondplaceId && artistGoingOut.includes(secondplaceId)) {
-            setErrorMessage(
-                <>
-                    Vill du verkligen tippa att artisten <strong>åker ut</strong> i sin deltävling men ändå kommer tvåa i <strong>finalen</strong>?
-                </>
-            );
-            return;
-        }
+        setErrorMessage(
+          <>
+            Du kan inte tippa att <strong>{winnerName}</strong> åker ut i{' '}
+            <strong>{subCompetition.name}</strong> men ändå vinner <strong>finalen</strong>?
+          </>
+        );
+        return;
+      }
+
+      // Find the second place artist's details
+      if (secondplaceId && artistGoingOut.includes(secondplaceId)) {
+        const secondPlaceArtist = subCompetition.artists.find((artist) => artist.id === secondplaceId);
+        const secondPlaceName = secondPlaceArtist ? secondPlaceArtist.name : 'Den valda artisten';
+
+        setErrorMessage(
+          <>
+            Du kan inte tippa att <strong>{secondPlaceName}</strong> åker ut i{' '}
+            <strong>{subCompetition.name}</strong> men ändå kommer tvåa i <strong>finalen</strong>?
+          </>
+        );
+        return;
+      }
 
     }
 

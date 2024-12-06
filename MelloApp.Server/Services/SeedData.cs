@@ -136,21 +136,19 @@ public class SeedData
         // Add code here to create 30 random artists with names
 
         string[] artistNames = {
-            "Echo Drift", "Lunar Pulse", "Velvet Harmony", "Neon Reverie", "Silent Mirage",
-            "Thunder Veil", "Starlight Horizon", "Electric Symphony", "Echoed Dreams", "Mystic Grove",
-            "Astral Fade", "Eclipse Realm", "Frosted Echo", "Infinite Voyage", "Luminous Shade",
-            "Blaze Arc", "Crystal Moon", "Phantom Pulse", "Wild Orbit", "Sonic Maze",
-            "Lost Aura", "Celestial Tide", "Silver Vein", "Desert Bloom", "Flickerwave",
-            "Ghost Nova", "Hazy Echo", "Aurora Burst", "Zenith Flow", "Solstice Drift"
+            "Linnea Henriksson", "Meira Omar", "Maja Ivarsson", "Albin Johnsén feat. Pa", "John Lundvik", "Adrian Macéus",
+            "SCHLAGERZ", "Nomi Tales", "Klara Hammarström", "Kaliffa", "Erik Segerstedt", "Fredrik Lundman",
+            "Malou Prytz", "Greczula", "Annika Wickihalder", "Björn Holmgren", "Angelino", "Dolly Style",
+            "KAJ", "Ella Tiritiello", "AmenA", "Måns Zelmerlöw", "Andreas Lundstedt", "Tennessee Tears",
+            "Saga Ludvigsson", "Vilhelm Buchaus", "Victoria Silvstedt", "Arvingarna", "SCARLET", "Arwin"
         };
 
         string[] songNames = {
-            "Whispered Echoes", "Lost in Neon", "Celestial Flames", "Timeless Voyage", "Dreamscape",
-            "Shattered Realms", "Veil of Stars", "Electric Visions", "Frozen Reverie", "Midnight Haze",
-            "Echoes of Dawn", "Flickering Light", "Pulse of Eternity", "Into the Abyss", "Lunar Dreams",
-            "Cosmic Tide", "Silent Symphony", "Phantom Glow", "Beyond Horizons", "Mystic Path",
-            "Nebula's Embrace", "Veiled Moonlight", "Astral Symphony", "Shadows of Time", "Eternal Glow",
-            "Celestial Waves", "Frosted Mirage", "Aurora Song", "Echo of Twilight", "Luminous Journey"
+            "Den känslan", "Hush Hush", "Kamikaze Life", "Upp i luften", "Voice of the Silent", "Vår första gång",
+            "Don Juan", "Funniest Thing", "On and On and On", "Salute", "Show Me What Love Is", "The Heart of a Swedish Cowboy",
+            "24K Gold", "Believe Me", "Life Again", "Rädda mig", "Teardrops", "YIHAA",
+            "Bara bada bastu", "Bara du är där", "De Good Be Better", "Revolution", "Vicious", "Yours",
+            "Hate You So Much", "I'm Yours", "Love It!", "Ring baby ring", "Sweet N' Psycho", "This Dream of Mine"
         };
 
 
