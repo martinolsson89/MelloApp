@@ -21,8 +21,15 @@ interface GetUserDto {
 }
 
 function TotalPoints({ leaderboardData }: LeaderboardProps) {
-    // Optional: Filter out users who haven't made bets
+    // Filter out users who haven't made bets
     const filteredLeaderboardData = leaderboardData.filter((entry) => entry.user.hasMadeBet);
+
+    // Sort so the top scorer is first
+    filteredLeaderboardData.sort((a, b) => b.points - a.points);
+
+    const leaderPoints = filteredLeaderboardData.length > 0 ? filteredLeaderboardData[0].points : 0;
+    const secondPlacePoints = filteredLeaderboardData.length > 1 ? filteredLeaderboardData[1].points : 0;
+    const leaderDifference = secondPlacePoints > 0 ? leaderPoints - secondPlacePoints : 0;
 
     return (
         <Box
@@ -30,7 +37,6 @@ function TotalPoints({ leaderboardData }: LeaderboardProps) {
                 mt: 4,
                 textAlign: 'left',
                 mx: 'auto',
-                // p: 3,
                 boxShadow: 3,
                 borderRadius: 2,
                 bgcolor: '#f3e5f5',
@@ -42,115 +48,128 @@ function TotalPoints({ leaderboardData }: LeaderboardProps) {
                     Totalpoäng
                 </Typography>
             </Box>
-            {/* <Divider sx={{m:2}} /> */}
             <Box sx={{ px: 3 }}>
                 <List>
-                    {filteredLeaderboardData.map((entry, index) => (
-                        <div key={index}>
-                            <ListItem
-                                sx={{
-                                    backgroundColor: 'white',
-                                    borderRadius: 2,
-                                    my: 2,
-                                    boxShadow: 3,
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    alignItems: 'center', // Center items vertically
-                                    justifyContent: 'space-between', // Distribute space between items
-                                    p: 2, // Add padding for better spacing
-                                }}
-                            >
-                                {/* Rank */}
-                                <Typography
-                                    variant="h6"
-                                    fontWeight="bold"
-                                    sx={{ minWidth: '30px', textAlign: 'center' }}
-                                >
-                                    {`${index + 1}`}
-                                </Typography>
+                    {filteredLeaderboardData.map((entry, index) => {
+                        let differenceText = '';
+                        let differenceColor: string | undefined = undefined;
+                        if (index === 0 && filteredLeaderboardData.length > 1) {
+                            // Leader: show how many points above 2nd place
+                            differenceText = `(+${leaderDifference})`;
+                            differenceColor = 'green';
+                        } else if (index > 0) {
+                            // Others: show how many points behind the leader
+                            const diff = leaderPoints - entry.points;
+                            differenceText = `(-${diff})`;
+                            differenceColor = 'red';
+                        }
 
-                                <ListItemAvatar>
-                                    <Badge
-                                        overlap="circular"
-                                        anchorOrigin={{
-                                            vertical: 'top',
-                                            horizontal: 'right',
-                                        }}
-                                        badgeContent={
-                                            index === 0 ? (
-                                                <Box
-                                                    component="img"
-                                                    src={kingCrown}// Path to your crown image
-                                                    alt="Crown"
-                                                    sx={{
-                                                    position: 'absolute',
-                                                    top: -43, // Adjust as needed
-                                                    right: 22, // Adjust as needed
-                                                    width: 40, // Adjust size as needed
-                                                    height: 40,
-                                                    zIndex: 1, // Ensure it appears above the avatar
-                                                }}
-                                                />
-                                            ) : null
-                                        }
+                        return (
+                            <div key={index}>
+                                <ListItem
+                                    sx={{
+                                        backgroundColor: 'white',
+                                        borderRadius: 2,
+                                        my: 2,
+                                        boxShadow: 3,
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between',
+                                        p: 2,
+                                    }}
+                                >
+                                    {/* Rank */}
+                                    <Typography
+                                        variant="h6"
+                                        fontWeight="bold"
+                                        sx={{ minWidth: '30px', textAlign: 'center' }}
                                     >
-                                        <Avatar
-                                            src={entry.user.avatarImageUrl}
-                                            alt={entry.user.firstName}
-                                            sx={{
-                                                width: 86,
-                                                height: 86,
-                                                border: index === 0 ? '3px solid gold' : '1px solid black',
-                                                boxSizing: 'border-box',
+                                        {`${index + 1}`}
+                                    </Typography>
+
+                                    <ListItemAvatar>
+                                        <Badge
+                                            overlap="circular"
+                                            anchorOrigin={{
+                                                vertical: 'top',
+                                                horizontal: 'right',
                                             }}
+                                            badgeContent={
+                                                index === 0 ? (
+                                                    <Box
+                                                        component="img"
+                                                        src={kingCrown}
+                                                        alt="Crown"
+                                                        sx={{
+                                                            position: 'absolute',
+                                                            top: -43, 
+                                                            right: 22,
+                                                            width: 40,
+                                                            height: 40,
+                                                            zIndex: 1,
+                                                        }}
+                                                    />
+                                                ) : null
+                                            }
+                                        >
+                                            <Avatar
+                                                src={entry.user.avatarImageUrl}
+                                                alt={entry.user.firstName}
+                                                sx={{
+                                                    width: 86,
+                                                    height: 86,
+                                                    border: index === 0 ? '3px solid gold' : '1px solid black',
+                                                    boxSizing: 'border-box',
+                                                }}
+                                            />
+                                        </Badge>
+                                    </ListItemAvatar>
+
+                                    {/* Name */}
+                                    {entry.user.firstName.toLowerCase() === "frida" ? (
+                                        <ListItemText
+                                            primary={
+                                                <Typography
+                                                    variant="body1"
+                                                    fontWeight="bold"
+                                                    sx={{ ml: 2 }}
+                                                >
+                                                    {entry.user.firstName} {entry.user.lastName.charAt(0).toUpperCase()}
+                                                </Typography>
+                                            }
+                                            sx={{ flex: 1 }}
                                         />
-                                    </Badge>
-                                </ListItemAvatar>
+                                    ) : (
+                                        <ListItemText
+                                            primary={
+                                                <Typography
+                                                    variant="body1"
+                                                    fontWeight="bold"
+                                                    sx={{ ml: 2 }}
+                                                >
+                                                    {entry.user.firstName}
+                                                </Typography>
+                                            }
+                                            sx={{ flex: 1 }}
+                                        />
+                                    )}
 
-                                {/* Name */}
-                                {entry.user.firstName.toLowerCase() === "frida" ? (
-                                    <ListItemText
-                                    primary={
-                                        <Typography
-                                            variant="body1"
-                                            fontWeight="bold"
-                                            sx={{ ml: 2 }} // Add margin to separate from the avatar
-                                        >
-                                            {entry.user.firstName} {entry.user.lastName.charAt(0).toUpperCase()}
+                                    {/* Points and Difference */}
+                                    <Box sx={{ ml: 2, display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                                        <Typography variant="body1" fontWeight="bold" sx={{ whiteSpace: 'nowrap' }}>
+                                            Poäng: {entry.points}
                                         </Typography>
-                                    }
-                                    sx={{ flex: 1 }} // Take up available space for proper alignment
-                                />
-
-                                ) : (
-                                    <ListItemText
-                                    primary={
-                                        <Typography
-                                            variant="body1"
-                                            fontWeight="bold"
-                                            sx={{ ml: 2 }} // Add margin to separate from the avatar
-                                        >
-                                            {entry.user.firstName}
-                                        </Typography>
-                                    }
-                                    sx={{ flex: 1 }} // Take up available space for proper alignment
-                                />
-                                    
-                                )}
-                                
-
-                                {/* Points */}
-                                <Typography
-                                    variant="body1"
-                                    fontWeight="bold"
-                                    sx={{ ml: 2, whiteSpace: 'nowrap' }} // Prevent line breaks
-                                >
-                                    Poäng: {entry.points}
-                                </Typography>
-                            </ListItem>
-
-                        </div>
-                    ))}
+                                        {differenceText && (
+                                            <Typography variant="caption" sx={{ color: differenceColor }}>
+                                                {differenceText}
+                                            </Typography>
+                                        )}
+                                    </Box>
+                                </ListItem>
+                            </div>
+                        );
+                    })}
                 </List>
             </Box>
         </Box>

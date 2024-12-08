@@ -78,7 +78,13 @@ function Rules() {
                         <span style={{ fontWeight: 'bold' }}>Hur lägger jag till en egen profilbild?</span>
                     </Typography>
                     <Typography variant="body1" align="left" sx={{ mb: 2 }}>
-                        <span style={{ fontWeight: 'bold' }}>Svar:</span> Du klickar antingen på<span style={{ fontWeight: 'bold' }}><Button onClick={() => handleNavigation('/my-account')}> Mitt konto </Button></span>här eller i menyn. Där kan du klistra in en länk till en bild från nätet. Exempelvis kan du högerklicka på din profilbild på Facbook och välja 'Kopiera bildadress'.
+                        <span style={{ fontWeight: 'bold' }}>Svar:</span> Du klickar antingen på<span style={{ fontWeight: 'bold' }}><Button onClick={() => handleNavigation('/my-account')}> Mitt konto </Button></span>här eller i menyn:
+                    </Typography>
+                    <Typography variant="body1" align="left" sx={{ mb: 2 }}>
+                    <span style={{ fontWeight: 'bold' }}>Alternativ 1: Kopiera en bild från nätet</span> - Du kan klista in en bildadress från en bild på nätet (Ex. din profilbild på Facebook). Du går då till bilden högerklickar på bilden och väljer "kopiera bildadress", sedan klistrar du in länken i fältet på "Mitt konto" och trycker sedan på "spara bild".
+                    </Typography>
+                    <Typography variant="body1" align="left" sx={{ mb: 2 }}>
+                    <span style={{ fontWeight: 'bold' }}>Alternativ 2: Ladda upp en bild</span> - Klicka på "välj bild" för att ladda upp en bild från datorn eller din telefon, klicka sedan på "spara bild".
                     </Typography>
 
 

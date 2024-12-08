@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MelloApp.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241123203258_init")]
+    [Migration("20241207213201_init")]
     partial class init
     {
         /// <inheritdoc />

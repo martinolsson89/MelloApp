@@ -1,8 +1,7 @@
-﻿import React, { useEffect, useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import { Typography, Box, Divider, Button, Container, Grid } from '@mui/material';
 import AuthorizeView from "../components/AuthorizeView.tsx";
 import Navbar from "../components/Navbar.tsx";
-import { userService } from '../services/UserService';
 import { AuthorizedUser } from '../components/AuthorizedUser';
 
 

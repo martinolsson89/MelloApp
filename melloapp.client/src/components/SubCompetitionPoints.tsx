@@ -34,30 +34,30 @@ function SubCompetitionPoints({ subCompetitionData }: SubCompetitionProps) {
     }}>
       {subCompetitionData.map((entry, index) => (
         <Box
-          key={index}
+          key={entry.subCompetitionId}
+          id={`subCompetition-${entry.subCompetitionId}`} // Assigning the id here
           sx={{
             mt: 4,
             textAlign: 'left',
             mx: 'auto',
-            // p: 3,
             boxShadow: 3,
             borderRadius: 2,
             bgcolor: 'white',
             width: { xs: '92%', sm: '92%', md: 'auto' },
           }}
         >
-          <Box sx={{ backgroundColor: colors[index], boxShadow: 2, p: 2, textAlign: 'center', borderTopLeftRadius: 6, borderTopRightRadius: 6 }}>
+          <Box sx={{ backgroundColor: colors[index % colors.length], boxShadow: 2, p: 2, textAlign: 'center', borderTopLeftRadius: 6, borderTopRightRadius: 6 }}>
             <Typography variant="h6" color='white' gutterBottom sx={{
-              textShadow: "1px 1px 2px rgba(0, 0, 0, 0.5)", // Add shadow here
+              textShadow: "1px 1px 2px rgba(0, 0, 0, 0.5)",
             }} >
               Poäng {entry.name}
             </Typography>
           </Box>
           <List>
-            {entry.userScores.map((userScore, index) => (
-              <div key={index}>
+            {entry.userScores.map((userScore, idx) => (
+              <div key={idx}>
                 <ListItem sx={{
-                  backgroundColor: index % 2 === 0 ? 'white' : '#f2f3f5',
+                  backgroundColor: idx % 2 === 0 ? 'white' : '#f2f3f5',
                   borderRadius: 2,
                 }}>
                   <ListItemAvatar>
@@ -67,25 +67,14 @@ function SubCompetitionPoints({ subCompetitionData }: SubCompetitionProps) {
                       sx={{ width: 55, height: 55, m: 1 }}
                     />
                   </ListItemAvatar>
-                  {userScore.firstName.toLowerCase() === "frida" ? (
-                    <ListItemText
-                    primary={`${index + 1}. ${userScore.firstName} ${userScore.lastName.charAt(0).toUpperCase()}`}
+                  <ListItemText
+                    primary={`${idx + 1}. ${userScore.firstName}${userScore.firstName.toLowerCase() === "frida" ? ` ${userScore.lastName.charAt(0).toUpperCase()}` : ''}`}
                     secondary={
                       <Typography variant="body2" fontWeight="bold">
                         Poäng: {userScore.points}
                       </Typography>
                     }
                   />
-                  ) : (
-                    <ListItemText
-                    primary={`${index + 1}. ${userScore.firstName}`}
-                    secondary={
-                      <Typography variant="body2" fontWeight="bold">
-                        Poäng: {userScore.points}
-                      </Typography>
-                    }
-                  />
-                  )}
                 </ListItem>
               </div>
             ))}

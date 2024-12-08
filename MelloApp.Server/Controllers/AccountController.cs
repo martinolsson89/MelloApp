@@ -51,6 +51,12 @@ namespace MelloApp.Server.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
+            // if email is already in use
+            if (await _userManager.FindByEmailAsync(model.Email) != null)
+            {
+                return BadRequest(new { message = $"En användare med {model.Email} är redan registrerad" });
+            }
+
             var user = new ApplicationUser
             {
                 FirstName = model.FirstName,

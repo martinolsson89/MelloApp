@@ -158,11 +158,14 @@ public class SeedData
         }
 
 
-        var subCompetitions = await _context.SubCompetitions.ToListAsync();
+        var subCompetitions = await _context.SubCompetitions
+            .OrderBy(sc => sc.Date)
+            .ToListAsync();
+
+
 
         int startingNumber = 1;
-
-        // Add starting number 1-5 to each artist that are part of a subcompetition
+        int subCompetitionIndex = 0;
 
         for (int i = 0; i < artistNames.Length; i++)
         {
@@ -174,7 +177,7 @@ public class SeedData
                 Name = artistName,
                 Song = songName,
                 StartingNumber = startingNumber,
-                SubCompetitionId = subCompetitions[i % subCompetitions.Count].Id
+                SubCompetitionId = subCompetitions[subCompetitionIndex].Id
 
             };
 
@@ -185,6 +188,7 @@ public class SeedData
             if(startingNumber > 6)
             {
                 startingNumber = 1;
+                subCompetitionIndex++;
             }
         }
     }
