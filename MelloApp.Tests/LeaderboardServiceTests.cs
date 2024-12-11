@@ -31,13 +31,20 @@ public class LeaderboardServiceTests
 
     private void SeedDatabase()
     {
+        // Clear existing data
+        _context.Leaderboards.RemoveRange(_context.Leaderboards);
+        _context.SubCompetitions.RemoveRange(_context.SubCompetitions);
+        _context.ScoresAfterSubCompetitions.RemoveRange(_context.ScoresAfterSubCompetitions);
+        _context.ResultsOfSubCompetitions.RemoveRange(_context.ResultsOfSubCompetitions);
+        _context.FinalPredictions.RemoveRange(_context.FinalPredictions);
+        _context.SaveChanges();
+
         // Add sample leaderboard entries
         _context.Leaderboards.Add(new Leaderboard { Id = "lead1", UserId = "user1", Points = 10 });
         _context.Leaderboards.Add(new Leaderboard { Id = "lead2", UserId = "user2", Points = 5 });
 
         // Add sample sub-competitions
-        _context.SubCompetitions.Add(new SubCompetition { Id = "sub1", Name = "Sub Competition 1", Date = DateTime.Today, Location = "Stockholm"});
-        _context.SaveChanges();
+        _context.SubCompetitions.Add(new SubCompetition { Id = "sub1", Name = "Sub Competition 1", Date = DateTime.Today, Location = "Stockholm" });
 
         // Add sample scores
         _context.ScoresAfterSubCompetitions.Add(new ScoreAfterSubCompetition
@@ -45,14 +52,14 @@ public class LeaderboardServiceTests
             Id = "score1",
             UserId = "user1",
             Points = 20,
-            SubCompetitionId = "sub1" // Ensure this is set
+            SubCompetitionId = "sub1"
         });
         _context.ScoresAfterSubCompetitions.Add(new ScoreAfterSubCompetition
         {
             Id = "score2",
             UserId = "user2",
             Points = 15,
-            SubCompetitionId = "sub1" // Ensure this is set
+            SubCompetitionId = "sub1"
         });
 
         // Add sample results
@@ -62,7 +69,7 @@ public class LeaderboardServiceTests
             ArtistId = "artist1",
             Placement = ePlacement.Final,
             FinalPlacement = eFinalPlacement.Vinnare,
-            SubCompetitionId = "sub1" // Ensure this is set
+            SubCompetitionId = "sub1"
         });
         _context.ResultsOfSubCompetitions.Add(new ResultOfSubCompetition
         {
@@ -70,7 +77,7 @@ public class LeaderboardServiceTests
             ArtistId = "artist2",
             Placement = ePlacement.FinalKval,
             FinalPlacement = eFinalPlacement.Tvåa,
-            SubCompetitionId = "sub1" // Ensure this is set
+            SubCompetitionId = "sub1"
         });
 
         // Add final predictions
@@ -81,7 +88,7 @@ public class LeaderboardServiceTests
             ArtistId = "artist1",
             FinalPredictedPlacement = eFinalPlacement.Vinnare,
             User = new ApplicationUser { FirstName = "John", LastName = "Doe", AvatarImageUrl = "avatar1.jpg" },
-            SubCompetitionId = "sub1" // Ensure this is set
+            SubCompetitionId = "sub1"
         });
 
         _context.SaveChanges();

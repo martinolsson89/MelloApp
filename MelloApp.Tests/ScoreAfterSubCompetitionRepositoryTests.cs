@@ -32,7 +32,7 @@ using Xunit;
             var repository = new ScoreAfterSubCompetitionRepository(context);
 
             var subCompetition1 = new SubCompetition { Id = "1", Name = "SubCompetition1", Date = DateTime.Now };
-        var subCompetition2 = new SubCompetition { Id = "2", Name = "SubCompetition2", Date = DateTime.Now.AddDays(1) };
+            var subCompetition2 = new SubCompetition { Id = "2", Name = "SubCompetition2", Date = DateTime.Now.AddDays(1) };
 
         var scores = new List<ScoreAfterSubCompetition>
             {
