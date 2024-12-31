@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import {
     Box,
     Typography,
@@ -74,7 +74,7 @@ function AddFinalResults() {
           console.log(data);
 
           try {
-            const response = await fetch('https://localhost:7263/ResultOfSubCompetition/batch', {
+              const response = await fetch('https://app-melloapp-001.azurewebsites.net/ResultOfSubCompetition/batch', {
               method: 'PUT',
               headers: {
                 'Content-Type': 'application/json'

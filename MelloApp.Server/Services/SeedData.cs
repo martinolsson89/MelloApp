@@ -3,6 +3,8 @@ using MelloApp.Server.Data;
 using MelloApp.Server.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System;
+using EnvironmentName = Microsoft.AspNetCore.Hosting.EnvironmentName;
 
 namespace MelloApp.Server.Services;
 
@@ -11,12 +13,14 @@ public class SeedData
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ApplicationDbContext _context;
+    private readonly IWebHostEnvironment _env;  // store environment
 
-    public SeedData(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, ApplicationDbContext context)
+    public SeedData(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, ApplicationDbContext context, IWebHostEnvironment env)
     {
         _roleManager = roleManager;
         _userManager = userManager;
         _context = context;
+        _env = env;
     }
 
     public async Task InitializeData()
@@ -69,6 +73,9 @@ public class SeedData
         string[] firstNames = { "Frida", "Lena", "Eva", "Ove"};
         string[] lastNames = { "Schylström", "Schylström", "Viberg", "Viberg" };
 
+        
+        var defaultAvatarBlobUrl = "https://melloappstorage.blob.core.windows.net/profile-pictures/default-avatar.png";
+
         for (int i = 0; i < firstNames.Length; i++)
         {
             string firstName = $"{firstNames[i]}";
@@ -84,7 +91,8 @@ public class SeedData
                     LastName = lastName,
                     Email = email,
                     UserName = email,
-                    AvatarImageUrl = "/uploads/avatars/default-avatar.png"
+                    AvatarImageUrl = defaultAvatarBlobUrl
+                    //AvatarImageUrl = "/uploads/avatars/default-avatar.png"
                 };
 
                 await _userManager.CreateAsync(user, password);
@@ -136,19 +144,19 @@ public class SeedData
         // Add code here to create 30 random artists with names
 
         string[] artistNames = {
-            "Linnea Henriksson", "Meira Omar", "Maja Ivarsson", "Albin Johnsén feat. Pa", "John Lundvik", "Adrian Macéus",
-            "SCHLAGERZ", "Nomi Tales", "Klara Hammarström", "Kaliffa", "Erik Segerstedt", "Fredrik Lundman",
-            "Malou Prytz", "Greczula", "Annika Wickihalder", "Björn Holmgren", "Angelino", "Dolly Style",
-            "KAJ", "Ella Tiritiello", "AmenA", "Måns Zelmerlöw", "Andreas Lundstedt", "Tennessee Tears",
-            "Saga Ludvigsson", "Vilhelm Buchaus", "Victoria Silvstedt", "Arvingarna", "SCARLET", "Arwin"
+            "Albin Johnsén feat. Pa", "Maja Ivarsson", "John Lundvik", "Meira Omar", "Adrian Macéus", "Linnea Henriksson",
+            "Nomi Tales", "SCHLAGERZ", "Erik Segerstedt", "Klara Hammarström", "Fredrik Lundman", "Kaliffa",
+            "Greczula", "Malou Prytz", "Björn Holmgren", "Dolly Style", "Angelino", "Annika Wickihalder",
+            "Andreas Lundstedt", "Ella Tiritiello", "Tennessee Tears", "KAJ", "AmenA", "Måns Zelmerlöw", 
+            "Arvingarna", "Arwin", "Saga Ludvigsson", "Victoria Silvstedt", "Vilhelm Buchaus", "SCARLET"
         };
 
         string[] songNames = {
-            "Den känslan", "Hush Hush", "Kamikaze Life", "Upp i luften", "Voice of the Silent", "Vår första gång",
-            "Don Juan", "Funniest Thing", "On and On and On", "Salute", "Show Me What Love Is", "The Heart of a Swedish Cowboy",
-            "24K Gold", "Believe Me", "Life Again", "Rädda mig", "Teardrops", "YIHAA",
-            "Bara bada bastu", "Bara du är där", "De Good Be Better", "Revolution", "Vicious", "Yours",
-            "Hate You So Much", "I'm Yours", "Love It!", "Ring baby ring", "Sweet N' Psycho", "This Dream of Mine"
+            "Upp i luften", "Kamikaze Life", "Voice of the Silent", "Hush Hush", "Vår första gång", "Den känslan",
+            "Funniest Thing", "Don Juan", "Show Me What Love Is", "On and On and On", "The Heart of a Swedish Cowboy", "Salute",
+            "Believe Me", "24K Gold", "Rädda mig", "YIHAA", "Teardrops", "Life Again",
+            "Vicious", "Bara du är där", "Yours", "Bara bada bastu", "De Good Be Better", "Revolution",
+            "Ring baby ring", "This Dream of Mine", "Hate You So Much", "Love It!", "I'm Yours", "Sweet N' Psycho"
         };
 
 

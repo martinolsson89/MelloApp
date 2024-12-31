@@ -17,7 +17,7 @@ interface GetUserDto {
     id: string;
     firstName: string;
     lastName: string;
-    avatarImageUrl: string | null;
+    avatarImageUrl: string;
     hasMadeBet: boolean;
 }
 
@@ -100,7 +100,6 @@ function Leaderboard() {
                     </Box>
                 ) : (
                     <Box>
-                        import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
                         <Box
                             sx={{

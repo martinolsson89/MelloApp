@@ -32,7 +32,7 @@ function AddFinalScore() {
 
 
     const handleSubmit = () => {
-        fetch(`https://localhost:7263/Points/CalculatePointsFinal`, {
+        fetch(`https://app-melloapp-001.azurewebsites.net/Points/CalculatePointsFinal`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

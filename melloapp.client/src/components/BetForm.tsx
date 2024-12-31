@@ -15,7 +15,7 @@ import {
   Button,
   Alert,
 } from '@mui/material';
-import Artists from './Artists';
+/*import Artists from './Artists';*/
 
 // Define enums and types
 enum ePlacement {
@@ -46,14 +46,14 @@ interface SubCompetition {
 }
 
 interface Prediction {
-  predictedPlacement: ePlacement;
+  predictedPlacement: ePlacement | string;
   userId: string;
   artistId: string;
   subCompetitionId: string;
 }
 
 interface FinalPrediction {
-  finalPredictedPlacement: eFinalPlacement;
+  finalPredictedPlacement: eFinalPlacement | string;
   userId: string;
   artistId: string;
   subCompetitionId: string;

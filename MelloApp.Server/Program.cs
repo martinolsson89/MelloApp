@@ -79,16 +79,19 @@ namespace MelloApp.Server
             {
                 options.AddDefaultPolicy(policy =>
                 {
-                    policy.WithOrigins("https://localhost:5173") // Your frontend URL
+                    policy.WithOrigins("https://localhost:5173", "https://app-melloapp-001.azurewebsites.net/") // Your frontend URL
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials(); // If using cookies
                 });
             });
 
+
+
             var app = builder.Build();
 
             app.UseDefaultFiles();
+
             app.UseStaticFiles(new StaticFileOptions
             {
                 OnPrepareResponse = ctx =>
@@ -97,13 +100,16 @@ namespace MelloApp.Server
                 }
             });
 
-            // Enable serving files from the 'uploads' folder
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(
-                    Path.Combine(builder.Environment.ContentRootPath, "uploads", "avatars")),
-                RequestPath = "/uploads/avatars"
-            });
+            //// Enable serving files from the 'uploads' folder
+            //app.UseStaticFiles(new StaticFileOptions
+            //{
+            //    FileProvider = new PhysicalFileProvider(
+            //        Path.Combine(builder.Environment.ContentRootPath, "uploads", "avatars")),
+            //    RequestPath = "/uploads/avatars"
+            //});
+
+            app.UseStaticFiles(); // the default static file middleware
+
 
             app.MapIdentityApi<ApplicationUser>();
 

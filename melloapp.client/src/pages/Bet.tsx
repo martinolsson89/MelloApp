@@ -44,6 +44,7 @@ interface UserDto {
     email: string;
     firstName: string;
     lastName: string;
+    avatarImageUrl: string | null;
     hasMadeBet: boolean;
     predictions: PredictionDto[];
     finalPredictions: FinalPredictionDto[];
@@ -143,28 +144,34 @@ function Bet() {
                 >
                     {isLoading ? (
                         <Typography variant="h6">Laddar...</Typography>
-                    ) : hasBet ? (
-                        <>
+                    ) : userData ? (
+                        // If we have userData, check if user already placed a bet
+                        hasBet ? (
                             <BetReceipt userData={userData} />
-                        </>
-                    ) : (
-                        <>
-                            <Typography variant="h4" gutterBottom>
-                                Här fyller du i ditt tips!
-                            </Typography>
-                            <Typography variant="subtitle1" sx={{ mb: 3 }}>
-                                {randomSentence}
-                                {userData?.firstName}?
-                            </Typography>
+                        ) : (
+                            <>
+                                <Typography variant="h4" gutterBottom>
+                                    Här fyller du i ditt tips!
+                                </Typography>
+                                <Typography variant="subtitle1" sx={{ mb: 3 }}>
+                                    {randomSentence}
+                                    {userData.firstName}?
+                                </Typography>
 
-                            {/* Pass the necessary props to BetForm */}
-                            <BetForm
-                                subCompetitions={subCompetitions}
-                                allArtists={allArtists}
-                                user={userData}
-                                onBetSubmitted={handleBetSubmitted}
-                            />
-                        </>
+                                {/* Pass the necessary props to BetForm */}
+                                <BetForm
+                                    subCompetitions={subCompetitions}
+                                    allArtists={allArtists}
+                                    user={userData}
+                                    onBetSubmitted={handleBetSubmitted}
+                                />
+                            </>
+                        )
+                    ) : (
+                        // If userData is null, show a fallback or error message
+                        <Typography variant="body1">
+                            Ingen användardata hittades. Logga in för att fortsätta.
+                        </Typography>
                     )}
                 </Box>
             </>

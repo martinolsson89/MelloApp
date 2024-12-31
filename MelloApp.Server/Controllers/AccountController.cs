@@ -8,6 +8,8 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using AutoMapper;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using MelloApp.Server.Models.Account;
 using MelloApp.Server.Repositories;
 using Microsoft.IdentityModel.Tokens;
@@ -57,13 +59,15 @@ namespace MelloApp.Server.Controllers
                 return BadRequest(new { message = $"En användare med {model.Email} är redan registrerad" });
             }
 
+            var defaultAvatarBlobUrl = "https://melloappstorage.blob.core.windows.net/profile-pictures/default-avatar.png";
+
             var user = new ApplicationUser
             {
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 UserName = model.Email,
                 Email = model.Email,
-                AvatarImageUrl = $"{Request.Scheme}://{Request.Host}/uploads/avatars/default-avatar.png"
+                AvatarImageUrl = defaultAvatarBlobUrl
 
             };
 
@@ -291,55 +295,61 @@ namespace MelloApp.Server.Controllers
         [Authorize]
         public async Task<IActionResult> Update([FromBody] UpdateAvatarDto model)
         {
+            // 1. Get the current user
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            // Get the user from the database
             var user = await _userManager.FindByIdAsync(userId);
 
             if (user == null)
             {
-                return NotFound();
+                return NotFound(new { message = "User not found." });
             }
 
-            // Delete existing avatar file if it exists and is not the default
+            // 2. If the user already has a custom avatar (not the default), delete it from Blob Storage
+            //    - We assume "default-avatar.png" is part of the URL for the default image.
             if (!string.IsNullOrEmpty(user.AvatarImageUrl) &&
-                user.AvatarImageUrl != "/uploads/avatars/default-avatar.png")
+                !user.AvatarImageUrl.Contains("default-avatar.png", StringComparison.OrdinalIgnoreCase))
             {
                 try
                 {
-                    var existingFileName = Path.GetFileName(user.AvatarImageUrl);
-                    var existingFilePath = Path.Combine(_environment.ContentRootPath, "uploads", "avatars",
-                        existingFileName);
+                    // Parse the old avatar URL to get the blob name
+                    var oldAvatarUri = new Uri(user.AvatarImageUrl);
+                    var oldBlobName = Path.GetFileName(oldAvatarUri.LocalPath);
+                    // e.g., "abc12345.png"
 
-                    if (System.IO.File.Exists(existingFilePath))
-                    {
-                        System.IO.File.Delete(existingFilePath);
-                        Console.WriteLine($"Deleted old avatar: {existingFilePath}");
-                    }
+                    // Prepare Blob container client
+                    var connectionString = _configuration["AzureStorage:ConnectionString"];
+                    var containerName = _configuration["AzureStorage:ContainerName"];
+                    var containerClient = new BlobContainerClient(connectionString, containerName);
+
+                    // Delete the old blob if it exists
+                    var oldBlobClient = containerClient.GetBlobClient(oldBlobName);
+                    await oldBlobClient.DeleteIfExistsAsync(DeleteSnapshotsOption.IncludeSnapshots);
+
+                    Console.WriteLine($"Deleted old avatar from Azure Blob Storage: {oldBlobName}");
                 }
                 catch (Exception ex)
                 {
                     // Log the exception
-                    Console.WriteLine($"Error deleting old avatar: {ex.Message}");
+                    Console.WriteLine($"Error deleting old avatar from Blob: {ex.Message}");
+
                     // Optionally, return an error response or continue
                     return StatusCode(StatusCodes.Status500InternalServerError,
-                        new { message = "Error deleting the old avatar." });
+                        new { message = "Error deleting the old avatar from Azure Blob Storage." });
                 }
             }
 
-            // Map only the allowed properties from the model to the user entity
+            // 3. Update the user's AvatarImageUrl to the *new* blob URL
+            //    The new URL should already be an Azure Blob URL
             user.AvatarImageUrl = model.AvatarImageUrl;
-            // Add other properties as needed, ensuring they are safe to update
 
-
-            // Save changes to the database
+            // 4. Save changes to the database
             var result = await _userManager.UpdateAsync(user);
             if (!result.Succeeded)
             {
-                return BadRequest(new { message = "Failed to update user profile." });
+                return BadRequest(new { message = "Failed to update user avatar." });
             }
 
-            return Ok();
+            return Ok(new { message = "Avatar updated successfully.", newAvatarUrl = user.AvatarImageUrl });
         }
 
         // DELETE: /Account/AllByUserId/{id}
@@ -399,34 +409,47 @@ namespace MelloApp.Server.Controllers
             // Generate a unique filename
             var uniqueFileName = $"{Guid.NewGuid()}{extension}";
 
-            // Define the path to save the image
-            var uploadsFolder = Path.Combine(_environment.ContentRootPath, "uploads", "avatars");
-            if (!Directory.Exists(uploadsFolder))
-            {
-                Directory.CreateDirectory(uploadsFolder);
-            }
-
-            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+            // Get Azure Storage connection string & container name from configuration
+            var connectionString = _configuration["AzureStorage:ConnectionString"];
+            var containerName = _configuration["AzureStorage:ContainerName"];
 
             try
             {
-                // Save the file to the server
-                using (var stream = new FileStream(filePath, FileMode.Create))
+                // Create the blob service client
+                BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
+
+                // Get the container client
+                BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+
+                // Ensure the container exists (creates it if it doesn't)
+                await containerClient.CreateIfNotExistsAsync(PublicAccessType.Blob);
+
+                // Get a reference to a blob
+                BlobClient blobClient = containerClient.GetBlobClient(uniqueFileName);
+
+                // Upload the file stream
+                using (var stream = avatar.OpenReadStream())
                 {
-                    await avatar.CopyToAsync(stream);
+                    await blobClient.UploadAsync(stream, new BlobUploadOptions
+                    {
+                        HttpHeaders = new BlobHttpHeaders
+                        {
+                            ContentType = avatar.ContentType
+                        }
+                    });
                 }
 
-                // Construct the URL to access the uploaded image
-                var avatarUrl = $"{Request.Scheme}://{Request.Host}/uploads/avatars/{uniqueFileName}";
+                // Construct the blob URI (this will be publicly accessible if the container is set to PublicAccessType.Blob)
+                var avatarUrl = blobClient.Uri.ToString();
 
                 return Ok(new { avatarImageUrl = avatarUrl });
             }
             catch (Exception ex)
             {
                 // Log the exception
-                Console.WriteLine($"Error uploading avatar: {ex.Message}");
+                Console.WriteLine($"Error uploading avatar to Blob: {ex.Message}");
                 return StatusCode(StatusCodes.Status500InternalServerError,
-                    new { message = "Error uploading the file." });
+                    new { message = "Error uploading the file to Azure Blob Storage." });
             }
         }
 
@@ -465,47 +488,69 @@ namespace MelloApp.Server.Controllers
             // Generate a unique filename
             var uniqueFileName = $"{Guid.NewGuid()}{extension}";
 
-            // Define the path to save the image
-            var uploadsFolder = Path.Combine(_environment.ContentRootPath, "uploads", "avatars");
-            if (!Directory.Exists(uploadsFolder))
-            {
-                Directory.CreateDirectory(uploadsFolder);
-            }
-
-            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+            // Get Azure Storage connection string & container name from configuration
+            var connectionString = _configuration["AzureStorage:ConnectionString"];
+            var containerName = _configuration["AzureStorage:ContainerName"];
+            // Example: containerName might be "profile-pictures"
 
             try
             {
-                // Save the file to the server
-                using (var stream = new FileStream(filePath, FileMode.Create))
+                // Create the blob service client
+                var blobServiceClient = new BlobServiceClient(connectionString);
+
+                // Get the container client
+                var containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+
+                // Ensure the container exists (creates it if it doesn't)
+                await containerClient.CreateIfNotExistsAsync(PublicAccessType.Blob);
+
+                // Get a reference to a new blob
+                var blobClient = containerClient.GetBlobClient(uniqueFileName);
+
+                // Upload the file stream to Blob
+                using (var stream = avatar.OpenReadStream())
                 {
-                    await avatar.CopyToAsync(stream);
+                    await blobClient.UploadAsync(stream, new BlobUploadOptions
+                    {
+                        HttpHeaders = new BlobHttpHeaders
+                        {
+                            ContentType = avatar.ContentType
+                        }
+                    });
                 }
 
-                // Delete existing avatar file if it exists and is not the default
-                if (!string.IsNullOrEmpty(user.AvatarImageUrl) && !user.AvatarImageUrl.Contains("default-avatar.png"))
+                // Construct the blob URI (this will be publicly accessible 
+                // if the container is set to PublicAccessType.Blob)
+                var avatarUrl = blobClient.Uri.ToString();
+
+                // Optionally: Delete the old avatar from Blob Storage (if desired)
+                // Only if user has an existing avatar that is *not* the default
+                if (!string.IsNullOrEmpty(user.AvatarImageUrl) &&
+                    !user.AvatarImageUrl.Contains("default-avatar.png"))
                 {
                     try
                     {
-                        var existingFileName = Path.GetFileName(user.AvatarImageUrl);
-                        var existingFilePath = Path.Combine(uploadsFolder, existingFileName);
+                        // The old avatar URL is something like:
+                        // https://<StorageAccount>.blob.core.windows.net/<containerName>/<oldFilename>
+                        var oldAvatarUri = new Uri(user.AvatarImageUrl);
 
-                        if (System.IO.File.Exists(existingFilePath))
-                        {
-                            System.IO.File.Delete(existingFilePath);
-                        }
+                        // Extract the blob name from the old avatar URL
+                        var oldBlobName = Path.GetFileName(oldAvatarUri.LocalPath);
+
+                        // Get a reference to the old blob
+                        var oldBlobClient = containerClient.GetBlobClient(oldBlobName);
+
+                        // Delete if it exists
+                        await oldBlobClient.DeleteIfExistsAsync(DeleteSnapshotsOption.IncludeSnapshots);
                     }
                     catch (Exception ex)
                     {
-                        // Log the exception
-                        Console.WriteLine($"Error deleting old avatar: {ex.Message}");
+                        // Log the exception, but don't fail the entire request
+                        Console.WriteLine($"Error deleting old avatar from Blob: {ex.Message}");
                     }
                 }
 
-                // Construct the URL to access the uploaded image
-                var avatarUrl = $"{Request.Scheme}://{Request.Host}/uploads/avatars/{uniqueFileName}";
-
-                // Update the user's AvatarImageUrl
+                // Update the user's AvatarImageUrl to the new blob URL
                 user.AvatarImageUrl = avatarUrl;
 
                 // Save changes to the database
@@ -520,11 +565,13 @@ namespace MelloApp.Server.Controllers
             catch (Exception ex)
             {
                 // Log the exception
-                Console.WriteLine($"Error uploading avatar: {ex.Message}");
+                Console.WriteLine($"Error uploading avatar to Blob: {ex.Message}");
                 return StatusCode(StatusCodes.Status500InternalServerError,
-                    new { message = "Error uploading the file." });
+                    new { message = "Error uploading the file to Azure Blob Storage." });
             }
         }
+
+
 
         // PUT: /Account/UpdateUserAvatarUrl
         [Authorize(Roles = "Admin")]
@@ -537,46 +584,60 @@ namespace MelloApp.Server.Controllers
             if (string.IsNullOrEmpty(model.AvatarImageUrl))
                 return BadRequest(new { message = "Avatar image URL is required." });
 
-            // Get the user from the database
+            // 1. Get the user from the database
             var user = await _userManager.FindByIdAsync(model.Id);
-
             if (user == null)
                 return NotFound(new { message = "User not found." });
 
-            // Delete existing avatar file if it exists and is not the default
-            if (!string.IsNullOrEmpty(user.AvatarImageUrl) && !user.AvatarImageUrl.Contains("default-avatar.png"))
+            // 2. If the user already has a custom avatar (not default), delete it from Blob Storage
+            if (!string.IsNullOrEmpty(user.AvatarImageUrl) &&
+                !user.AvatarImageUrl.Contains("default-avatar.png", StringComparison.OrdinalIgnoreCase))
             {
                 try
                 {
-                    var existingFileName = Path.GetFileName(user.AvatarImageUrl);
-                    var existingFilePath = Path.Combine(_environment.ContentRootPath, "uploads", "avatars",
-                        existingFileName);
+                    // Parse the old avatar URL to get the blob name
+                    // e.g., https://<STORAGE_ACCOUNT>.blob.core.windows.net/<CONTAINER>/<FILENAME>
+                    var oldAvatarUri = new Uri(user.AvatarImageUrl);
+                    var oldBlobName = Path.GetFileName(oldAvatarUri.LocalPath);
+                    // e.g., "abc12345.png"
 
-                    if (System.IO.File.Exists(existingFilePath))
-                    {
-                        System.IO.File.Delete(existingFilePath);
-                        Console.WriteLine($"Deleted old avatar: {existingFilePath}");
-                    }
+                    // Prepare Blob container client
+                    var connectionString = _configuration["AzureStorage:ConnectionString"];
+                    var containerName = _configuration["AzureStorage:ContainerName"];
+                    var containerClient = new BlobContainerClient(connectionString, containerName);
+
+                    // Attempt to delete the old blob if it exists
+                    var oldBlobClient = containerClient.GetBlobClient(oldBlobName);
+                    await oldBlobClient.DeleteIfExistsAsync(DeleteSnapshotsOption.IncludeSnapshots);
+
+                    Console.WriteLine($"Deleted old avatar from Azure Blob Storage: {oldBlobName}");
                 }
                 catch (Exception ex)
                 {
                     // Log the exception
-                    Console.WriteLine($"Error deleting old avatar: {ex.Message}");
+                    Console.WriteLine($"Error deleting old avatar from Blob: {ex.Message}");
+                    // You can decide if you want to fail or continue if deletion fails.
+                    // For demonstration, let's continue without failing the entire request.
                 }
             }
 
-            // Update the user's AvatarImageUrl
+            // 3. Update the user's AvatarImageUrl with the new blob URL
             user.AvatarImageUrl = model.AvatarImageUrl;
 
-            // Save changes to the database
+            // 4. Save changes to the database
             var result = await _userManager.UpdateAsync(user);
             if (!result.Succeeded)
             {
                 return BadRequest(new { message = "Failed to update user's avatar." });
             }
 
-            return Ok();
+            return Ok(new
+            {
+                message = "User avatar updated successfully.",
+                newAvatarUrl = user.AvatarImageUrl
+            });
         }
+
 
         [HttpPost]
         [Route("forgot-password")]

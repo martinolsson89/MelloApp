@@ -1,6 +1,6 @@
 ﻿// src/components/AuthorizedUser.tsx
 
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { UserContext } from './AuthorizeView';
 
 interface AuthorizedUserProps {

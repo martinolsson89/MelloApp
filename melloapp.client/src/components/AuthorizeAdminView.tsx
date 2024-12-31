@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, createContext } from 'react';
+﻿import { useState, useEffect, createContext, useContext } from 'react';
 /*import { Navigate } from 'react-router-dom';*/
 
 
@@ -79,7 +79,7 @@ function AuthorizeAdminView(props: { children: React.ReactNode }) {
 
 export function AuthorizedUser(props: { value: string}) {
     // Consume the username from the UserContext
-    const user: any = React.useContext(UserContext);
+    const user: any = useContext(UserContext);
 
     // Display the username in a h1 tag
     if (props.value == "role")

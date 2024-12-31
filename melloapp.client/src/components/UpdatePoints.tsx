@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+﻿import { useState } from 'react';
 import {
     Card,
     CardHeader,
@@ -39,7 +39,7 @@ const UpdatePointsForm = () => {
 
 
         try {
-            const response = await fetch('https://localhost:7263/Points/update-points-by-details', {
+            const response = await fetch('https://app-melloapp-001.azurewebsites.net/Points/update-points-by-details', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

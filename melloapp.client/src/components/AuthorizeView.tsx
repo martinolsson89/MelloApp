@@ -1,5 +1,5 @@
 ﻿// src/components/AuthorizeView.tsx
-import React, { useState, useEffect, createContext, ReactNode } from 'react';
+import { useState, useEffect, createContext, ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
 import { userService } from '../services/UserService';
 

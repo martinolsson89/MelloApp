@@ -1,6 +1,6 @@
 ﻿import React, { useState, useEffect } from 'react';
 import {
-    Button, FormControl, InputLabel, MenuItem, Select, Typography, Box
+    Button, FormControl, InputLabel, MenuItem, Select, Typography, Box, SelectChangeEvent
 } from '@mui/material';
 import Navbar from './Navbar';
 import { userService } from '../services/UserService';
@@ -24,7 +24,7 @@ function ChangeRegisterStatus() {
             });
     }, []);
 
-    const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    const handleChange = (event: SelectChangeEvent<string>) => {
         setStatus(event.target.value as string);
     };
 
