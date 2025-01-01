@@ -54,6 +54,12 @@ const CrudOperations: React.FC = () => {
                         >
                             Hantera poäng
                         </Button>
+                        <Button
+                            variant="contained"
+                            onClick={() => navigate('/admin-center/leaderboard-management')}
+                        >
+                            Hantera Ledertavla
+                        </Button>
 
                     </Stack>
                 </Box>

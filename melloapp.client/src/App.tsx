@@ -27,6 +27,7 @@ import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from "./pages/ResetPassword";
 import DeleteUser from './components/DeleteUser';
 import ChangeRegisterStatus from './components/ChangeRegisterStatus';
+import LeaderboardManagement from './components/LeaderboardManagement';
 
 
 
@@ -62,6 +63,7 @@ function App() {
                 <Route path='/admin-center/user-avatar' element={<UserAvatar />} />
                 <Route path='/admin-center/delete-user' element={<DeleteUser />} />
                 <Route path='/admin-center/change-register-status' element={<ChangeRegisterStatus />} />
+                <Route path='/admin-center/leaderboard-management' element={<LeaderboardManagement />} />
             </Routes>
         </BrowserRouter>
     );
