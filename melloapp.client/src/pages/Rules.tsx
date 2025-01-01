@@ -98,10 +98,10 @@ function Rules() {
                         • Välj <span style={{ fontWeight: 'bold' }}>2 artister/låtar</span> som du tror går direkt till <span style={{ fontWeight: 'bold' }}>Finalen</span> i varje delfinal.
                     </Typography>
                     <Typography variant="body1" align="left" sx={{ mb: 2 }}>
-                        • Välj <span style={{ fontWeight: 'bold' }}>2 artister/låtar</span> som du tror går direkt till <span style={{ fontWeight: 'bold' }}>Finalkvalet</span> i varje delfinal.
+                        • Välj <span style={{ fontWeight: 'bold' }}>1 artist/låt</span> som du tror går vidare till <span style={{ fontWeight: 'bold' }}>Finalkvalet</span> i varje delfinal.
                     </Typography>
                     <Typography variant="body1" align="left" sx={{ mb: 2 }}>
-                        • Välj <span style={{ fontWeight: 'bold' }}>2 artister/låtar</span> som kommer <span style={{ fontWeight: 'bold' }}>Åka Ut</span> i varje delfinal.
+                        • Välj <span style={{ fontWeight: 'bold' }}>3 artister/låtar</span> som kommer <span style={{ fontWeight: 'bold' }}>Åka Ut</span> i varje delfinal.
                     </Typography>
                     <Typography variant="body1" align="left" sx={{ mb: 2 }}>
                         • Välj den <span style={{ fontWeight: 'bold' }}>artist/låt</span> som du tror kommer vinna hela Svenska Melodifestivalen i <span style={{ fontWeight: 'bold' }}>Finalen</span> den 8/3

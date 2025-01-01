@@ -150,10 +150,10 @@ const AddSubCompetitionResults: React.FC = () => {
         // Validate counts
         if (
             counts[ePlacement.Final] !== 2 ||
-            counts[ePlacement.FinalKval] !== 2 ||
-            counts[ePlacement.ÅkerUt] !== 2
+            counts[ePlacement.FinalKval] !== 1 ||
+            counts[ePlacement.ÅkerUt] !== 3
         ) {
-            alert('Du måste ha fylla i två resultat av varje typ.(Final, FinalKval, Åker ut)');
+            alert('Du måste ha fylla i två artister till Final, 1 artist till FinalKval och 3 som Åker ut');
             return;
         }
 

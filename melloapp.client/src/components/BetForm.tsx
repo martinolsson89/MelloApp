@@ -133,12 +133,12 @@ function BetForm({ subCompetitions, allArtists, user, onBetSubmitted }: BetFormP
       // Validate counts
       if (
         counts[ePlacement.Final] !== 2 ||
-        counts[ePlacement.FinalKval] !== 2 ||
-        counts[ePlacement.ÅkerUt] !== 2
+        counts[ePlacement.FinalKval] !== 1 ||
+        counts[ePlacement.ÅkerUt] !== 3
       ) {
           setErrorMessage(
               <>
-                  I <strong>{subCompetition.name}</strong>, får du välja <strong>max 2 artister</strong> för varje placering: Final, FinalKval, och Åker Ut.
+                  I <strong>{subCompetition.name}</strong>, måste du välja <strong>max 2 artister</strong> till Final, <strong>max 1 artist</strong> till FinalKval, och <strong>max 3 artister</strong> som Åker Ut.
               </>
         );
         return;
