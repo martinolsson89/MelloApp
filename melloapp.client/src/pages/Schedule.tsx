@@ -1,5 +1,6 @@
 ﻿import { useState, useEffect } from 'react';
-import { Typography, Box, Card, CardContent, CardHeader, List, ListItem, ListItemText, Divider } from '@mui/material';
+import {
+    Typography, Box, Card, CardContent, CardHeader, List, ListItem, ListItemText, Divider } from '@mui/material';
 import Navbar from "../components/Navbar.tsx";
 import AuthorizeView from "../components/AuthorizeView.tsx";
 
@@ -10,6 +11,7 @@ interface Artist {
     name: string;
     song: string;
     startingNumber: number;
+    imageUrl: string;
     subCompetitionId: string;
 }
 
@@ -82,7 +84,13 @@ function Schedule() {
                             <List>
                                 {subCompetition.artists.map((artist) => (
                                     <div key={artist.id}>
-                                        <ListItem sx={{textAlign: 'center'}}>
+                                        <ListItem sx={{ textAlign: 'center' }}>
+                                            {/* Show the artist’s image using Avatar */}
+                                            <img
+                                                src={artist.imageUrl}
+                                                alt={artist.name}
+                                                style={{ width: '150px', borderRadius: '2', marginRight: '16px' }}
+                                            />
                                             <ListItemText
                                                 primary={`${artist.startingNumber}. ${artist.song}`}
                                                 secondary={`Artist: ${artist.name}`}

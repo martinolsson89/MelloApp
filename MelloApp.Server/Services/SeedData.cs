@@ -29,7 +29,7 @@ public class SeedData
         await CreateAdminUser();
         //await CreateRandomUsers();
         //await CreateRandomSubcompetitions();
-        //await CreateRandomArtists();
+        await CreateRandomArtists();
     }
 
     private async Task CreateRoles()
@@ -159,6 +159,40 @@ public class SeedData
             "Ring baby ring", "This Dream of Mine", "Hate You So Much", "Love It!", "I'm Yours", "Sweet N' Psycho"
         };
 
+        string[] imgUrls = {
+    "https://melloappstorage.blob.core.windows.net/artist-pictures/1_thumbnail.jpg",
+    "https://melloappstorage.blob.core.windows.net/artist-pictures/2_thumbnail.jpeg",
+    "https://melloappstorage.blob.core.windows.net/artist-pictures/3_thumbnail.jpeg",
+    "https://melloappstorage.blob.core.windows.net/artist-pictures/4_thumbnail.jpeg",
+    "https://melloappstorage.blob.core.windows.net/artist-pictures/5_thumbnail.jpeg",
+    "https://melloappstorage.blob.core.windows.net/artist-pictures/6_thumbnail.jpeg",
+    "https://melloappstorage.blob.core.windows.net/artist-pictures/2_1_thumbnail.jpeg",
+    "https://melloappstorage.blob.core.windows.net/artist-pictures/2_2_thumbnail.jpeg",
+    "https://melloappstorage.blob.core.windows.net/artist-pictures/2_3_thumbnail.jpeg",
+    "https://melloappstorage.blob.core.windows.net/artist-pictures/2_4_thumbnail.jpeg",
+    "https://melloappstorage.blob.core.windows.net/artist-pictures/2_5_thumbnail.jpeg",
+    "https://melloappstorage.blob.core.windows.net/artist-pictures/2_6_thumbnail.jpeg",
+    "https://melloappstorage.blob.core.windows.net/artist-pictures/3_1_thumbnail.jpeg",
+    "https://melloappstorage.blob.core.windows.net/artist-pictures/3_2_thumbnail.jpeg",
+    "https://melloappstorage.blob.core.windows.net/artist-pictures/3_3_thumbnail.jpeg",
+    "https://melloappstorage.blob.core.windows.net/artist-pictures/3_4_thumbnail.jpeg",
+    "https://melloappstorage.blob.core.windows.net/artist-pictures/3_5_thumbnail.jpeg",
+    "https://melloappstorage.blob.core.windows.net/artist-pictures/3_6_thumbnail.jpeg",
+    "https://melloappstorage.blob.core.windows.net/artist-pictures/4_1_thumbnail.jpeg",
+    "https://melloappstorage.blob.core.windows.net/artist-pictures/4_2_thumbnail.jpg",
+    "https://melloappstorage.blob.core.windows.net/artist-pictures/4_3_thumbnail.jpeg",
+    "https://melloappstorage.blob.core.windows.net/artist-pictures/4_4_thumbnail.jpeg",
+    "https://melloappstorage.blob.core.windows.net/artist-pictures/4_5_thumbnail.jpeg",
+    "https://melloappstorage.blob.core.windows.net/artist-pictures/4_6_thumbnail.jpeg",
+    "https://melloappstorage.blob.core.windows.net/artist-pictures/5_1_thumbnail.jpg",
+    "https://melloappstorage.blob.core.windows.net/artist-pictures/5_2_thumbnail.jpeg",
+    "https://melloappstorage.blob.core.windows.net/artist-pictures/5_3_thumbnail.jpeg",
+    "https://melloappstorage.blob.core.windows.net/artist-pictures/5_4_thumbnail.jpeg",
+    "https://melloappstorage.blob.core.windows.net/artist-pictures/5_5_thumbnail.jpeg",
+    "https://melloappstorage.blob.core.windows.net/artist-pictures/5_6_thumbnail.jpeg",
+};
+
+
 
         if (_context.Artists.Any())
         {
@@ -185,8 +219,8 @@ public class SeedData
                 Name = artistName,
                 Song = songName,
                 StartingNumber = startingNumber,
-                SubCompetitionId = subCompetitions[subCompetitionIndex].Id
-
+                SubCompetitionId = subCompetitions[subCompetitionIndex].Id,
+                ImageUrl = imgUrls[i]
             };
 
             await _context.AddAsync(artist);
