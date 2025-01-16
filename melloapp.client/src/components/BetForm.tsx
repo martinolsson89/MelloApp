@@ -138,7 +138,7 @@ function BetForm({ subCompetitions, allArtists, user, onBetSubmitted }: BetFormP
       ) {
           setErrorMessage(
               <>
-                  I <strong>{subCompetition.name}</strong>, måste du välja <strong>max 2 artister</strong> till Final, <strong>max 1 artist</strong> till FinalKval, och <strong>max 3 artister</strong> som Åker Ut.
+                  I <strong>{subCompetition.name}</strong>, måste du välja <strong>2 artister</strong> till Final, <strong>1 artist</strong> till FinalKval, och <strong>3 artister</strong> som Åker Ut.
               </>
         );
         return;

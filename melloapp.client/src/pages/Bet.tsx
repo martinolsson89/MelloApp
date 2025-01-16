@@ -153,6 +153,21 @@ function Bet() {
                                 <Typography variant="h4" gutterBottom>
                                     Här fyller du i ditt tips!
                                 </Typography>
+                                        {/* Information Box */}
+                                        <Box
+                                            sx={{
+                                                p: 2,
+                                                mb: 2,
+                                                bgcolor: 'grey.100',
+                                                border: '1px solid #ccc',
+                                                borderRadius: 1
+                                            }}
+                                        >
+                                            <Typography variant="body1">
+                                                I <strong>varje deltävling</strong> väljer du <strong>2 artister</strong> som går direkt
+                                                till final, <strong>1 artist</strong> som går till finalkvalet och <strong>3 artister</strong> som åker ut.
+                                            </Typography>
+                                        </Box>
                                 <Typography variant="subtitle1" sx={{ mb: 3 }}>
                                     {randomSentence}
                                     {userData.firstName}?

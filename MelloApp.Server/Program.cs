@@ -79,7 +79,7 @@ namespace MelloApp.Server
             {
                 options.AddDefaultPolicy(policy =>
                 {
-                    policy.WithOrigins("https://localhost:5173", "https://app-melloapp-001.azurewebsites.net/") // Your frontend URL
+                    policy.WithOrigins("https://localhost:5173", "https://app-melloapp-001.azurewebsites.net/", "https://www.slaktkampen.se/", "https://slaktkampen.se/") // Your frontend URL
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials(); // If using cookies

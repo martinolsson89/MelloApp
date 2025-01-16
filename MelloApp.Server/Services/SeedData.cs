@@ -27,9 +27,9 @@ public class SeedData
     {
         await CreateRoles();
         await CreateAdminUser();
-        await CreateRandomUsers();
-        await CreateRandomSubcompetitions();
-        await CreateRandomArtists();
+        //await CreateRandomUsers();
+        //await CreateRandomSubcompetitions();
+        //await CreateRandomArtists();
     }
 
     private async Task CreateRoles()
@@ -47,10 +47,10 @@ public class SeedData
 
     private async Task CreateAdminUser()
     {
-        string firstName = "AdminMartin";
-        string lastName = "AdminOlsson";
-        string email = "admin@admin.com";
-        string password = "asdf12";
+        string firstName = "Mello";
+        string lastName = "Admin";
+        string email = "admin@slaktkampen.se";
+        string password = "sadiomane123";
 
         if (await _userManager.FindByEmailAsync(email) == null)
         {
@@ -155,7 +155,7 @@ public class SeedData
             "Upp i luften", "Kamikaze Life", "Voice of the Silent", "Hush Hush", "Vår första gång", "Den känslan",
             "Funniest Thing", "Don Juan", "Show Me What Love Is", "On and On and On", "The Heart of a Swedish Cowboy", "Salute",
             "Believe Me", "24K Gold", "Rädda mig", "YIHAA", "Teardrops", "Life Again",
-            "Vicious", "Bara du är där", "Yours", "Bara bada bastu", "De Good Be Better", "Revolution",
+            "Vicious", "Bara du är där", "Yours", "Bara bada bastu", "Do Good Be Better", "Revolution",
             "Ring baby ring", "This Dream of Mine", "Hate You So Much", "Love It!", "I'm Yours", "Sweet N' Psycho"
         };
 
