@@ -29,7 +29,7 @@ public class SeedData
         await CreateAdminUser();
         //await CreateRandomUsers();
         //await CreateRandomSubcompetitions();
-        await CreateRandomArtists();
+        //await CreateRandomArtists();
     }
 
     private async Task CreateRoles()
