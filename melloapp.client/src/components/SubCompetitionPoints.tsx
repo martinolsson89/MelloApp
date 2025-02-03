@@ -68,7 +68,7 @@ function SubCompetitionPoints({ subCompetitionData }: SubCompetitionProps) {
                     />
                   </ListItemAvatar>
                   <ListItemText
-                    primary={`${idx + 1}. ${userScore.firstName}${userScore.firstName.toLowerCase() === "frida" ? ` ${userScore.lastName.charAt(0).toUpperCase()}` : ''}`}
+                    primary={`${userScore.firstName}${userScore.firstName.toLowerCase() === "frida" ? ` ${userScore.lastName.charAt(0).toUpperCase()}` : ''}`}
                     secondary={
                       <Typography variant="body2" fontWeight="bold">
                         Poäng: {userScore.points}

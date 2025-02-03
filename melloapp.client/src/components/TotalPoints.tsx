@@ -27,9 +27,31 @@ function TotalPoints({ leaderboardData }: LeaderboardProps) {
     // Sort so the top scorer is first
     filteredLeaderboardData.sort((a, b) => b.points - a.points);
 
+    // Determine the leader's points (all entries with these points get crowned)
     const leaderPoints = filteredLeaderboardData.length > 0 ? filteredLeaderboardData[0].points : 0;
+
+    // Calculate leader difference (will be 0 if the top two are tied)
     const secondPlacePoints = filteredLeaderboardData.length > 1 ? filteredLeaderboardData[1].points : 0;
-    const leaderDifference = secondPlacePoints > 0 ? leaderPoints - secondPlacePoints : 0;
+    const leaderDifference = leaderPoints - secondPlacePoints;
+
+    // Compute the ranking with ties. If two users share the same score,
+    // they get the same rank and the next rank is simply the count of distinct scores + 1.
+    let currentRank = 0;
+    let previousPoints: number | null = null;
+    const leaderboardWithRank = filteredLeaderboardData.map((entry, index) => {
+        if (index === 0) {
+            currentRank = 1;
+        } else {
+            if (entry.points === previousPoints) {
+                // same rank as previous
+            } else {
+                // Increase rank by 1 (only count distinct scores)
+                currentRank++;
+            }
+        }
+        previousPoints = entry.points;
+        return { entry, rank: currentRank };
+    });
 
     return (
         <Box
@@ -50,22 +72,25 @@ function TotalPoints({ leaderboardData }: LeaderboardProps) {
             </Box>
             <Box sx={{ px: 3 }}>
                 <List>
-                    {filteredLeaderboardData.map((entry, index) => {
+                    {leaderboardWithRank.map(({ entry, rank }, index) => {
+                        // Calculate difference text. Hide if no difference.
                         let differenceText = '';
                         let differenceColor: string | undefined = undefined;
                         if (index === 0 && filteredLeaderboardData.length > 1) {
-                            // Leader: show how many points above 2nd place
-                            differenceText = `(+${leaderDifference})`;
-                            differenceColor = 'green';
+                            if (leaderDifference > 0) {
+                                differenceText = `(+${leaderDifference})`;
+                                differenceColor = 'green';
+                            }
                         } else if (index > 0) {
-                            // Others: show how many points behind the leader
                             const diff = leaderPoints - entry.points;
-                            differenceText = `(-${diff})`;
-                            differenceColor = 'red';
+                            if (diff > 0) {
+                                differenceText = `(-${diff})`;
+                                differenceColor = 'red';
+                            }
                         }
 
                         return (
-                            <div key={index}>
+                            <div key={entry.id}>
                                 <ListItem
                                     sx={{
                                         backgroundColor: 'white',
@@ -85,7 +110,7 @@ function TotalPoints({ leaderboardData }: LeaderboardProps) {
                                         fontWeight="bold"
                                         sx={{ minWidth: '30px', textAlign: 'center' }}
                                     >
-                                        {`${index + 1}`}
+                                        {rank}
                                     </Typography>
 
                                     <ListItemAvatar>
@@ -96,14 +121,15 @@ function TotalPoints({ leaderboardData }: LeaderboardProps) {
                                                 horizontal: 'right',
                                             }}
                                             badgeContent={
-                                                index === 0 ? (
+                                                // Give a crown to any entry that ties for first.
+                                                entry.points === leaderPoints ? (
                                                     <Box
                                                         component="img"
                                                         src={kingCrown}
                                                         alt="Crown"
                                                         sx={{
                                                             position: 'absolute',
-                                                            top: -43, 
+                                                            top: -43,
                                                             right: 22,
                                                             width: 40,
                                                             height: 40,
@@ -119,7 +145,7 @@ function TotalPoints({ leaderboardData }: LeaderboardProps) {
                                                 sx={{
                                                     width: 86,
                                                     height: 86,
-                                                    border: index === 0 ? '3px solid gold' : '1px solid black',
+                                                    border: entry.points === leaderPoints ? '3px solid gold' : '1px solid black',
                                                     boxSizing: 'border-box',
                                                 }}
                                             />
@@ -127,14 +153,10 @@ function TotalPoints({ leaderboardData }: LeaderboardProps) {
                                     </ListItemAvatar>
 
                                     {/* Name */}
-                                    {entry.user.firstName.toLowerCase() === "frida" ? (
+                                    {entry.user.firstName.toLowerCase() === 'frida' ? (
                                         <ListItemText
                                             primary={
-                                                <Typography
-                                                    variant="body1"
-                                                    fontWeight="bold"
-                                                    sx={{ ml: 2 }}
-                                                >
+                                                <Typography variant="body1" fontWeight="bold" sx={{ ml: 2 }}>
                                                     {entry.user.firstName} {entry.user.lastName.charAt(0).toUpperCase()}
                                                 </Typography>
                                             }
@@ -143,11 +165,7 @@ function TotalPoints({ leaderboardData }: LeaderboardProps) {
                                     ) : (
                                         <ListItemText
                                             primary={
-                                                <Typography
-                                                    variant="body1"
-                                                    fontWeight="bold"
-                                                    sx={{ ml: 2 }}
-                                                >
+                                                <Typography variant="body1" fontWeight="bold" sx={{ ml: 2 }}>
                                                     {entry.user.firstName}
                                                 </Typography>
                                             }

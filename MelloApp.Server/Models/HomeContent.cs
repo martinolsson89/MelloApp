@@ -10,6 +10,12 @@ public class HomeContent
     [JsonPropertyName("description")]
     public string Description { get; set; }
 
+    [JsonPropertyName("linkUrl")]
+    public string LinkUrl { get; set; }
+
+    [JsonPropertyName("linkText")]
+    public string LinkText { get; set; }
+
     [JsonPropertyName("imageUrl")]
     public string ImageUrl { get; set; }
 }

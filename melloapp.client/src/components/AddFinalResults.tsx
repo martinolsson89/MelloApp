@@ -74,7 +74,7 @@ function AddFinalResults() {
           console.log(data);
 
           try {
-              const response = await fetch('https://app-melloapp-001.azurewebsites.net/ResultOfSubCompetition/batch', {
+              const response = await fetch('https://www.slaktkampen.se/ResultOfSubCompetition/batch', {
               method: 'PUT',
               headers: {
                 'Content-Type': 'application/json'

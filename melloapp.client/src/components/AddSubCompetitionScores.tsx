@@ -60,7 +60,7 @@ function AddSubCompetitionScores() {
     }
 
     const handleSubmit = () => {
-        fetch(`https://app-melloapp-001.azurewebsites.net/Points/${selectedSubCompetitionId}`, {
+        fetch(`https://www.slaktkampen.se/Points/${selectedSubCompetitionId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

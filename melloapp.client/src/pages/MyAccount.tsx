@@ -55,11 +55,11 @@ function MyAccount() {
     const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
             const file = event.target.files[0];
-            const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/heic', 'image/heif']; // Common image formats
+            const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/heic', 'image/heif']; // Common image formats
             const maxSize = 5 * 1024 * 1024; // 5 MB in bytes
 
             if (!validTypes.includes(file.type)) {
-                alert('Ogiltig filtyp. Vänligen välj en bild i JPEG, PNG, GIF, WEBP, eller HEIC-format.');
+                alert('Ogiltig filtyp. Vänligen välj en bild i JPEG, JPG, PNG, GIF, WEBP, eller HEIC-format.');
                 return;
             }
 

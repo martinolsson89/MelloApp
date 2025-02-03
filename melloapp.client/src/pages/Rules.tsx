@@ -60,7 +60,7 @@ function Rules() {
                         <span style={{ fontWeight: 'bold' }}>När stänger tippningen?</span>
                     </Typography>
                     <Typography variant="body1" align="left" sx={{ mb: 2 }}>
-                        <span style={{ fontWeight: 'bold' }}>Svar:</span> Du kan tippa fram till till och med <span style={{ fontWeight: 'bold' }}>31 januari.</span>
+                        <span style={{ fontWeight: 'bold' }}>Svar:</span> Du kan tippa fram till till och med <span style={{ fontWeight: 'bold' }}>30 januari.</span>
                     </Typography>
                     <Typography variant="body1" align="left" sx={{ mb: 2, textDecoration: 'underline' }}>
                         <span style={{ fontWeight: 'bold' }}>Vart ser jag mina poäng?</span>
