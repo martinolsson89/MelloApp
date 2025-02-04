@@ -30,6 +30,8 @@ function AddFinalScore() {
         navigate(path);
     };
 
+    //https://localhost:7263/
+    //https://www.slaktkampen.se/
 
     const handleSubmit = () => {
         fetch(`https://www.slaktkampen.se/Points/CalculatePointsFinal`, {

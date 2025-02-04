@@ -24,8 +24,13 @@ function TotalPoints({ leaderboardData }: LeaderboardProps) {
     // Filter out users who haven't made bets
     const filteredLeaderboardData = leaderboardData.filter((entry) => entry.user.hasMadeBet);
 
-    // Sort so the top scorer is first
-    filteredLeaderboardData.sort((a, b) => b.points - a.points);
+    // Sort by points descending and then by firstName (ascending) if points are equal.
+    filteredLeaderboardData.sort((a, b) => {
+        if (a.points === b.points) {
+            return a.user.firstName.localeCompare(b.user.firstName);
+        }
+        return b.points - a.points;
+    });
 
     // Determine the leader's points (all entries with these points get crowned)
     const leaderPoints = filteredLeaderboardData.length > 0 ? filteredLeaderboardData[0].points : 0;

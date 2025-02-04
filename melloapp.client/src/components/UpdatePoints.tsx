@@ -37,6 +37,8 @@ const UpdatePointsForm = () => {
         };
         console.log('Submitting:', formData);
 
+        //https://localhost:7263/
+        //https://www.slaktkampen.se/
 
         try {
             const response = await fetch('https://www.slaktkampen.se/Points/update-points-by-details', {
