@@ -20,7 +20,7 @@ namespace MelloApp.Server
             var builder = WebApplication.CreateBuilder(args);
 
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException();
-            builder.Services.AddDbContext<ApplicationDbContext>(options => 
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
 
             //Repositories
@@ -132,11 +132,11 @@ namespace MelloApp.Server
             app.MapFallbackToFile("/index.html");
 
             // Seed data
-            using (var scope = app.Services.CreateScope())
-            {
-                var seedData = scope.ServiceProvider.GetRequiredService<SeedData>();
-                await seedData.InitializeData();
-            }
+            //using (var scope = app.Services.CreateScope())
+            //{
+            //    var seedData = scope.ServiceProvider.GetRequiredService<SeedData>();
+            //    await seedData.InitializeData();
+            //}
 
             app.Run();
         }
