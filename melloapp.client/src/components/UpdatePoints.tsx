@@ -41,7 +41,7 @@ const UpdatePointsForm = () => {
         //https://www.slaktkampen.se/
 
         try {
-            const response = await fetch('https://www.slaktkampen.se/Points/update-points-by-details', {
+            const response = await fetch('/Points/update-points-by-details', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

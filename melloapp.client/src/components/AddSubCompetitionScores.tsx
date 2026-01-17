@@ -59,11 +59,8 @@ function AddSubCompetitionScores() {
         setShowButton(true);
     }
 
-    //https://localhost:7263/
-    //https://www.slaktkampen.se/
-
     const handleSubmit = () => {
-        fetch(`https://www.slaktkampen.se/Points/${selectedSubCompetitionId}`, {
+        fetch(`/Points/${selectedSubCompetitionId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

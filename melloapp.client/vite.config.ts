@@ -211,7 +211,10 @@ export default defineConfig({
                 target: 'https://localhost:7263/',
                 secure: false
             },
-
+            '^/Points': {
+                target: 'https://localhost:7263/',
+                secure: false
+            },
 
         },
         /*host: '192.168.86.103',*/

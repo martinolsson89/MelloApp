@@ -74,7 +74,7 @@ function AddFinalResults() {
           console.log(data);
 
           try {
-              const response = await fetch('https://www.slaktkampen.se/ResultOfSubCompetition/batch', {
+              const response = await fetch('/ResultOfSubCompetition/batch', {
               method: 'PUT',
               headers: {
                 'Content-Type': 'application/json'
@@ -82,7 +82,7 @@ function AddFinalResults() {
               credentials: 'include',
               body: JSON.stringify(data)
             });
-      
+
             if (response.ok) {
               const result = await response.json();
               console.log('Results saved successfully:', result);

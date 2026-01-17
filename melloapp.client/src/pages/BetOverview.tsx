@@ -469,7 +469,7 @@ function BetOverview() {
                                 sx={{ backgroundColor: 'green', boxShadow: 2, p: 2, textAlign: 'center' }}
                             >
                                 <Typography variant="h5" fontWeight='bold' color='white'>
-                                    Final: 2025-03-08 20:00 - Stockholm
+                                    Final: 2025-03-07 20:00 - Stockholm
                                 </Typography>
                             </AccordionSummary>
                             <AccordionDetails>

@@ -51,7 +51,7 @@ function Rules() {
                         Längst ner väljer du vilken artist/låt som kommer vinna resp. komma tvåa i finalen. När du är nöjd klickar du på knappen: <span style={{ fontWeight: 'bold' }}>Skicka in tips</span>, klart!
                     </Typography>
                     <Typography variant="body1" align="left" sx={{ mb: 2, textDecoration: 'underline' }}>
-                        <span style={{ fontWeight: 'bold' }}>Vart ser jag hur de andra i släkten har tippat?</span>
+                        <span style={{ fontWeight: 'bold' }}>Vart ser jag hur de andra har tippat?</span>
                     </Typography>
                     <Typography variant="body1" align="left" sx={{ mb: 2 }}>
                         <span style={{ fontWeight: 'bold' }}>Svar:</span> Du klickar antingen på<span style={{ fontWeight: 'bold' }}><Button onClick={() => handleNavigation('/bet-overview')}>Tipshörnan </Button></span> här eller i menyn. Här uppdateras också resultaten efter varje deltävling och finalen.
@@ -60,7 +60,7 @@ function Rules() {
                         <span style={{ fontWeight: 'bold' }}>När stänger tippningen?</span>
                     </Typography>
                     <Typography variant="body1" align="left" sx={{ mb: 2 }}>
-                        <span style={{ fontWeight: 'bold' }}>Svar:</span> Du kan tippa fram till till och med <span style={{ fontWeight: 'bold' }}>30 januari.</span>
+                        <span style={{ fontWeight: 'bold' }}>Svar:</span> Du kan tippa fram till till och med <span style={{ fontWeight: 'bold' }}> Söndag 25 januari.</span>
                     </Typography>
                     <Typography variant="body1" align="left" sx={{ mb: 2, textDecoration: 'underline' }}>
                         <span style={{ fontWeight: 'bold' }}>Vart ser jag mina poäng?</span>
@@ -104,10 +104,10 @@ function Rules() {
                         • Välj <span style={{ fontWeight: 'bold' }}>3 artister/låtar</span> som kommer <span style={{ fontWeight: 'bold' }}>Åka Ut</span> i varje delfinal.
                     </Typography>
                     <Typography variant="body1" align="left" sx={{ mb: 2 }}>
-                        • Välj den <span style={{ fontWeight: 'bold' }}>artist/låt</span> som du tror kommer vinna hela Svenska Melodifestivalen i <span style={{ fontWeight: 'bold' }}>Finalen</span> den 8/3
+                        • Välj den <span style={{ fontWeight: 'bold' }}>artist/låt</span> som du tror kommer vinna hela Svenska Melodifestivalen i <span style={{ fontWeight: 'bold' }}>Finalen</span> den 7/3
                     </Typography>
                     <Typography variant="body1" align="left" sx={{ mb: 4 }}>
-                        • Välj den <span style={{ fontWeight: 'bold' }}>artist/låt</span> som du tror kommer att komma <span style={{ fontWeight: 'bold' }}>tvåa i Finalen</span> den 8/3
+                        • Välj den <span style={{ fontWeight: 'bold' }}>artist/låt</span> som du tror kommer att komma <span style={{ fontWeight: 'bold' }}>tvåa i Finalen</span> den 7/3
                     </Typography>
 
                     <Divider sx={{ my: 2 }} />
@@ -126,10 +126,10 @@ function Rules() {
                         • För varje rätt <span style={{ fontWeight: 'bold' }}>Åker ut</span>, får du <span style={{ fontWeight: 'bold' }}>1 poäng</span>
                     </Typography>
                     <Typography variant="body1" align="left" sx={{ mb: 1 }}>
-                        • För den rätta artist/låt som <span style={{ fontWeight: 'bold' }}>vinner i finalen</span> den 8/3, får du <span style={{ fontWeight: 'bold' }}>10 poäng</span>
+                        • För den rätta artist/låt som <span style={{ fontWeight: 'bold' }}>vinner i finalen</span> den 7/3, får du <span style={{ fontWeight: 'bold' }}>10 poäng</span>
                     </Typography>
                     <Typography variant="body1" align="left">
-                        • För den rätta artist/låt som <span style={{ fontWeight: 'bold' }}>kommer tvåa i finalen</span> den 8/3, får du <span style={{ fontWeight: 'bold' }}>8 poäng</span>
+                        • För den rätta artist/låt som <span style={{ fontWeight: 'bold' }}>kommer tvåa i finalen</span> den 7/3, får du <span style={{ fontWeight: 'bold' }}>8 poäng</span>
                     </Typography>
                 </Box>
             </>

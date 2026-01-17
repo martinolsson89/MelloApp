@@ -34,7 +34,7 @@ function AddFinalScore() {
     //https://www.slaktkampen.se/
 
     const handleSubmit = () => {
-        fetch(`https://www.slaktkampen.se/Points/CalculatePointsFinal`, {
+        fetch(`/Points/CalculatePointsFinal`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

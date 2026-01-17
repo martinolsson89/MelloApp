@@ -37,13 +37,13 @@ function Navbar() {
         { label: 'Ledartavla', path: '/leaderboard' },
         { label: 'Mitt konto', path: '/my-account' }
     ];
-    
+
 
   return (
       <AppBar position="static" sx={{ backgroundColor: 'rgba(246, 66, 173, 0.7)' }}>
           <Toolbar>
               <Typography variant="h6" sx={{ flexGrow: 1, cursor: 'pointer' }} onClick={() => handleNavigation('/')}>
-                  Släktkampen 2025
+                  Släktkampen 2026
               </Typography>
               {/* Desktop Navigation */}
               {isLoggedIn && (
@@ -53,7 +53,7 @@ function Navbar() {
                           {item.label}
                       </Button>
                   ))}
-                  
+
                    {isAdmin && (
                         <Button color="inherit" onClick={() => handleNavigation('/admin-center')}>
                             Admin
@@ -64,7 +64,7 @@ function Navbar() {
                   </LogoutLink>
               </Box>
               )}
-            
+
               {/* Mobile Navigation Menu Icon */}
               <IconButton
                   color="inherit"
@@ -74,7 +74,7 @@ function Navbar() {
               >
                   <MenuIcon />
               </IconButton>
-              
+
               {/* Mobile Menu */}
               {isLoggedIn && (
               <Menu
