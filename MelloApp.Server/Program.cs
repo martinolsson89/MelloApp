@@ -126,6 +126,7 @@ namespace MelloApp.Server
 
             app.UseCors(); // Enable CORS
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
 
