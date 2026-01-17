@@ -1,4 +1,3 @@
-
 using System.Text.Json.Serialization;
 using MelloApp.Server.Data;
 using MelloApp.Server.Interface;
@@ -38,7 +37,7 @@ namespace MelloApp.Server
             //Services
             builder.Services.AddScoped<PointsCalculationService>();
             builder.Services.AddScoped<LeaderboardService>();
-            builder.Services.AddTransient<IEmailSender, SendGridEmailSender>();
+            builder.Services.AddTransient<IEmailSender, GmailSmtpEmailSender>();
 
 
 
@@ -68,6 +67,7 @@ namespace MelloApp.Server
             });
 
 
+
             // Add services to the container.
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -79,7 +79,7 @@ namespace MelloApp.Server
             {
                 options.AddDefaultPolicy(policy =>
                 {
-                    policy.WithOrigins("https://localhost:5173", "https://app-melloapp-001.azurewebsites.net/", "https://www.slaktkampen.se/", "https://slaktkampen.se/") // Your frontend URL
+                    policy.WithOrigins("https://localhost:5173") // Your frontend URL
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials(); // If using cookies
@@ -118,6 +118,8 @@ namespace MelloApp.Server
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
+                builder.Configuration.AddUserSecrets<Program>();
+
             }
 
             app.UseHttpsRedirection();
@@ -132,11 +134,11 @@ namespace MelloApp.Server
             app.MapFallbackToFile("/index.html");
 
             // Seed data
-            //using (var scope = app.Services.CreateScope())
-            //{
-            //    var seedData = scope.ServiceProvider.GetRequiredService<SeedData>();
-            //    await seedData.InitializeData();
-            //}
+            using (var scope = app.Services.CreateScope())
+            {
+                var seedData = scope.ServiceProvider.GetRequiredService<SeedData>();
+                await seedData.InitializeData();
+            }
 
             app.Run();
         }

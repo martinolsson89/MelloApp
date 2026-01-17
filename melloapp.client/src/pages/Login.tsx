@@ -1,7 +1,7 @@
 ﻿import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TextField, Checkbox, FormControlLabel, Typography, Button, Box, Alert } from '@mui/material';
-import imageUrl from '../assets/sweden-melodifestivalen-2025-logo.jpg';
+import imageUrl from '../assets/Melodifestivalen_2026_-_logotyp.jpg';
 import { userService } from '../services/UserService';
 
 function Login() {
@@ -29,7 +29,7 @@ function Login() {
             setRememberme(e.target.checked);
         }
     };
-    
+
 
     // handle submit event for the form
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -89,7 +89,7 @@ function Login() {
                 mt: 6,
                 boxShadow: 3,
                 borderRadius: 2,
-                bgcolor: 'rgba(255, 255, 255, 0.7)',
+                bgcolor: 'white',
             }}
         >
             <Box component="img" src={imageUrl} alt="Login Logo" sx={{ width: '100%', mb: 2, objectFit: 'contain' }} />

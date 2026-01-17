@@ -15,7 +15,7 @@ const ForgotPassword: React.FC = () => {
         event.preventDefault();
         setMessage(null);
         setError(null);
-    
+
         try {
             const response = await fetch('/Account/forgot-password', {
                 method: 'POST',
@@ -24,7 +24,7 @@ const ForgotPassword: React.FC = () => {
                 },
                 body: JSON.stringify({ email }), // Convert email to JSON object
             });
-    
+
             if (response.ok) {
                 const data = await response.json();
                 setMessage(data.message || "Om mejlen är registrerad skickas en återställningslänk.");
@@ -36,7 +36,7 @@ const ForgotPassword: React.FC = () => {
             setError("Kunde inte ansluta till servern, prova igen.");
         }
     };
-    
+
 
     return (
         <Box
@@ -51,7 +51,7 @@ const ForgotPassword: React.FC = () => {
                 component="form"
                 onSubmit={handleSubmit}
                 sx={{ width: "100%", maxWidth: 400, textAlign: "center", borderRadius: 2,
-                    bgcolor: 'rgba(255, 255, 255, 0.7)', p: 3, mt: 6, boxShadow: 3 }}
+                    bgcolor: 'white', p: 3, mt: 6, boxShadow: 3 }}
             >
                 <Typography variant="h4" gutterBottom>
                     Återställ lösenord

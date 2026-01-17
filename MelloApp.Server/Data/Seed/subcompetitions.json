@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Deltävling 1",
+    "location": "Linköping",
+    "date": "2026-01-31T20:00:00"
+  },
+  {
+    "name": "Deltävling 2",
+    "location": "Göteborg",
+    "date": "2026-02-07T20:00:00"
+  },
+  {
+    "name": "Deltävling 3",
+    "location": "Kristianstad",
+    "date": "2026-02-14T20:00:00"
+  },
+  {
+    "name": "Deltävling 4",
+    "location": "Malmö",
+    "date": "2026-02-21T20:00:00"
+  },
+  {
+    "name": "Deltävling 5",
+    "location": "Sundsvall",
+    "date": "2026-02-28T20:00:00"
+  },
+  {
+    "name": "Final",
+    "location": "Stockholm",
+    "date": "2026-03-07T20:00:00"
+  }
+]

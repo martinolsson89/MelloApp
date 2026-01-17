@@ -38,10 +38,10 @@ function Register() {
         const { name, value } = e.target;
          if (name === 'firstName') {
         setFirstName(value);
-        } 
+        }
          else if (name === 'lastName') {
         setLastName(value);
-        } 
+        }
           else if (name === 'email') {
             setEmail(value);
         } else if (name === 'password') {
@@ -101,7 +101,7 @@ function Register() {
     };
 
     return (
-        <Box sx={{ maxWidth: 400, mx: 'auto', mt: 6, p: 3, boxShadow: 3, borderRadius: 2, bgcolor: 'rgba(255, 255, 255, 0.7)' }}>
+        <Box sx={{ maxWidth: 400, mx: 'auto', mt: 6, p: 3, boxShadow: 3, borderRadius: 2, bgcolor: 'white' }}>
             <Typography variant="h5" align="center" gutterBottom>
                 Registrera ny användare
             </Typography>
@@ -156,7 +156,7 @@ function Register() {
                     margin="normal"
                     required
                 />
-                
+
                     <Box display="flex" flexDirection="column" alignItems="center" gap={2} mt={2}>
                     {isRegistrationEnabled && (
                     <Button variant="contained" color="primary" type="submit" fullWidth>
@@ -167,7 +167,7 @@ function Register() {
                         Gå till logga in
                     </Button>
                 </Box>
-                
+
             </form>
             {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
             {success && <Alert severity='success' sx={{mt: 2}}>{success}</Alert>}

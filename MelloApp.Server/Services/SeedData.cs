@@ -4,7 +4,8 @@ using MelloApp.Server.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
-using EnvironmentName = Microsoft.AspNetCore.Hosting.EnvironmentName;
+using System.Text.Json;
+
 
 namespace MelloApp.Server.Services;
 
@@ -14,22 +15,29 @@ public class SeedData
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ApplicationDbContext _context;
     private readonly IWebHostEnvironment _env;  // store environment
+    private readonly IConfiguration _config;
+    private readonly JsonSerializerOptions _jsonOptions = new()
+    {
+        PropertyNameCaseInsensitive = true
+    };
 
-    public SeedData(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, ApplicationDbContext context, IWebHostEnvironment env)
+    public SeedData(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager,
+        ApplicationDbContext context, IWebHostEnvironment env, IConfiguration config)
     {
         _roleManager = roleManager;
         _userManager = userManager;
         _context = context;
         _env = env;
+        _config = config;
     }
 
     public async Task InitializeData()
     {
         await CreateRoles();
         await CreateAdminUser();
-        //await CreateRandomUsers();
-        //await CreateRandomSubcompetitions();
-        //await CreateRandomArtists();
+        await CreateRandomUsers();
+        await CreateRandomSubcompetitions();
+        await CreateRandomArtists();
     }
 
     private async Task CreateRoles()
@@ -47,14 +55,20 @@ public class SeedData
 
     private async Task CreateAdminUser()
     {
+
+        var email = _config["SeedAdmin:Email"];
+        var password = _config["SeedAdmin:Password"];
         string firstName = "Mello";
         string lastName = "Admin";
-        string email = "admin@slaktkampen.se";
-        string password = "sadiomane123";
 
-        if (await _userManager.FindByEmailAsync(email) == null)
+        if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+            return;
+
+       var user = await _userManager.FindByEmailAsync(email);
+
+        if (user is null)
         {
-            var user = new ApplicationUser
+            user = new ApplicationUser
             {
                 FirstName = firstName,
                 LastName = lastName,
@@ -73,8 +87,8 @@ public class SeedData
         string[] firstNames = { "Frida", "Lena", "Eva", "Ove"};
         string[] lastNames = { "Schylström", "Schylström", "Viberg", "Viberg" };
 
-        
-        var defaultAvatarBlobUrl = "https://melloappstorage.blob.core.windows.net/profile-pictures/default-avatar.png";
+
+        var defaultAvatarBlobUrl = "https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg";
 
         for (int i = 0; i < firstNames.Length; i++)
         {
@@ -104,135 +118,85 @@ public class SeedData
 
     private async Task CreateRandomSubcompetitions()
     {
-        string[] competitionNames = { "Deltävling 1", "Deltävling 2", "Deltävling 3", "Deltävling 4", "Deltävling 5"};
-        string[] locationNames = { "Luleå", "Göteborg", "Västerås", "Malmö", "Jönköping"};
-
-        // Dates for the subcompetitions
-        DateTime[] competitionDates = { new DateTime(2025, 2, 1), new DateTime(2025, 2, 8), new DateTime(2025, 2, 15), new DateTime(2025, 2, 22), new DateTime(2025, 3, 1) };
-
-        // Time for the subcompetitions
-        TimeSpan competitionTime = new TimeSpan(20, 0, 0); // 8 PM
-
         // Add subcompetitions with names, dates and locations to the database if subcompetitions entity is empty
         if (_context.SubCompetitions.Any())
         {
             return;
         }
 
+        var items = await LoadSeedAsync<SubCompetitionSeedDto>(
+        "Data/Seed/subcompetitions.json"
+    );
 
-
-        for (int i = 0; i < competitionNames.Length; i++)
+        var entities = items.Select(x => new SubCompetition
         {
-            string competitionName = $"{competitionNames[i]}";
-            DateTime competitionDateTime = competitionDates[i].Date + competitionTime;
-            string competitionLocation = $"{locationNames[i]}";
+            Name = x.Name,
+            Location = x.Location,
+            Date = x.Date
+        });
 
-            var subCompetition = new SubCompetition
-            {
-                Name = competitionName,
-                Date = competitionDateTime,
-                Location = competitionLocation
-            };
-
-            await _context.AddAsync(subCompetition);
-            await _context.SaveChangesAsync();
-        }
+        await _context.SubCompetitions.AddRangeAsync(entities);
+        await _context.SaveChangesAsync();
     }
 
     private async Task CreateRandomArtists()
     {
-        // Add code here to create 30 random artists with names
-
-        string[] artistNames = {
-            "Albin Johnsén feat. Pa", "Maja Ivarsson", "John Lundvik", "Meira Omar", "Adrian Macéus", "Linnea Henriksson",
-            "Nomi Tales", "SCHLAGERZ", "Erik Segerstedt", "Klara Hammarström", "Fredrik Lundman", "Kaliffa",
-            "Greczula", "Malou Prytz", "Björn Holmgren", "Dolly Style", "Angelino", "Annika Wickihalder",
-            "Andreas Lundstedt", "Ella Tiritiello", "Tennessee Tears", "KAJ", "AmenA", "Måns Zelmerlöw", 
-            "Arvingarna", "Arwin", "Saga Ludvigsson", "Victoria Silvstedt", "Vilhelm Buchaus", "SCARLET"
-        };
-
-        string[] songNames = {
-            "Upp i luften", "Kamikaze Life", "Voice of the Silent", "Hush Hush", "Vår första gång", "Den känslan",
-            "Funniest Thing", "Don Juan", "Show Me What Love Is", "On and On and On", "The Heart of a Swedish Cowboy", "Salute",
-            "Believe Me", "24K Gold", "Rädda mig", "YIHAA", "Teardrops", "Life Again",
-            "Vicious", "Bara du är där", "Yours", "Bara bada bastu", "Do Good Be Better", "Revolution",
-            "Ring baby ring", "This Dream of Mine", "Hate You So Much", "Love It!", "I'm Yours", "Sweet N' Psycho"
-        };
-
-        string[] imgUrls = {
-    "https://melloappstorage.blob.core.windows.net/artist-pictures/1_thumbnail.jpg",
-    "https://melloappstorage.blob.core.windows.net/artist-pictures/2_thumbnail.jpeg",
-    "https://melloappstorage.blob.core.windows.net/artist-pictures/3_thumbnail.jpeg",
-    "https://melloappstorage.blob.core.windows.net/artist-pictures/4_thumbnail.jpeg",
-    "https://melloappstorage.blob.core.windows.net/artist-pictures/5_thumbnail.jpeg",
-    "https://melloappstorage.blob.core.windows.net/artist-pictures/6_thumbnail.jpeg",
-    "https://melloappstorage.blob.core.windows.net/artist-pictures/2_1_thumbnail.jpeg",
-    "https://melloappstorage.blob.core.windows.net/artist-pictures/2_2_thumbnail.jpeg",
-    "https://melloappstorage.blob.core.windows.net/artist-pictures/2_3_thumbnail.jpeg",
-    "https://melloappstorage.blob.core.windows.net/artist-pictures/2_4_thumbnail.jpeg",
-    "https://melloappstorage.blob.core.windows.net/artist-pictures/2_5_thumbnail.jpeg",
-    "https://melloappstorage.blob.core.windows.net/artist-pictures/2_6_thumbnail.jpeg",
-    "https://melloappstorage.blob.core.windows.net/artist-pictures/3_1_thumbnail.jpeg",
-    "https://melloappstorage.blob.core.windows.net/artist-pictures/3_2_thumbnail.jpeg",
-    "https://melloappstorage.blob.core.windows.net/artist-pictures/3_3_thumbnail.jpeg",
-    "https://melloappstorage.blob.core.windows.net/artist-pictures/3_4_thumbnail.jpeg",
-    "https://melloappstorage.blob.core.windows.net/artist-pictures/3_5_thumbnail.jpeg",
-    "https://melloappstorage.blob.core.windows.net/artist-pictures/3_6_thumbnail.jpeg",
-    "https://melloappstorage.blob.core.windows.net/artist-pictures/4_1_thumbnail.jpeg",
-    "https://melloappstorage.blob.core.windows.net/artist-pictures/4_2_thumbnail.jpg",
-    "https://melloappstorage.blob.core.windows.net/artist-pictures/4_3_thumbnail.jpeg",
-    "https://melloappstorage.blob.core.windows.net/artist-pictures/4_4_thumbnail.jpeg",
-    "https://melloappstorage.blob.core.windows.net/artist-pictures/4_5_thumbnail.jpeg",
-    "https://melloappstorage.blob.core.windows.net/artist-pictures/4_6_thumbnail.jpeg",
-    "https://melloappstorage.blob.core.windows.net/artist-pictures/5_1_thumbnail.jpg",
-    "https://melloappstorage.blob.core.windows.net/artist-pictures/5_2_thumbnail.jpeg",
-    "https://melloappstorage.blob.core.windows.net/artist-pictures/5_3_thumbnail.jpeg",
-    "https://melloappstorage.blob.core.windows.net/artist-pictures/5_4_thumbnail.jpeg",
-    "https://melloappstorage.blob.core.windows.net/artist-pictures/5_5_thumbnail.jpeg",
-    "https://melloappstorage.blob.core.windows.net/artist-pictures/5_6_thumbnail.jpeg",
-};
-
-
-
         if (_context.Artists.Any())
         {
             return;
         }
 
+        var artistDtos = await LoadSeedAsync<ArtistSeedDto>(
+        "Data/Seed/artists.json"
+        );
 
-        var subCompetitions = await _context.SubCompetitions
-            .OrderBy(sc => sc.Date)
-            .ToListAsync();
+        // Make sure subcompetitions exist
+        var subCompetitions = await _context.SubCompetitions.ToListAsync();
+        if (subCompetitions.Count == 0)
+            throw new InvalidOperationException("No SubCompetitions found. Seed subcompetitions before artists.");
 
+        // Map by name (case-insensitive)
+        var subCompetitionByName = subCompetitions
+            .GroupBy(sc => sc.Name.Trim(), StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(g => g.Key, g => g.First(), StringComparer.OrdinalIgnoreCase);
 
+        var entities = new List<Artist>();
 
-        int startingNumber = 1;
-        int subCompetitionIndex = 0;
-
-        for (int i = 0; i < artistNames.Length; i++)
+        foreach (var dto in artistDtos)
         {
-            string artistName = $"{artistNames[i]}";
-            string songName = $"{songNames[i]}";
-
-            var artist = new Artist
+            if (!subCompetitionByName.TryGetValue(dto.SubCompetitionName.Trim(), out var sc))
             {
-                Name = artistName,
-                Song = songName,
-                StartingNumber = startingNumber,
-                SubCompetitionId = subCompetitions[subCompetitionIndex].Id,
-                ImageUrl = imgUrls[i]
-            };
-
-            await _context.AddAsync(artist);
-            await _context.SaveChangesAsync();
-
-            startingNumber++;
-            if(startingNumber > 6)
-            {
-                startingNumber = 1;
-                subCompetitionIndex++;
+                throw new InvalidOperationException(
+                    $"Artist '{dto.Name}' references unknown subCompetitionName '{dto.SubCompetitionName}'. " +
+                    "Check artists.json vs subcompetitions.json names."
+                );
             }
+
+            entities.Add(new Artist
+            {
+                Name = dto.Name,
+                Song = dto.Song,
+                ImageUrl = dto.ImageUrl,
+                StartingNumber = dto.StartingNumber,
+                SubCompetitionId = sc.Id
+            });
         }
+
+        await _context.Artists.AddRangeAsync(entities);
+        await _context.SaveChangesAsync();
+    }
+    private async Task<List<T>> LoadSeedAsync<T>(string relativePath)
+    {
+        // relativePath example: "Data/Seed/artists.json"
+        var fullPath = Path.Combine(_env.ContentRootPath, relativePath);
+
+        if (!File.Exists(fullPath))
+            throw new FileNotFoundException($"Seed file not found: {fullPath}");
+
+        var json = await File.ReadAllTextAsync(fullPath);
+        var data = JsonSerializer.Deserialize<List<T>>(json, _jsonOptions);
+
+        return data ?? new List<T>();
     }
 }
 
