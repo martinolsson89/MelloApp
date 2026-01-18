@@ -32,7 +32,7 @@ function MyAccount() {
                 if (userResponse.status === 200) {
                     let data = await userResponse.json();
                     setUserData(data);
-                    console.log(data);
+                    /*console.log(data);*/
                     setHasBet(data.hasMadeBet);
                     setAvatarUrl(data.avatarImageUrl || '');
                 } else {
@@ -134,7 +134,7 @@ function MyAccount() {
                     },
                     body: JSON.stringify({ avatarImageUrl: avatarUrl }),
                 });
-                console.log(response);
+                /*console.log(response);*/
                 if (response.ok) {
                     setUserData((prevData) =>
                         prevData ? { ...prevData, avatarImageUrl: avatarUrl } : prevData

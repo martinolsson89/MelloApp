@@ -29,12 +29,12 @@ function AuthorizeView({ children }: AuthorizeViewProps) {
                 });
 
                 if (response.status === 200) {
-                    console.log("Authorized");
+                    /*console.log("Authorized");*/
                     const data: User = await response.json();
                     setUser(data);
                     userService.saveUserData(data); // Ensure data is saved
                     setAuthorized(true);
-                    console.log(data);
+                    /*console.log(data);*/
                 } else if (response.status === 401) {
                     console.log("Unauthorized");
                     setAuthorized(false);

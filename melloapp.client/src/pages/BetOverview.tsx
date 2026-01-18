@@ -101,7 +101,7 @@ function BetOverview() {
                 const data: UserDto = await userResponse.json();
                 setUserData(data);
                 setHasBet(data.hasMadeBet);
-                console.log(userData);
+                /*console.log(userData);*/
             } else {
                 throw new Error('Error fetching user data');
             }
@@ -116,7 +116,7 @@ function BetOverview() {
             let response = await fetch('/SubCompetition/GetSubCompetitionsWithArtistsAndPredictions');
             if (response.status === 200) {
                 let data = await response.json();
-                console.log('API Data:', data); // Inspect data
+                /*console.log('API Data:', data);*/ // Inspect data
                 setBetOverviewData(data);
             } else {
                 throw new Error('Error fetching data');
@@ -132,7 +132,7 @@ function BetOverview() {
             let response = await fetch('/FinalPrediction');
             if (response.status === 200) {
                 let data = await response.json();
-                console.log('API Data FinalPrediction:', data);
+                /*console.log('API Data FinalPrediction:', data);*/
                 setFinalPredictionData(data);
             } else {
                 throw new Error('Error fetching data');

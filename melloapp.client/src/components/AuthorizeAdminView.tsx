@@ -20,7 +20,7 @@ function AuthorizeAdminView(props: { children: React.ReactNode }) {
 
     useEffect(() => {
         // Get the cookie value
-      
+
 
         // define a fetch function that retries until status 200 or 401
         async function getAdmin(url: string, options: any) {
@@ -30,9 +30,9 @@ function AuthorizeAdminView(props: { children: React.ReactNode }) {
 
                 // check the status code
                 if (response.status == 200) {
-                    console.log("AuthorizedAdmin");
+                    /*console.log("AuthorizedAdmin");*/
                     let j: any = await response.json();
-                    console.log('User data:', j)
+                    /*console.log('User data:', j)*/
                     setUser({ role: j.role });
                     setAuthorized(true);
                     return response; // return the response
