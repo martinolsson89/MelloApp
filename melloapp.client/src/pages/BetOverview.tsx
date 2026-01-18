@@ -101,7 +101,7 @@ function BetOverview() {
                 const data: UserDto = await userResponse.json();
                 setUserData(data);
                 setHasBet(data.hasMadeBet);
-                /*console.log(userData);*/
+                console.log(userData);
             } else {
                 throw new Error('Error fetching user data');
             }
