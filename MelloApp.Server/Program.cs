@@ -79,7 +79,7 @@ namespace MelloApp.Server
             {
                 options.AddDefaultPolicy(policy =>
                 {
-                    policy.WithOrigins("https://localhost:5173") // Your frontend URL
+                    policy.WithOrigins("https://localhost:5173", "https://melloapp26.azurewebsites.net/") // Your frontend URL
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials(); // If using cookies
@@ -137,6 +137,9 @@ namespace MelloApp.Server
             // Seed data
             using (var scope = app.Services.CreateScope())
             {
+                var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                await db.Database.MigrateAsync();
+
                 var seedData = scope.ServiceProvider.GetRequiredService<SeedData>();
                 await seedData.InitializeData();
             }

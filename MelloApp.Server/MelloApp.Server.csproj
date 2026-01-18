@@ -43,4 +43,11 @@
     <Folder Include="uploads\avatars\" />
   </ItemGroup>
 
+	<ItemGroup>
+		<Content Include="Data\**\*.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+	</ItemGroup>
+
 </Project>
