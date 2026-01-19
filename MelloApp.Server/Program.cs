@@ -135,14 +135,14 @@ namespace MelloApp.Server
             app.MapFallbackToFile("/index.html");
 
             // Seed data
-            using (var scope = app.Services.CreateScope())
-            {
-                var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                await db.Database.MigrateAsync();
+            //using (var scope = app.Services.CreateScope())
+            //{
+            //    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            //    await db.Database.MigrateAsync();
 
-                var seedData = scope.ServiceProvider.GetRequiredService<SeedData>();
-                await seedData.InitializeData();
-            }
+            //    var seedData = scope.ServiceProvider.GetRequiredService<SeedData>();
+            //    await seedData.InitializeData();
+            //}
 
             app.Run();
         }
